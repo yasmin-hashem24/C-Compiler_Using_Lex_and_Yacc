@@ -34,7 +34,7 @@
 
                       /* Mathematical and logical expressions */
 [0-9]+              { yylval.Integer = atoi(yytext); return INTEGER; }
-[a-zA-Z0-9]+        { yylval.Char = strdup(yytext); return CHAR; }
+\'[a-zA-Z0-9]\'       { yylval.Char = strdup(yytext); return CHAR; }
 [0-9]*\.[0-9]+      { yylval.Float  = atoi(yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.String = strdup(yytext); return STRING; }
 [_a-zA-Z][_a-zA-Z0-9]*       {yylval.ID=strdup(yytext);return ID;}               /* identifiers and variable names */
@@ -54,8 +54,9 @@
 "{"                 { return LBRACE; }
 "}"                 { return RBRACE; }
            /* skip whitespace */
-[ \t\n\r]             ; 
-
+[ \t\n\r]                             ; 
+\/\/[^\n]*                            ;                 /* single line comment */
+\/\*([^*]|\*[^\/])*\*\/               ;                 /* multiline comment */
 
             /* Error handling */
 .                   { yyerror("Unexpected character"); }
