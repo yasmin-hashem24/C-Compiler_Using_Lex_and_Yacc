@@ -16,17 +16,28 @@
 "switch"            { return SWITCH; }
 "repeat"            { return REPEAT; }
 "until"             { return UNTIL; }
-                    /* Assignment statements */
-"="                 { return ASSIGN; }
+"case"              {return CASE;}
+"default"           {return DEFAULT;}
+"break"             {return BREAK;}
+"return"            {return RETURN;}
+"exit"              {return EXIT;}
+"continue"          {return CONTINUE;}
+"print"             {return PRINT;}
+
                        /* Variables and Constants declaration */
 "var"               { return VAR; }
 "const"             { return CONST; }
 "func"              { return FUNC; }
+"main"              { return MAIN; }
+"include"           { return INCLUDE; }
+"define"            { return DEFINE; }
+
                       /* Mathematical and logical expressions */
 [0-9]+              { yylval.Integer = atoi(yytext); return INTEGER; }
 [a-zA-Z0-9]+        { yylval.Char = strdup(yytext); return CHAR; }
 [0-9]*\.[0-9]+      { yylval.Float  = atoi(yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.String = strdup(yytext); return STRING; }
+[_a-zA-Z][_a-zA-Z0-9]*       {yylval.ID=strdup(yytext);return ID;}               /* identifiers and variable names */
 
 "=="                { return EQ; }
 "!="                { return NEQ; }
@@ -36,19 +47,17 @@
 ">="                { return GTE; }
 "&&"                { return AND; }
 "||"                { return OR; }
-"+"                 { return PLUS; }
-"-"                 { return MINUS; }
-"*"                 { return MULT; }
-"/"                 { return DIV; }
-"%"                 { return MOD; }
-"("                 { return LPAREN; }
-")"                 { return RPAREN; }
+
+[\(\)\+\\\-\*\/\%\[\]\=\!\,\:\;] { return yytext[0]; }
+
                     /* Block structure (nested scopes where variables may be declared at the beginning of blocks) */
 "{"                 { return LBRACE; }
 "}"                 { return RBRACE; }
-                      /* Error handling */
-";"                 { return SEMICOLON; }
-[ \t\n\r]             ; /* skip whitespace */
+           /* skip whitespace */
+[ \t\n\r]             ; 
+
+
+            /* Error handling */
 .                   { yyerror("Unexpected character"); }
                      /* Datatypes */
 "int"               { return INT_TYPE; }
@@ -57,9 +66,11 @@
 "char"              { return CHAR_TYPE; }
 "string"            { return STRING_TYPE; }
 "void"              { return VOID_TYPE; }
+
                         /* boolean constants */
 "true"              {return BOOL_TRUE;}         
 "false"             {return BOOL_FALSE;}
+
 
 %%
 
