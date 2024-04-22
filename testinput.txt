@@ -3,9 +3,7 @@ float y = 4.24;
 string roufy = "i am roufyz";
 int z = 0;
 //void yasmin(int x) { x = 4; }
-const int a = 10;
-const float b = 3.14;
-const string c = "constant";
+
 
 
 enum Color { RED, GREEN, BLUE };
@@ -13,10 +11,16 @@ enum Color myColor = GREEN;
 
 /* void yasmin(int x) { x =4;
 }*/
+
+
+
 void yasmin(int x) {
     x = x + 1;
 }
 
+const int a = 10;
+const float b = 3.14;
+const string c = "constant";
 
 int add(int a, int b) { return a + b; }
 

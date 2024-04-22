@@ -54,7 +54,12 @@
 [ \t\r]                             ; 
 \n                      { ++currentLineNumber; }
 \/\/[^\n]*                            ;                 /* single line comment */
-\/\*([^*]|\*[^\/])*\*\/               ;                 /* multiline comment */
+\/\*([^*]|\*[^\/]|[\n])*[\n]*\*\/   { 
+                                        ++currentLineNumber;
+                                        /* Increment line count for each newline character within the multiline comment */
+                                        yytext[yyleng - 1] = '\0'; /* Trim the trailing newline */
+                                    }
+
 
 
                      /* Datatypes */
