@@ -2,7 +2,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include <y.tab.h>
+    #include "y.tab.h"
 
 %}
 
@@ -36,7 +36,7 @@
 \'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
 [0-9]*\.[0-9]+      { yylval.fVal = atoi(yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
-[_a-zA-Z][_a-zA-Z0-9]*       {yylval.ID=strdup(yytext);return ID;}               /* identifiers and variable names */
+[_a-zA-Z][_a-zA-Z0-9]*       {yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
 
 "=="                { return EQ; }
 "!="                { return NEQ; }
@@ -68,8 +68,8 @@
 "void"              { return VOID_TYPE; }
 
                         /* boolean constants */
-"true"              { yylval.bValue = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
-"false"             { yylval.boolValue = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+"true"              { yylval.bVal = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
+"false"             { yylval.bVal = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
 
 %%
 

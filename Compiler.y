@@ -25,7 +25,7 @@
 %token <bVal> BOOL
 %token <cVal> CHAR
 %token <sVal> STRING
-%token <sVal> ID
+%token <sVal> IDENTIFIER
 %token <bVal> BOOL_FALSE BOOL_TRUE
 %token INT_TYPE FLOAT_TYPE BOOL_TYPE CHAR_TYPE STRING_TYPE VOID_TYPE
 
@@ -39,7 +39,7 @@
 %nonassoc IFX 
 %nonassoc ELSE 
 /* The following rules are for the precedence of the operators */
-%left EQ NEQ LT GT LRE GTE AND OR
+%left EQ NEQ LT GT LTE GTE AND OR
 %left '+' '-' 
 %left '*' '/' 
 %left '%'
@@ -109,13 +109,13 @@ for_loop                : FOR '(' declaration_assignment expression ';' expressi
                         ;
 
 // Functions rules
-function                : type ID '(' arg_list ')' LBRACE statement_list RETURN expression RBRACE
-                        | VOID_TYPE ID '(' arg_list ')' LBRACE statement_list RBRACE
+function                : type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression RBRACE
+                        | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE
 
-function_call           : ID '(' arg_list_call ')' ';'
+function_call           : IDENTIFIER '(' arg_list_call ')' ';'
 
-arg_list                : arg_list ',' type ID
-                        | type ID
+arg_list                : arg_list ',' type IDENTIFIER
+                        | type IDENTIFIER
                         |
                         ;
 
@@ -131,24 +131,24 @@ declaration_assignment  : declaration
                         | assignment
                         ;
 
-declaration             : type ID ';'
-                        | type ID '=' expression ';'
-                        | CONST type ID '=' expression ';'
-                        | ENUM ID ID '=' ID ';'
+declaration             : type IDENTIFIER ';'
+                        | type IDENTIFIER '=' expression ';'
+                        | CONST type IDENTIFIER '=' expression ';'
+                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER ';'
                         ;
 
-assignment              : ID '=' expression ';'
+assignment              : IDENTIFIER '=' expression ';'
                         ;
 
 // Enum rules
 // enum Foo { a, b, c = 10, d, e = 1, f, g = f + c };
-enum_declaration        : ENUM ID LBRACE enum_list RBRACE ';'
+enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'
                         ;
 
-enum_list               : enum_list ',' ID
-                        | ID
-                        | enum_list ',' ID '=' expression
-                        | ID '=' expression
+enum_list               : enum_list ',' IDENTIFIER
+                        | IDENTIFIER
+                        | enum_list ',' IDENTIFIER '=' expression
+                        | IDENTIFIER '=' expression
                         ;
 
 // Expressions rules
@@ -169,7 +169,7 @@ expression              : expression '+' expression
                         | '-' expression %prec UMINUS
                         | '!' expression
                         | value
-                        | ID
+                        | IDENTIFIER
                         ;
 
 type                    : INT_TYPE
