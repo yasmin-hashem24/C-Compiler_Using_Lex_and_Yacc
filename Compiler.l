@@ -36,13 +36,6 @@
 "include"           { return INCLUDE; }
 "define"            { return DEFINE; }
 
-                      /* Mathematical and logical expressions */
-[0-9]+              { yylval.iVal = atoi(yytext); return INTEGER; }
-\'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
-[0-9]*\.[0-9]+        { yylval.fVal =  atof(yytext); return FLOAT; }
-\"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
-[_a-zA-Z][_a-zA-Z0-9]*       {yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
-
 "=="                { return EQ; }
 "!="                { return NEQ; }
 "<"                 { return LT; }
@@ -62,8 +55,7 @@
 \/\/[^\n]*                            ;                 /* single line comment */
 \/\*([^*]|\*[^\/])*\*\/               ;                 /* multiline comment */
 
-            /* Error handling */
-.                   { yyerror("Unexpected character"); }
+
                      /* Datatypes */
 "int"               { return INT_TYPE; }
 "float"             { return FLOAT_TYPE; }
@@ -75,6 +67,16 @@
                         /* boolean constants */
 "true"              { yylval.bVal = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
 "false"             { yylval.bVal = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+
+                      /* Mathematical and logical expressions */
+[0-9]+              { yylval.iVal = atoi(yytext); return INTEGER; }
+\'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
+[0-9]*\.[0-9]+        { yylval.fVal =  atof(yytext); return FLOAT; }
+\"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
+[_a-zA-Z][_a-zA-Z0-9]*       {yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
+
+            /* Error handling */
+.                   { yyerror("Unexpected character"); }
 
 %%
 

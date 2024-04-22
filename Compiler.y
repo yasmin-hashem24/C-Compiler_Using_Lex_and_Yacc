@@ -128,18 +128,18 @@ arg_list_call           : arg_list_call ',' expression
 
 // Assignments and declarations rules
 
-declaration_assignment  : declaration
-                        | assignment
+declaration_assignment  : declaration';'
+                        | assignment';'
                         ;
 
-declaration             : type IDENTIFIER ';'
-                        | type IDENTIFIER '=' expression ';'
-                        | CONST type IDENTIFIER '=' expression ';'
-                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER ';'
-                        | VAR IDENTIFIER ';'
+declaration             : type IDENTIFIER
+                        | type IDENTIFIER '=' expression
+                        | CONST type IDENTIFIER '=' expression
+                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER
+                        | VAR IDENTIFIER
                         ;
 
-assignment              : IDENTIFIER '=' expression ';'
+assignment              : IDENTIFIER '=' expression
                         ;
 
 // Enum rules

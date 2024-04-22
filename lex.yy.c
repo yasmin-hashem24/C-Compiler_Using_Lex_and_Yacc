@@ -362,22 +362,22 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[152] =
     {   0,
-        0,    0,   50,   40,   37,   37,   34,   40,   34,   40,
-       40,   40,   34,   21,   28,   34,   29,   25,   25,   25,
-       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
-       25,   35,   40,   36,   27,    0,   24,   32,    0,   23,
-        0,   38,    0,   21,   30,   26,   31,   25,   25,   25,
-       25,   25,   25,   25,    6,   25,   25,   25,   25,   25,
-       25,   25,    1,   25,   25,   25,   25,   25,   25,   25,
-       25,   25,   25,   33,   22,    0,    0,   38,   25,   25,
-       25,   25,   25,   25,   25,   25,   25,   25,   25,    4,
-       25,   25,   25,   25,   25,   25,   25,   25,   25,   15,
+        0,    0,   50,   48,   32,   32,   29,   48,   29,   48,
+       48,   48,   29,   43,   23,   29,   24,   47,   47,   47,
+       47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+       47,   30,   48,   31,   22,    0,   46,   27,    0,   45,
+        0,   33,    0,   43,   25,   21,   26,   47,   47,   47,
+       47,   47,   47,   47,    6,   47,   47,   47,   47,   47,
+       47,   47,    1,   47,   47,   47,   47,   47,   47,   47,
+       47,   47,   47,   28,   44,    0,    0,   33,   47,   47,
+       47,   47,   47,   47,   47,   47,   47,   47,   47,    4,
+       47,   47,   35,   47,   47,   47,   47,   47,   47,   15,
 
-       25,   25,   39,   25,   25,    7,   25,   25,   25,   25,
-       25,    2,   14,   11,   25,   25,   17,   25,   18,   25,
-       25,   25,   25,   25,   25,   25,    9,   16,   25,   25,
-       25,   25,   25,   25,   13,   25,   25,   25,    3,   25,
-       25,   20,   25,   10,   25,    5,   25,    8,   19,   12,
+       47,   47,   34,   37,   47,    7,   38,   47,   47,   47,
+       47,    2,   14,   11,   47,   47,   17,   47,   18,   47,
+       47,   47,   47,   41,   40,   47,    9,   16,   47,   47,
+       47,   42,   36,   47,   13,   47,   47,   47,    3,   47,
+       47,   20,   47,   10,   39,    5,   47,    8,   19,   12,
         0
     } ;
 
@@ -929,157 +929,157 @@ YY_RULE_SETUP
 #line 38 "Compiler.l"
 { return DEFINE; }
 	YY_BREAK
-/* Mathematical and logical expressions */
 case 21:
 YY_RULE_SETUP
-#line 41 "Compiler.l"
-{ yylval.iVal = atoi(yytext); return INTEGER; }
+#line 40 "Compiler.l"
+{ return EQ; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 42 "Compiler.l"
-{ yylval.cVal = strdup(yytext); return CHAR; }
+#line 41 "Compiler.l"
+{ return NEQ; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 43 "Compiler.l"
-{ yylval.fVal =  atof(yytext); return FLOAT; }
+#line 42 "Compiler.l"
+{ return LT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 44 "Compiler.l"
-{ yylval.sVal = strdup(yytext); return STRING; }
+#line 43 "Compiler.l"
+{ return GT; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 45 "Compiler.l"
-{yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
+#line 44 "Compiler.l"
+{ return LTE; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 47 "Compiler.l"
-{ return EQ; }
+#line 45 "Compiler.l"
+{ return GTE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 48 "Compiler.l"
-{ return NEQ; }
+#line 46 "Compiler.l"
+{ return AND; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 49 "Compiler.l"
-{ return LT; }
+#line 47 "Compiler.l"
+{ return OR; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 50 "Compiler.l"
-{ return GT; }
-	YY_BREAK
-case 30:
-YY_RULE_SETUP
-#line 51 "Compiler.l"
-{ return LTE; }
-	YY_BREAK
-case 31:
-YY_RULE_SETUP
-#line 52 "Compiler.l"
-{ return GTE; }
-	YY_BREAK
-case 32:
-YY_RULE_SETUP
-#line 53 "Compiler.l"
-{ return AND; }
-	YY_BREAK
-case 33:
-YY_RULE_SETUP
-#line 54 "Compiler.l"
-{ return OR; }
-	YY_BREAK
-case 34:
-YY_RULE_SETUP
-#line 56 "Compiler.l"
+#line 49 "Compiler.l"
 { return yytext[0]; }
 	YY_BREAK
 /* Block structure (nested scopes where variables may be declared at the beginning of blocks) */
-case 35:
+case 30:
 YY_RULE_SETUP
-#line 59 "Compiler.l"
+#line 52 "Compiler.l"
 { return LBRACE; }
 	YY_BREAK
-case 36:
+case 31:
 YY_RULE_SETUP
-#line 60 "Compiler.l"
+#line 53 "Compiler.l"
 { return RBRACE; }
 	YY_BREAK
 /* skip whitespace */
-case 37:
-/* rule 37 can match eol */
+case 32:
+/* rule 32 can match eol */
+YY_RULE_SETUP
+#line 55 "Compiler.l"
+; 
+	YY_BREAK
+case 33:
+YY_RULE_SETUP
+#line 56 "Compiler.l"
+;                 /* single line comment */
+	YY_BREAK
+case 34:
+/* rule 34 can match eol */
+YY_RULE_SETUP
+#line 57 "Compiler.l"
+;                 /* multiline comment */
+	YY_BREAK
+/* Datatypes */
+case 35:
+YY_RULE_SETUP
+#line 61 "Compiler.l"
+{ return INT_TYPE; }
+	YY_BREAK
+case 36:
 YY_RULE_SETUP
 #line 62 "Compiler.l"
-; 
+{ return FLOAT_TYPE; }
+	YY_BREAK
+case 37:
+YY_RULE_SETUP
+#line 63 "Compiler.l"
+{ return BOOL_TYPE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 63 "Compiler.l"
-;                 /* single line comment */
+#line 64 "Compiler.l"
+{ return CHAR_TYPE; }
 	YY_BREAK
 case 39:
-/* rule 39 can match eol */
 YY_RULE_SETUP
-#line 64 "Compiler.l"
-;                 /* multiline comment */
+#line 65 "Compiler.l"
+{ return STRING_TYPE; }
 	YY_BREAK
-/* Error handling */
 case 40:
 YY_RULE_SETUP
-#line 67 "Compiler.l"
-{ yyerror("Unexpected character"); }
+#line 66 "Compiler.l"
+{ return VOID_TYPE; }
 	YY_BREAK
-/* Datatypes */
+/* boolean constants */
 case 41:
 YY_RULE_SETUP
 #line 69 "Compiler.l"
-{ return INT_TYPE; }
+{ yylval.bVal = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 70 "Compiler.l"
-{ return FLOAT_TYPE; }
+{ yylval.bVal = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
 	YY_BREAK
+/* Mathematical and logical expressions */
 case 43:
 YY_RULE_SETUP
-#line 71 "Compiler.l"
-{ return BOOL_TYPE; }
+#line 73 "Compiler.l"
+{ yylval.iVal = atoi(yytext); return INTEGER; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 72 "Compiler.l"
-{ return CHAR_TYPE; }
+#line 74 "Compiler.l"
+{ yylval.cVal = strdup(yytext); return CHAR; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 73 "Compiler.l"
-{ return STRING_TYPE; }
+#line 75 "Compiler.l"
+{ yylval.fVal =  atof(yytext); return FLOAT; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 74 "Compiler.l"
-{ return VOID_TYPE; }
+#line 76 "Compiler.l"
+{ yylval.sVal = strdup(yytext); return STRING; }
 	YY_BREAK
-/* boolean constants */
 case 47:
 YY_RULE_SETUP
 #line 77 "Compiler.l"
-{ yylval.bVal = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
+{yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
 	YY_BREAK
+/* Error handling */
 case 48:
 YY_RULE_SETUP
-#line 78 "Compiler.l"
-{ yylval.bVal = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+#line 80 "Compiler.l"
+{ yyerror("Unexpected character"); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 80 "Compiler.l"
+#line 82 "Compiler.l"
 ECHO;
 	YY_BREAK
 #line 1086 "lex.yy.c"
@@ -2087,7 +2087,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 80 "Compiler.l"
+#line 82 "Compiler.l"
 
 
 /* part 3 user subroutines */
