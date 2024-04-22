@@ -1,0 +1,6 @@
+Syntax error at line 1: Unexpected character
+Syntax error at line 2: Unexpected character
+Syntax error at line 3: Unexpected character
+Syntax error at line 3: Unexpected character
+Syntax error at line 3: Unexpected character
+Syntax error at line 5: syntax error

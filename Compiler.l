@@ -6,7 +6,7 @@
     #include <string.h>
     #include "node.h"
     #include "y.tab.h"
-
+    int currentLineNumber = 1;
 %}
 
 %option nounistd
@@ -51,7 +51,8 @@
 "{"                 { return LBRACE; }
 "}"                 { return RBRACE; }
            /* skip whitespace */
-[ \t\n\r]                             ; 
+[\t\r]                             ; 
+\n                      { ++currentLineNumber; }
 \/\/[^\n]*                            ;                 /* single line comment */
 \/\*([^*]|\*[^\/])*\*\/               ;                 /* multiline comment */
 

@@ -10,6 +10,9 @@
 
     void yyerror(char *s);
     int yylex();
+    extern FILE *yyin;
+extern FILE *errorsFile;
+extern int currentLineNumber; 
 %}
 
 %union {
@@ -190,14 +193,35 @@ value                   : INTEGER
                         ; 
 
 %%
+extern FILE *yyin;
+FILE *errorsFile;
 
 /* part 3 user subroutines */
 void yyerror(char *s) {
-    fprintf(stderr, "%s\n", s);
-    exit(1);
+     fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
 
 int main() {
+      FILE *fp = fopen("testinput.txt", "r");
+
+    if (!fp) {
+        perror("Error opening input file");
+        return 1;
+    }
+
+    errorsFile = fopen("output.txt", "w");
+    if (!errorsFile) {
+        perror("Error opening output file");
+        fclose(fp);
+        return 1;
+    }
+
+    yyin = fp;
+
     yyparse();
+
+    fclose(fp);
+    fclose(errorsFile);
+
     return 0;
 }
