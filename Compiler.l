@@ -51,7 +51,7 @@
 "{"                 { return LBRACE; }
 "}"                 { return RBRACE; }
            /* skip whitespace */
-[\t\r]                             ; 
+[ \t\r]                             ; 
 \n                      { ++currentLineNumber; }
 \/\/[^\n]*                            ;                 /* single line comment */
 \/\*([^*]|\*[^\/])*\*\/               ;                 /* multiline comment */

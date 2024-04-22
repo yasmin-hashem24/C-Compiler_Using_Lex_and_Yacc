@@ -34,7 +34,7 @@ extern int currentLineNumber;
 %token INT_TYPE FLOAT_TYPE BOOL_TYPE CHAR_TYPE STRING_TYPE VOID_TYPE
 
 %token LBRACE RBRACE
-%token EQ NEQ LT GT LRE GTE AND OR
+%token EQ NEQ LT GT LTE GTE AND OR
 
 %token CONST FUNC MAIN INCLUDE DEFINE VAR
 %token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT BREAK RETURN EXIT CONTINUE PRINT ENUM
@@ -166,7 +166,7 @@ expression              : expression '+' expression
                         | expression NEQ expression
                         | expression LT expression
                         | expression GT expression
-                        | expression LRE expression
+                        | expression LTE expression
                         | expression GTE expression
                         | expression AND expression
                         | expression OR expression

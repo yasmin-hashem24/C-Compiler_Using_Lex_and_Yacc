@@ -74,7 +74,7 @@ extern int yydebug;
     NEQ = 275,                     /* NEQ  */
     LT = 276,                      /* LT  */
     GT = 277,                      /* GT  */
-    LRE = 278,                     /* LRE  */
+    LTE = 278,                     /* LTE  */
     GTE = 279,                     /* GTE  */
     AND = 280,                     /* AND  */
     OR = 281,                      /* OR  */
@@ -99,8 +99,7 @@ extern int yydebug;
     PRINT = 300,                   /* PRINT  */
     ENUM = 301,                    /* ENUM  */
     IFX = 302,                     /* IFX  */
-    LTE = 303,                     /* LTE  */
-    UMINUS = 304                   /* UMINUS  */
+    UMINUS = 303                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -129,7 +128,7 @@ extern int yydebug;
 #define NEQ 275
 #define LT 276
 #define GT 277
-#define LRE 278
+#define LTE 278
 #define GTE 279
 #define AND 280
 #define OR 281
@@ -154,8 +153,7 @@ extern int yydebug;
 #define PRINT 300
 #define ENUM 301
 #define IFX 302
-#define LTE 303
-#define UMINUS 304
+#define UMINUS 303
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -170,7 +168,7 @@ union YYSTYPE
     char *sVal;
     nodeType *nPtr;
 
-#line 174 "y.tab.h"
+#line 172 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
