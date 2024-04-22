@@ -5,6 +5,7 @@
     #include <stdlib.h>
     #include <stdbool.h> 
     #include <string.h>
+    #include <stdarg.h>
     #include "node.h"
 
     void yyerror(char *s);
@@ -32,7 +33,7 @@
 %token LBRACE RBRACE
 %token EQ NEQ LT GT LRE GTE AND OR
 
-%token CONST FUNC MAIN INCLUDE DEFINE
+%token CONST FUNC MAIN INCLUDE DEFINE VAR
 %token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT BREAK RETURN EXIT CONTINUE PRINT ENUM
 
 /* To remove the shift/reduce conflict(in If-Else Ambiguity), we need to add the following precedence and associativity rules */
@@ -135,6 +136,7 @@ declaration             : type IDENTIFIER ';'
                         | type IDENTIFIER '=' expression ';'
                         | CONST type IDENTIFIER '=' expression ';'
                         | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER ';'
+                        | VAR IDENTIFIER ';'
                         ;
 
 assignment              : IDENTIFIER '=' expression ';'

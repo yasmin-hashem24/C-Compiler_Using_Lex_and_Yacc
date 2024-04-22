@@ -34,7 +34,7 @@
                       /* Mathematical and logical expressions */
 [0-9]+              { yylval.iVal = atoi(yytext); return INTEGER; }
 \'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
-[0-9]*\.[0-9]+      { yylval.fVal = atoi(yytext); return FLOAT; }
+[0-9]*\.[0-9]+        { yylval.fVal = atof(yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
 [_a-zA-Z][_a-zA-Z0-9]*       {yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
 
