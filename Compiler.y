@@ -181,7 +181,7 @@ type                    : INT_TYPE
                         | STRING_TYPE
 
 value                   : INTEGER
-                        | FLOAT
+                        | FLOAT    
                         | BOOL
                         | CHAR
                         | STRING

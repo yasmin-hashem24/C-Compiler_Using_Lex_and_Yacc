@@ -2,12 +2,17 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include <stdbool.h> 
+    #include <string.h>
+    #include "node.h"
     #include "y.tab.h"
 
 %}
 
+%option nounistd
 /* part 2 production rules */
 %%
+
                      /* If-then-else statement, while loops, repeat-until loops, for loops, switch statement */
 "if"                { return IF; }
 "else"              { return ELSE; }
@@ -34,7 +39,7 @@
                       /* Mathematical and logical expressions */
 [0-9]+              { yylval.iVal = atoi(yytext); return INTEGER; }
 \'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
-[0-9]*\.[0-9]+        { yylval.fVal = atof(yytext); return FLOAT; }
+[0-9]*\.[0-9]+        { yylval.fVal =  atof(yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
 [_a-zA-Z][_a-zA-Z0-9]*       {yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
 
