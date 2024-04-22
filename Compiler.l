@@ -14,8 +14,7 @@
 "while"             { return WHILE; }
 "for"               { return FOR; }
 "switch"            { return SWITCH; }
-"repeat"            { return REPEAT; }
-"until"             { return UNTIL; }
+"do"                { return DO; }
 "case"              {return CASE;}
 "default"           {return DEFAULT;}
 "break"             {return BREAK;}
@@ -23,7 +22,7 @@
 "exit"              {return EXIT;}
 "continue"          {return CONTINUE;}
 "print"             {return PRINT;}
-
+"enum"              {return ENUM;}
                        /* Variables and Constants declaration */
 "var"               { return VAR; }
 "const"             { return CONST; }
@@ -33,10 +32,10 @@
 "define"            { return DEFINE; }
 
                       /* Mathematical and logical expressions */
-[0-9]+              { yylval.Integer = atoi(yytext); return INTEGER; }
-\'[a-zA-Z0-9]\'       { yylval.Char = strdup(yytext); return CHAR; }
-[0-9]*\.[0-9]+      { yylval.Float  = atoi(yytext); return FLOAT; }
-\"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.String = strdup(yytext); return STRING; }
+[0-9]+              { yylval.iVal = atoi(yytext); return INTEGER; }
+\'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
+[0-9]*\.[0-9]+      { yylval.fVal = atoi(yytext); return FLOAT; }
+\"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
 [_a-zA-Z][_a-zA-Z0-9]*       {yylval.ID=strdup(yytext);return ID;}               /* identifiers and variable names */
 
 "=="                { return EQ; }
@@ -69,9 +68,8 @@
 "void"              { return VOID_TYPE; }
 
                         /* boolean constants */
-"true"              {return BOOL_TRUE;}         
-"false"             {return BOOL_FALSE;}
-
+"true"              { yylval.bValue = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
+"false"             { yylval.boolValue = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
 
 %%
 
