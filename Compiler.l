@@ -27,6 +27,14 @@
 "continue"          { printf("CONTINUE\n"); return CONTINUE; }
 "print"             { printf("PRINT\n"); return PRINT; }
 "enum"              { printf("ENUM\n"); return ENUM; }
+
+                     /* Datatypes */
+"int"               { printf("INT_TYPE\n"); return INT_TYPE; }
+"float"             { printf("FLOAT_TYPE\n"); return FLOAT_TYPE; }
+"bool"              { printf("BOOL_TYPE\n"); return BOOL_TYPE; }
+"char"              { printf("CHAR_TYPE\n"); return CHAR_TYPE; }
+"string"            { printf("STRING_TYPE\n"); return STRING_TYPE; }
+"void"              { printf("VOID_TYPE\n"); return VOID_TYPE; }
                        /* Variables and Constants declaration */
 "var"               { printf("VAR\n"); return VAR; }
 "const"             { printf("CONST\n"); return CONST; }
@@ -49,8 +57,14 @@
                     /* Block structure (nested scopes where variables may be declared at the beginning of blocks) */
 "{"                 { printf("LBRACE\n"); return LBRACE; }
 "}"                 { printf("RBRACE\n"); return RBRACE; }
+
+
+                        /* boolean constants */
+"true"              { yylval.bVal = 1; printf("BOOL_TRUE\n"); return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
+"false"             { yylval.bVal = 0; printf("BOOL_FALSE\n"); return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+
            /* skip whitespace */
-[ \t\r]                             ; 
+[ \t\r]+                             ; 
 \n                      { ++currentLineNumber; }
 \/\/[^\n]*                            ;                 /* single line comment */
 \/\*([^*]|\*[^\/]|[\n])*[\n]*\*\/   { 
@@ -60,17 +74,8 @@
 
 
 
-                     /* Datatypes */
-"int"               { printf("INT_TYPE\n"); return INT_TYPE; }
-"float"             { printf("FLOAT_TYPE\n"); return FLOAT_TYPE; }
-"bool"              { printf("BOOL_TYPE\n"); return BOOL_TYPE; }
-"char"              { printf("CHAR_TYPE\n"); return CHAR_TYPE; }
-"string"            { printf("STRING_TYPE\n"); return STRING_TYPE; }
-"void"              { printf("VOID_TYPE\n"); return VOID_TYPE; }
 
-                        /* boolean constants */
-"true"              { yylval.bVal = 1; printf("BOOL_TRUE\n"); return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
-"false"             { yylval.bVal = 0; printf("BOOL_FALSE\n"); return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+
 
                       /* Mathematical and logical expressions */
 [0-9]+              { yylval.iVal = atoi(yytext); printf("INTEGER: %s\n", yytext); return INTEGER; }
