@@ -11,8 +11,8 @@
     void yyerror(char *s);
     int yylex();
     extern FILE *yyin;
-extern FILE *errorsFile;
-extern int currentLineNumber; 
+    extern FILE *errorsFile;
+    extern int currentLineNumber; 
 %}
 
 %union {
@@ -58,7 +58,7 @@ extern int currentLineNumber;
 /* part 2 production rules */
 %%
 
-program                 : function
+program                 :  function
                         | statement_list
                         ;
 
@@ -111,7 +111,7 @@ while_loop              : WHILE '(' expression ')' LBRACE statement_list RBRACE
 do_while_loop           : DO LBRACE statement_list RBRACE WHILE '(' expression ')' ';'
                         ;
 
-for_loop                : FOR '(' declaration_assignment expression ';' expression ')' LBRACE statement_list RBRACE
+for_loop                : FOR '(' declaration_assignment_loop ';' expression';' declaration_assignment_loop ')' LBRACE statement_list RBRACE
                         ;
 
 // Functions rules
@@ -119,6 +119,10 @@ function                : type IDENTIFIER '('arg_list')' LBRACE statement_list R
                         | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE
 
 function_call           : IDENTIFIER '(' arg_list_call ')' ';'
+                        ;
+
+function_call_expression: IDENTIFIER '(' arg_list_call ')'
+                        ;
 
 arg_list                : type IDENTIFIER','arg_list
                         | type IDENTIFIER
@@ -137,6 +141,10 @@ declaration_assignment  : declaration';'
                         | assignment';'
                         ;
 
+declaration_assignment_loop     : declaration
+                                | assignment
+                                ;
+
 declaration             : type IDENTIFIER
                         | type IDENTIFIER '=' expression
                         | CONST type IDENTIFIER '=' expression
@@ -145,8 +153,7 @@ declaration             : type IDENTIFIER
                         ;
 
 assignment              : IDENTIFIER '=' expression
-                        ;
-
+                        ; 
 // Enum rules
 // enum Foo { a, b, c = 10, d, e = 1, f, g = f + c };
 enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'
@@ -177,6 +184,7 @@ expression              : expression '+' expression
                         | '!' expression
                         | value
                         | IDENTIFIER
+                        | function_call_expression
                         ;
 
 type                    : INT_TYPE
@@ -200,30 +208,37 @@ FILE *errorsFile;
 
 /* part 3 user subroutines */
 void yyerror(char *s) {
-     fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
+    fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
 
-int main() {
-      FILE *fp = fopen("testinput.txt", "r");
+int main(int argc, char **argv) {
+    
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
+        return 1;
+    }
 
+    FILE *fp = fopen(argv[1], "r");
     if (!fp) {
         perror("Error opening input file");
         return 1;
     }
 
-    errorsFile = fopen("output.txt", "w");
-    if (!errorsFile) {
+    FILE *outputFile = fopen(argv[2], "w");
+    if (!outputFile) {
         perror("Error opening output file");
         fclose(fp);
         return 1;
     }
+
+    errorsFile = outputFile;
 
     yyin = fp;
 
     yyparse();
 
     fclose(fp);
-    fclose(errorsFile);
+    fclose(outputFile);
 
     return 0;
 }
