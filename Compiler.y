@@ -58,7 +58,10 @@
 /* part 2 production rules */
 %%
 
-program                 :  function
+program                 : function_or_statement
+                        ;
+
+function_or_statement   : function_declaration
                         | statement_list
                         ;
 
@@ -74,14 +77,9 @@ statement               : declaration_assignment
                         | conditional_statement
                         | loop_statement
                         | print_statement
-                        | function
-                        ;
-
-conditional_statement   : if_condition_statement
+                        | if_condition_statement
                         | switch_statement
-                        ;
-
-loop_statement          : while_loop
+                        | while_loop
                         | do_while_loop
                         | for_loop
                         ;
@@ -115,8 +113,9 @@ for_loop                : FOR '(' declaration_assignment_loop ';' expression';' 
                         ;
 
 // Functions rules
-function                : type IDENTIFIER '('arg_list')' LBRACE statement_list RETURN expression';' RBRACE 
+function_declaration   : type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression';' RBRACE 
                         | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE
+                        ;
 
 function_call           : IDENTIFIER '(' arg_list_call ')' ';'
                         ;
@@ -200,7 +199,8 @@ value                   : INTEGER
                         | STRING
                         | BOOL_TRUE
                         | BOOL_FALSE
-                        ; 
+                        ;
+
 
 %%
 extern FILE *yyin;
