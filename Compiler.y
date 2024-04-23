@@ -64,6 +64,7 @@ program                 : function
 
 statement_list          : statement_list statement
                         | statement
+                        |
                         ;   
 
 // Statements rules
@@ -73,6 +74,7 @@ statement               : declaration_assignment
                         | conditional_statement
                         | loop_statement
                         | print_statement
+                        | function
                         ;
 
 conditional_statement   : if_condition_statement
@@ -113,12 +115,12 @@ for_loop                : FOR '(' declaration_assignment expression ';' expressi
                         ;
 
 // Functions rules
-function                : type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression RBRACE
+function                : type IDENTIFIER '('arg_list')' LBRACE statement_list RETURN expression';' RBRACE 
                         | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE
 
 function_call           : IDENTIFIER '(' arg_list_call ')' ';'
 
-arg_list                : arg_list ',' type IDENTIFIER
+arg_list                : type IDENTIFIER','arg_list
                         | type IDENTIFIER
                         |
                         ;
