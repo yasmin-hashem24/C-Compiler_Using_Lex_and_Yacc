@@ -548,8 +548,7 @@ char *yytext;
     int currentLineNumber = 1;
 #line 550 "lex.yy.c"
 #define YY_NO_UNISTD_H 1
-/* part 2 production rules */
-#line 553 "lex.yy.c"
+#line 552 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -766,12 +765,12 @@ YY_DECL
 		}
 
 	{
-#line 14 "Compiler.l"
+#line 13 "Compiler.l"
 
-
-#line 17 "Compiler.l"
+#line 15 "Compiler.l"
+                    /* part 2 production rules */
                      /* If-then-else statement, while loops, repeat-until loops, for loops, switch statement */
-#line 775 "lex.yy.c"
+#line 774 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -830,268 +829,267 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 18 "Compiler.l"
-{ return IF; }
+#line 17 "Compiler.l"
+{ printf("IF\n"); return IF; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "Compiler.l"
-{ return ELSE; }
+#line 18 "Compiler.l"
+{ printf("ELSE\n"); return ELSE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 20 "Compiler.l"
-{ return WHILE; }
+#line 19 "Compiler.l"
+{ printf("WHILE\n"); return WHILE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "Compiler.l"
-{ return FOR; }
+#line 20 "Compiler.l"
+{ printf("FOR\n"); return FOR; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "Compiler.l"
-{ return SWITCH; }
+#line 21 "Compiler.l"
+{ printf("SWITCH\n"); return SWITCH; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 23 "Compiler.l"
-{ return DO; }
+#line 22 "Compiler.l"
+{ printf("DO\n"); return DO; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "Compiler.l"
-{return CASE;}
+#line 23 "Compiler.l"
+{ printf("CASE\n"); return CASE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 25 "Compiler.l"
-{return DEFAULT;}
+#line 24 "Compiler.l"
+{ printf("DEFAULT\n"); return DEFAULT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "Compiler.l"
-{return BREAK;}
+#line 25 "Compiler.l"
+{ printf("BREAK\n"); return BREAK; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 27 "Compiler.l"
-{return RETURN;}
+#line 26 "Compiler.l"
+{ printf("RETURN\n"); return RETURN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 28 "Compiler.l"
-{return EXIT;}
+#line 27 "Compiler.l"
+{ printf("EXIT\n"); return EXIT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 29 "Compiler.l"
-{return CONTINUE;}
+#line 28 "Compiler.l"
+{ printf("CONTINUE\n"); return CONTINUE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 30 "Compiler.l"
-{return PRINT;}
+#line 29 "Compiler.l"
+{ printf("PRINT\n"); return PRINT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 31 "Compiler.l"
-{return ENUM;}
+#line 30 "Compiler.l"
+{ printf("ENUM\n"); return ENUM; }
 	YY_BREAK
 /* Variables and Constants declaration */
 case 15:
 YY_RULE_SETUP
-#line 33 "Compiler.l"
-{ return VAR; }
+#line 32 "Compiler.l"
+{ printf("VAR\n"); return VAR; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 34 "Compiler.l"
-{ return CONST; }
+#line 33 "Compiler.l"
+{ printf("CONST\n"); return CONST; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 35 "Compiler.l"
-{ return FUNC; }
+#line 34 "Compiler.l"
+{ printf("FUNC\n"); return FUNC; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 36 "Compiler.l"
-{ return MAIN; }
+#line 35 "Compiler.l"
+{ printf("MAIN\n"); return MAIN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 37 "Compiler.l"
-{ return INCLUDE; }
+#line 36 "Compiler.l"
+{ printf("INCLUDE\n"); return INCLUDE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 38 "Compiler.l"
-{ return DEFINE; }
+#line 37 "Compiler.l"
+{ printf("DEFINE\n"); return DEFINE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 40 "Compiler.l"
-{ return EQ; }
+#line 39 "Compiler.l"
+{ printf("EQ\n"); return EQ; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 41 "Compiler.l"
-{ return NEQ; }
+#line 40 "Compiler.l"
+{ printf("NEQ\n"); return NEQ; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 42 "Compiler.l"
-{ return LT; }
+#line 41 "Compiler.l"
+{ printf("LT\n"); return LT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 43 "Compiler.l"
-{ return GT; }
+#line 42 "Compiler.l"
+{ printf("GT\n"); return GT; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 44 "Compiler.l"
-{ return LTE; }
+#line 43 "Compiler.l"
+{ printf("LTE\n"); return LTE; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 45 "Compiler.l"
-{ return GTE; }
+#line 44 "Compiler.l"
+{ printf("GTE\n"); return GTE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 46 "Compiler.l"
-{ return AND; }
+#line 45 "Compiler.l"
+{ printf("AND\n"); return AND; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 47 "Compiler.l"
-{ return OR; }
+#line 46 "Compiler.l"
+{ printf("OR\n"); return OR; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 49 "Compiler.l"
-{ return yytext[0]; }
+#line 48 "Compiler.l"
+{ printf("%s\n", yytext); return yytext[0]; }
 	YY_BREAK
 /* Block structure (nested scopes where variables may be declared at the beginning of blocks) */
 case 30:
 YY_RULE_SETUP
-#line 52 "Compiler.l"
-{ return LBRACE; }
+#line 51 "Compiler.l"
+{ printf("LBRACE\n"); return LBRACE; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 53 "Compiler.l"
-{ return RBRACE; }
+#line 52 "Compiler.l"
+{ printf("RBRACE\n"); return RBRACE; }
 	YY_BREAK
 /* skip whitespace */
 case 32:
 YY_RULE_SETUP
-#line 55 "Compiler.l"
+#line 54 "Compiler.l"
 ; 
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 56 "Compiler.l"
+#line 55 "Compiler.l"
 { ++currentLineNumber; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 57 "Compiler.l"
+#line 56 "Compiler.l"
 ;                 /* single line comment */
 	YY_BREAK
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 58 "Compiler.l"
+#line 57 "Compiler.l"
 { 
                                         ++currentLineNumber;
-                                        /* Increment line count for each newline character within the multiline comment */
-                                        yytext[yyleng - 1] = '\0'; /* Trim the trailing newline */
+                                        yytext[yyleng - 1] = '\0';
                                     }
 	YY_BREAK
 /* Datatypes */
 case 36:
 YY_RULE_SETUP
-#line 67 "Compiler.l"
-{ return INT_TYPE; }
+#line 65 "Compiler.l"
+{ printf("INT_TYPE\n"); return INT_TYPE; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 68 "Compiler.l"
-{ return FLOAT_TYPE; }
+#line 66 "Compiler.l"
+{ printf("FLOAT_TYPE\n"); return FLOAT_TYPE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 69 "Compiler.l"
-{ return BOOL_TYPE; }
+#line 67 "Compiler.l"
+{ printf("BOOL_TYPE\n"); return BOOL_TYPE; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 70 "Compiler.l"
-{ return CHAR_TYPE; }
+#line 68 "Compiler.l"
+{ printf("CHAR_TYPE\n"); return CHAR_TYPE; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 71 "Compiler.l"
-{ return STRING_TYPE; }
+#line 69 "Compiler.l"
+{ printf("STRING_TYPE\n"); return STRING_TYPE; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 72 "Compiler.l"
-{ return VOID_TYPE; }
+#line 70 "Compiler.l"
+{ printf("VOID_TYPE\n"); return VOID_TYPE; }
 	YY_BREAK
 /* boolean constants */
 case 42:
 YY_RULE_SETUP
-#line 75 "Compiler.l"
-{ yylval.bVal = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
+#line 73 "Compiler.l"
+{ yylval.bVal = 1; printf("BOOL_TRUE\n"); return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 76 "Compiler.l"
-{ yylval.bVal = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+#line 74 "Compiler.l"
+{ yylval.bVal = 0; printf("BOOL_FALSE\n"); return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
 	YY_BREAK
 /* Mathematical and logical expressions */
 case 44:
 YY_RULE_SETUP
-#line 79 "Compiler.l"
-{ yylval.iVal = atoi(yytext); return INTEGER; }
+#line 77 "Compiler.l"
+{ yylval.iVal = atoi(yytext); printf("INTEGER: %s\n", yytext); return INTEGER; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 80 "Compiler.l"
-{ yylval.cVal = strdup(yytext); return CHAR; }
+#line 78 "Compiler.l"
+{ yylval.cVal = strdup(yytext); printf("CHAR: %s\n", yytext); return CHAR; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 81 "Compiler.l"
-{ yylval.fVal =  atof(yytext); return FLOAT; }
+#line 79 "Compiler.l"
+{ yylval.fVal =  atof(yytext); printf("FLOAT: %s\n", yytext); return FLOAT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 82 "Compiler.l"
-{ yylval.sVal = strdup(yytext); return STRING; }
+#line 80 "Compiler.l"
+{ yylval.sVal = strdup(yytext); printf("STRING: %s\n", yytext); return STRING; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 83 "Compiler.l"
-{yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
+#line 81 "Compiler.l"
+{ yylval.sVal = strdup(yytext); printf("IDENTIFIER: %s\n", yytext); return IDENTIFIER; }               /* identifiers and variable names */
 	YY_BREAK
 /* Error handling */
 case 49:
 YY_RULE_SETUP
-#line 86 "Compiler.l"
-{ yyerror("Unexpected character"); }
+#line 84 "Compiler.l"
+{ printf("Unexpected character\n"); yyerror("Unexpected character"); }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 88 "Compiler.l"
+#line 86 "Compiler.l"
 ECHO;
 	YY_BREAK
-#line 1095 "lex.yy.c"
+#line 1093 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2096,7 +2094,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 88 "Compiler.l"
+#line 86 "Compiler.l"
+
 
 
 /* part 3 user subroutines */

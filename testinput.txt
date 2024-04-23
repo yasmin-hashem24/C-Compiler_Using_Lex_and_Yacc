@@ -5,27 +5,32 @@ int z = 0;
 //void yasmin(int x) { x = 4; }
 
 
-
 enum Color { RED, GREEN, BLUE };
 enum Color myColor = GREEN;
 
 /* void yasmin(int x) { x =4;
 }*/
 
+x = x + 1;
 
-
-void yasmin(int x) {
-    x = x + 1;
+if(x==2){
+    x = 1;
 }
+add(x,y);
+
+int yasmin2 (x ,y) { return a + b; }
+
+void yasmin2 (int x) {x = x + 1;}
 
 const int a = 10;
 const float b = 3.14;
 const string c = "constant";
+int z
 
-int add(int a, int b) { return a + b; }
 
 int main() {
     int result = add(5, 7);
     print("Result: ", result);
     return 0;
 }
+

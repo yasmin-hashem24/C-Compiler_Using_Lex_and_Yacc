@@ -10,81 +10,80 @@
 %}
 
 %option nounistd
-/* part 2 production rules */
 %%
-
+                    /* part 2 production rules */
                      /* If-then-else statement, while loops, repeat-until loops, for loops, switch statement */
-"if"                { return IF; }
-"else"              { return ELSE; }
-"while"             { return WHILE; }
-"for"               { return FOR; }
-"switch"            { return SWITCH; }
-"do"                { return DO; }
-"case"              {return CASE;}
-"default"           {return DEFAULT;}
-"break"             {return BREAK;}
-"return"            {return RETURN;}
-"exit"              {return EXIT;}
-"continue"          {return CONTINUE;}
-"print"             {return PRINT;}
-"enum"              {return ENUM;}
+"if"                { printf("IF\n"); return IF; }
+"else"              { printf("ELSE\n"); return ELSE; }
+"while"             { printf("WHILE\n"); return WHILE; }
+"for"               { printf("FOR\n"); return FOR; }
+"switch"            { printf("SWITCH\n"); return SWITCH; }
+"do"                { printf("DO\n"); return DO; }
+"case"              { printf("CASE\n"); return CASE; }
+"default"           { printf("DEFAULT\n"); return DEFAULT; }
+"break"             { printf("BREAK\n"); return BREAK; }
+"return"            { printf("RETURN\n"); return RETURN; }
+"exit"              { printf("EXIT\n"); return EXIT; }
+"continue"          { printf("CONTINUE\n"); return CONTINUE; }
+"print"             { printf("PRINT\n"); return PRINT; }
+"enum"              { printf("ENUM\n"); return ENUM; }
                        /* Variables and Constants declaration */
-"var"               { return VAR; }
-"const"             { return CONST; }
-"func"              { return FUNC; }
-"main"              { return MAIN; }
-"include"           { return INCLUDE; }
-"define"            { return DEFINE; }
+"var"               { printf("VAR\n"); return VAR; }
+"const"             { printf("CONST\n"); return CONST; }
+"func"              { printf("FUNC\n"); return FUNC; }
+"main"              { printf("MAIN\n"); return MAIN; }
+"include"           { printf("INCLUDE\n"); return INCLUDE; }
+"define"            { printf("DEFINE\n"); return DEFINE; }
 
-"=="                { return EQ; }
-"!="                { return NEQ; }
-"<"                 { return LT; }
-">"                 { return GT; }
-"<="                { return LTE; }
-">="                { return GTE; }
-"&&"                { return AND; }
-"||"                { return OR; }
+"=="                { printf("EQ\n"); return EQ; }
+"!="                { printf("NEQ\n"); return NEQ; }
+"<"                 { printf("LT\n"); return LT; }
+">"                 { printf("GT\n"); return GT; }
+"<="                { printf("LTE\n"); return LTE; }
+">="                { printf("GTE\n"); return GTE; }
+"&&"                { printf("AND\n"); return AND; }
+"||"                { printf("OR\n"); return OR; }
 
-[\(\)\+\\\-\*\/\%\[\]\=\!\,\:\;] { return yytext[0]; }
+[\(\)\+\\\-\*\/\%\[\]\=\!\,\:\;] { printf("%s\n", yytext); return yytext[0]; }
 
                     /* Block structure (nested scopes where variables may be declared at the beginning of blocks) */
-"{"                 { return LBRACE; }
-"}"                 { return RBRACE; }
+"{"                 { printf("LBRACE\n"); return LBRACE; }
+"}"                 { printf("RBRACE\n"); return RBRACE; }
            /* skip whitespace */
 [ \t\r]                             ; 
 \n                      { ++currentLineNumber; }
 \/\/[^\n]*                            ;                 /* single line comment */
 \/\*([^*]|\*[^\/]|[\n])*[\n]*\*\/   { 
                                         ++currentLineNumber;
-                                        /* Increment line count for each newline character within the multiline comment */
-                                        yytext[yyleng - 1] = '\0'; /* Trim the trailing newline */
+                                        yytext[yyleng - 1] = '\0';
                                     }
 
 
 
                      /* Datatypes */
-"int"               { return INT_TYPE; }
-"float"             { return FLOAT_TYPE; }
-"bool"              { return BOOL_TYPE; }
-"char"              { return CHAR_TYPE; }
-"string"            { return STRING_TYPE; }
-"void"              { return VOID_TYPE; }
+"int"               { printf("INT_TYPE\n"); return INT_TYPE; }
+"float"             { printf("FLOAT_TYPE\n"); return FLOAT_TYPE; }
+"bool"              { printf("BOOL_TYPE\n"); return BOOL_TYPE; }
+"char"              { printf("CHAR_TYPE\n"); return CHAR_TYPE; }
+"string"            { printf("STRING_TYPE\n"); return STRING_TYPE; }
+"void"              { printf("VOID_TYPE\n"); return VOID_TYPE; }
 
                         /* boolean constants */
-"true"              { yylval.bVal = 1; return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
-"false"             { yylval.bVal = 0; return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
+"true"              { yylval.bVal = 1; printf("BOOL_TRUE\n"); return BOOL_TRUE; }  // Assign value 1 for BOOL_TRUE
+"false"             { yylval.bVal = 0; printf("BOOL_FALSE\n"); return BOOL_FALSE; } // Assign value 0 for BOOL_FALSE
 
                       /* Mathematical and logical expressions */
-[0-9]+              { yylval.iVal = atoi(yytext); return INTEGER; }
-\'[a-zA-Z0-9]\'       { yylval.cVal = strdup(yytext); return CHAR; }
-[0-9]*\.[0-9]+        { yylval.fVal =  atof(yytext); return FLOAT; }
-\"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); return STRING; }
-[_a-zA-Z][_a-zA-Z0-9]*       {yylval.sVal = strdup(yytext);return IDENTIFIER;}               /* identifiers and variable names */
+[0-9]+              { yylval.iVal = atoi(yytext); printf("INTEGER: %s\n", yytext); return INTEGER; }
+\'[a-zA-Z0-9]\'    { yylval.cVal = strdup(yytext); printf("CHAR: %s\n", yytext); return CHAR; }
+[0-9]*\.[0-9]+      { yylval.fVal =  atof(yytext); printf("FLOAT: %s\n", yytext); return FLOAT; }
+\"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); printf("STRING: %s\n", yytext); return STRING; }
+[_a-zA-Z][_a-zA-Z0-9]*       { yylval.sVal = strdup(yytext); printf("IDENTIFIER: %s\n", yytext); return IDENTIFIER; }               /* identifiers and variable names */
 
             /* Error handling */
-.                   { yyerror("Unexpected character"); }
+.                   { printf("Unexpected character\n"); yyerror("Unexpected character"); }
 
 %%
+
 
 /* part 3 user subroutines */
 int yywrap(){
