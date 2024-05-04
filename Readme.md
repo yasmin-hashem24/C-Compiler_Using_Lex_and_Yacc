@@ -10,4 +10,11 @@
 ```bash
 ./bas.exe input.txt output.txt "uncomment lines in input.txt all lines shall result in errors because they are wrong"
 ./bas.exe input.txt output.txt "correct lines in input.txt all lines shall run and result in no errors until the last line which is actually wrong"
+
+
+
+ bison --yacc -d Compiler.y
+ lex Compiler.l
+ cc lex.yy.c y.tab.c -o bas.exe
+ ./bas.exe input.txt output.txt
 ```

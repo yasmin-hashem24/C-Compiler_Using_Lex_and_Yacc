@@ -15,12 +15,12 @@
 //sum(y,1)
 
 //void noReturn() {
-//    print("no return");
-//    retun z
+ //   print("no return");
+ //   retun z
 //}
 
 //void wrongArguments(x){
-//    print("missing type in arg");
+  //  print("missing type in arg");
 //}
 
 //int noReturn() {
