@@ -79,21 +79,27 @@ extern int yydebug;
     AND = 280,                     /* AND  */
     OR = 281,                      /* OR  */
     CONST = 282,                   /* CONST  */
-    VAR = 283,                     /* VAR  */
-    IF = 284,                      /* IF  */
-    ELSE = 285,                    /* ELSE  */
-    WHILE = 286,                   /* WHILE  */
-    DO = 287,                      /* DO  */
-    FOR = 288,                     /* FOR  */
-    SWITCH = 289,                  /* SWITCH  */
-    CASE = 290,                    /* CASE  */
-    DEFAULT = 291,                 /* DEFAULT  */
-    BREAK = 292,                   /* BREAK  */
-    RETURN = 293,                  /* RETURN  */
-    PRINT = 294,                   /* PRINT  */
-    ENUM = 295,                    /* ENUM  */
-    IFX = 296,                     /* IFX  */
-    UMINUS = 297                   /* UMINUS  */
+    FUNC = 283,                    /* FUNC  */
+    MAIN = 284,                    /* MAIN  */
+    INCLUDE = 285,                 /* INCLUDE  */
+    DEFINE = 286,                  /* DEFINE  */
+    VAR = 287,                     /* VAR  */
+    IF = 288,                      /* IF  */
+    ELSE = 289,                    /* ELSE  */
+    WHILE = 290,                   /* WHILE  */
+    DO = 291,                      /* DO  */
+    FOR = 292,                     /* FOR  */
+    SWITCH = 293,                  /* SWITCH  */
+    CASE = 294,                    /* CASE  */
+    DEFAULT = 295,                 /* DEFAULT  */
+    BREAK = 296,                   /* BREAK  */
+    RETURN = 297,                  /* RETURN  */
+    EXIT = 298,                    /* EXIT  */
+    CONTINUE = 299,                /* CONTINUE  */
+    PRINT = 300,                   /* PRINT  */
+    ENUM = 301,                    /* ENUM  */
+    IFX = 302,                     /* IFX  */
+    UMINUS = 303                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -127,36 +133,43 @@ extern int yydebug;
 #define AND 280
 #define OR 281
 #define CONST 282
-#define VAR 283
-#define IF 284
-#define ELSE 285
-#define WHILE 286
-#define DO 287
-#define FOR 288
-#define SWITCH 289
-#define CASE 290
-#define DEFAULT 291
-#define BREAK 292
-#define RETURN 293
-#define PRINT 294
-#define ENUM 295
-#define IFX 296
-#define UMINUS 297
+#define FUNC 283
+#define MAIN 284
+#define INCLUDE 285
+#define DEFINE 286
+#define VAR 287
+#define IF 288
+#define ELSE 289
+#define WHILE 290
+#define DO 291
+#define FOR 292
+#define SWITCH 293
+#define CASE 294
+#define DEFAULT 295
+#define BREAK 296
+#define RETURN 297
+#define EXIT 298
+#define CONTINUE 299
+#define PRINT 300
+#define ENUM 301
+#define IFX 302
+#define UMINUS 303
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "Compiler.y"
+#line 28 "Compiler.y"
 
     int iVal;
     float fVal;
     bool bVal;
     char cVal;
     char *sVal;
+    char *id;
     nodeType *nPtr;
 
-#line 160 "y.tab.h"
+#line 173 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
