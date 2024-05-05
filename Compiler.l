@@ -82,7 +82,7 @@
 \'[a-zA-Z0-9]\'    { yylval.cVal = strdup(yytext); printf("CHAR: %s\n", yytext); return CHAR; }
 [0-9]*\.[0-9]+      { yylval.fVal =  atof(yytext); printf("FLOAT: %s\n", yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); printf("STRING: %s\n", yytext); return STRING; }
-[_a-zA-Z][_a-zA-Z0-9]*       { yylval.id = strdup(yytext); printf("IDENTIFIER: %s\n", yytext); return IDENTIFIER; }               /* identifiers and variable names */
+[_a-zA-Z][_a-zA-Z0-9]*       { yylval.sVal = strdup(yytext); printf("IDENTIFIER: %s\n", yytext); return IDENTIFIER; }               /* identifiers and variable names */
 
             /* Error handling */
 .                   { printf("Unexpected character\n"); yyerror("Unexpected character"); }

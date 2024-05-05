@@ -99,7 +99,8 @@ extern int yydebug;
     PRINT = 300,                   /* PRINT  */
     ENUM = 301,                    /* ENUM  */
     IFX = 302,                     /* IFX  */
-    UMINUS = 303                   /* UMINUS  */
+    UMINUS = 303,                  /* UMINUS  */
+    NOT = 304                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -154,22 +155,22 @@ extern int yydebug;
 #define ENUM 301
 #define IFX 302
 #define UMINUS 303
+#define NOT 304
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 28 "Compiler.y"
+#line 18 "Compiler.y"
 
     int iVal;
     float fVal;
     bool bVal;
     char cVal;
     char *sVal;
-    char *id;
     nodeType *nPtr;
 
-#line 173 "y.tab.h"
+#line 174 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

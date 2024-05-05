@@ -9,16 +9,6 @@
     #include "node.h"
 
     void yyerror(const char *s);
-    nodeType *createTypeNode(conEnum type);
-    nodeType *createConstantNode();
-    nodeType *createIntConstantNode(int value);
-    nodeType *createFloatConstantNode(float value);
-    nodeType *createBoolConstantNode(bool value);
-    nodeType *createCharConstantNode(char value);
-    nodeType *createStringConstantNode(char* value);
-    nodeType *createIdentifierNode(char* id);
-    nodeType *createOperatorNode(int oper, int nops, ...);
-    void freeNode(nodeType *p);
     int yylex();
     extern FILE *yyin;
     extern FILE *errorsFile;
@@ -31,7 +21,6 @@
     bool bVal;
     char cVal;
     char *sVal;
-    char *id;
     nodeType *nPtr;
 };
 
@@ -40,7 +29,7 @@
 %token <bVal> BOOL
 %token <cVal> CHAR
 %token <sVal> STRING
-%token <id> IDENTIFIER
+%token <sVal> IDENTIFIER
 %token <bVal> BOOL_FALSE BOOL_TRUE
 %token INT_TYPE FLOAT_TYPE BOOL_TYPE CHAR_TYPE STRING_TYPE VOID_TYPE
 %token LBRACE RBRACE
@@ -55,8 +44,13 @@
 %left '+' '-'
 %left '*' '/'
 %left '%'
-%left EQ NEQ LT GT LTE GTE AND OR
-%nonassoc UMINUS
+%left EQ NEQ
+%left LT GT LTE GTE 
+%left AND
+%left OR
+
+%nonassoc UMINUS  // Unary minus
+%nonassoc NOT     // Unary logical NOT
 
 %type <nPtr> program statement_list statement print_statement
             if_statement else_statement switch_statement case_list case_default while_loop do_while_loop
@@ -170,8 +164,11 @@ enum_list               : enum_list ',' IDENTIFIER
                         | IDENTIFIER '=' expression
                         ;
 
-// Expressions rules
-expression              : expression '+' expression
+expression              : binary_expression
+                        | unary_expression
+                        ;
+
+binary_expression      : expression '+' expression
                         | expression '-' expression
                         | expression '*' expression
                         | expression '/' expression
@@ -185,13 +182,15 @@ expression              : expression '+' expression
                         | expression AND expression
                         | expression OR expression
                         | '(' expression ')'
-                        | '-' expression %prec UMINUS
-                        | '!' expression
                         | value
                         | IDENTIFIER
                         | function_call_expression
-                        
                         ;
+
+unary_expression       : '-' expression %prec UMINUS
+                        | '!' expression %prec NOT
+                        ;
+
 
 type                    : INT_TYPE
                         | FLOAT_TYPE
@@ -218,133 +217,6 @@ FILE *errorsFile;
 /* Part 3: User Subroutines */
 void yyerror(const char *s) {
     fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
-}
-
-// Create a node representing a type
-nodeType *createTypeNode(conEnum type) {
-    nodeType *p;
-
-    /* Allocate memory for the node */
-    if ((p = malloc(sizeof(nodeType))) == NULL)
-        yyerror("Memory allocation failed");
-
-    /* Copy information */
-    p->type = typeDef;
-    p->typ.type = type;
-
-    return p;
-}
-
-// Create a node representing a constant
-nodeType *createConstantNode() {
-    nodeType *p;
-
-    /* Allocate memory for the node */
-    if ((p = malloc(sizeof(nodeType))) == NULL)
-        yyerror("Memory allocation failed");
-
-    /* Set the node type */
-    p->type = typeCon;
-
-    return p;
-}
-
-// Create a node representing an integer constant
-nodeType *createIntConstantNode(int value) {
-    nodeType *p = createConstantNode();
-
-    p->con.type = typeInt;
-    p->con.iValue = value;
-    
-    return p;
-}
-
-// Create a node representing a float constant
-nodeType *createFloatConstantNode(float value) {
-    nodeType *p = createConstantNode();
-
-    p->con.type = typeFloat;
-    p->con.fValue = value;
-
-    return p;
-}
-
-// Create a node representing a boolean constant
-nodeType *createBoolConstantNode(bool value) {
-    nodeType *p = createConstantNode();
-
-    p->con.type = typeBool;
-    p->con.iValue = value;
-
-    return p;
-}
-
-// Create a node representing a character constant
-nodeType *createCharConstantNode(char value) {
-    nodeType *p = createConstantNode();
-
-    p->con.type = typeChar;
-    p->con.cValue = value;
-
-    return p;
-}
-
-// Create a node representing a string constant
-nodeType *createStringConstantNode(char* value) {
-    nodeType *p = createConstantNode();
-
-    p->con.type = typeString;
-    p->con.sValue = value;
-
-    return p;
-}
-
-// Create a node representing an identifier
-nodeType *createIdentifierNode(char* id) {
-    nodeType *p;
-
-    /* Allocate memory for the node */
-    if ((p = malloc(sizeof(nodeType))) == NULL)
-        yyerror("Memory allocation failed");
-
-    /* Copy information */
-    p->type = typeId;
-    p->id.id = id;
-
-    return p;
-}
-
-// Create a node representing an operator
-nodeType *createOperatorNode(int oper, int nops, ...) {
-    va_list ap;
-    nodeType *p;
-    int i;
-
-    /* Allocate memory for the node, extending op array */
-    if ((p = malloc(sizeof(nodeType) + (nops-1) * sizeof(nodeType *))) == NULL)
-        yyerror("Memory allocation failed");
-
-    /* Copy information */
-    p->type = typeOpr;
-    p->opr.oper = oper;
-    p->opr.nops = nops;
-    va_start(ap, nops);
-    for (i = 0; i < nops; i++)
-        p->opr.op[i] = va_arg(ap, nodeType*);
-    va_end(ap);
-    return p;
-}
-
-// Free memory allocated for a node
-void freeNode(nodeType *p) {
-    int i;
-
-    if (!p) return;
-    if (p->type == typeOpr) {
-        for (i = 0; i < p->opr.nops; i++)
-            freeNode(p->opr.op[i]);
-    }
-    free(p);
 }
 
 int main(int argc, char **argv) {
