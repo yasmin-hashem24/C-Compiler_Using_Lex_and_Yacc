@@ -1662,7 +1662,7 @@ yyreduce:
 
   case 16: /* print_statement: PRINT '(' expression ')' ';'  */
 #line 96 "Compiler.y"
-                                                                  {(yyval.nPtr)= CreateOperatorNode(PRINT, 1, (yyvsp[-2].nPtr));}
+                                                                  {(yyval.nPtr)= createOperatorNode(PRINT, 1, (yyvsp[-2].nPtr));}
 #line 1667 "y.tab.c"
     break;
 
@@ -1710,7 +1710,7 @@ yyreduce:
 
   case 24: /* do_while_loop: DO LBRACE statement_list RBRACE WHILE '(' expression ')' ';'  */
 #line 123 "Compiler.y"
-                                                                                       { (yyval.nPtr) = createOperatorNode(DO_WHILE, 2, (yyvsp[-6].nPtr), (yyvsp[-2].nPtr));}
+                                                                                       { (yyval.nPtr) = createOperatorNode(DO, 2, (yyvsp[-6].nPtr), (yyvsp[-2].nPtr));}
 #line 1715 "y.tab.c"
     break;
 
@@ -1722,7 +1722,7 @@ yyreduce:
 
   case 26: /* function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE  */
 #line 131 "Compiler.y"
-                                                                                                           { (yyval.nPtr)=createOperatorNode(FUNC, 3, createTypeNode((yyvsp[-10].nPtr)->typ.type), createIdentifierNode((yyvsp[-9].sVal)), (yyvsp[-7].nPtr), (yyvsp[-4].nPtr), (yyvsp[-2].nPtr));}
+                                                                                                           { (yyval.nPtr)=createOperatorNode(FUNC, 3, createTypeNode(getTypeEnum((yyvsp[-10].nPtr))), createIdentifierNode((yyvsp[-9].sVal)), (yyvsp[-7].nPtr), (yyvsp[-4].nPtr), (yyvsp[-2].nPtr));}
 #line 1727 "y.tab.c"
     break;
 
@@ -1746,13 +1746,13 @@ yyreduce:
 
   case 30: /* arg_list: type IDENTIFIER ',' arg_list  */
 #line 141 "Compiler.y"
-                                                                 { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode((yyvsp[-3].nPtr)->typ.type), createIdentifierNode((yyvsp[-2].sVal)));}
+                                                                 { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode(getTypeEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)));}
 #line 1751 "y.tab.c"
     break;
 
   case 31: /* arg_list: type IDENTIFIER  */
 #line 142 "Compiler.y"
-                                                                 { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode((yyvsp[-1].nPtr)->typ.type), createIdentifierNode((yyvsp[0].sVal)));}
+                                                                 { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode(getTypeEnum((yyvsp[-1].nPtr))), createIdentifierNode((yyvsp[0].sVal)));}
 #line 1757 "y.tab.c"
     break;
 
@@ -1794,25 +1794,25 @@ yyreduce:
 
   case 38: /* declaration: type IDENTIFIER ';'  */
 #line 158 "Compiler.y"
-                                                                                { (yyval.nPtr) = createOperatorNode(VAR_DECL, 2, createTypeNode((yyvsp[-2].nPtr)->typ.type), createIdentifierNode((yyvsp[-1].sVal))); }
+                                                                                { (yyval.nPtr) = createOperatorNode(VAR, 2, createTypeNode(getTypeEnum((yyvsp[-2].nPtr))), createIdentifierNode((yyvsp[-1].sVal))); }
 #line 1799 "y.tab.c"
     break;
 
   case 39: /* declaration: CONST type IDENTIFIER '=' expression ';'  */
 #line 159 "Compiler.y"
-                                                                               { (yyval.nPtr) = createOperatorNode(CONST_DECL, 2, createTypeNode((yyvsp[-4].nPtr)->typ.type), createIdentifierNode((yyvsp[-3].sVal)), (yyvsp[-1].nPtr)); }
+                                                                               { (yyval.nPtr) = createOperatorNode(CONST, 2, createTypeNode(getTypeEnum((yyvsp[-4].nPtr))), createIdentifierNode((yyvsp[-3].sVal)), (yyvsp[-1].nPtr)); }
 #line 1805 "y.tab.c"
     break;
 
   case 40: /* declaration: ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  */
 #line 160 "Compiler.y"
-                                                                                { (yyval.nPtr) = createOperatorNode(ENUM_DECL, 2, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr)); }
+                                                                                { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr)); }
 #line 1811 "y.tab.c"
     break;
 
   case 41: /* declaration: VAR IDENTIFIER ';'  */
 #line 161 "Compiler.y"
-                                                                               { (yyval.nPtr) = createOperatorNode(VAR_DECL, 2, createTypeNode(typeVar), createIdentifierNode((yyvsp[-1].sVal))); }
+                                                                               { (yyval.nPtr) = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode((yyvsp[-1].sVal))); }
 #line 1817 "y.tab.c"
     break;
 
@@ -2255,15 +2255,15 @@ FILE *errorsFile;
 void yyerror(const char *s) {
     fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
+
 nodeType *createTypeNode(conEnum type) {
     nodeType *p;
 
     if ((p = malloc(sizeof(nodeType))) == NULL)
         yyerror("Memory allocation failed");
 
-    /* Copy information */
-    p->type = typeDef;
-    p->typ.type = type;
+    /* Set the node type */
+    p->type = typeDef; // Change to typeDef for a type node
 
     return p;
 }
@@ -2283,16 +2283,18 @@ nodeType *createConstantNode() {
 nodeType *createIntConstantNode(int value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeInt;
+    p->type = typeCon;
+    p->con.type = typeInt; // Set the constant type
     p->con.iValue = value;
-    
+
     return p;
 }
 
 nodeType *createFloatConstantNode(float value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeFloat;
+    p->type = typeCon;
+    p->con.type = typeFloat; // Set the constant type
     p->con.fValue = value;
 
     return p;
@@ -2301,7 +2303,8 @@ nodeType *createFloatConstantNode(float value) {
 nodeType *createBoolConstantNode(bool value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeBool;
+    p->type = typeCon;
+    p->con.type = typeBool; // Set the constant type
     p->con.iValue = value;
 
     return p;
@@ -2310,7 +2313,8 @@ nodeType *createBoolConstantNode(bool value) {
 nodeType *createCharConstantNode(char value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeChar;
+    p->type = typeCon;
+    p->con.type = typeChar; // Set the constant type
     p->con.cValue = value;
 
     return p;
@@ -2319,8 +2323,9 @@ nodeType *createCharConstantNode(char value) {
 nodeType *createStringConstantNode(char* value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeString;
-    p->con.sValue = value;
+    p->type = typeCon;
+    p->con.type = typeString; // Set the constant type
+    p->con.sValue = strdup(value); // Duplicate the string
 
     return p;
 }
@@ -2337,12 +2342,11 @@ nodeType *createIdentifierNode(char* id) {
     return p;
 }
 
-// Create a node representing an operator
 nodeType *createOperatorNode(int oper, int nops, ...) {
     va_list ap;
     nodeType *p;
     int i;
-
+  
     if ((p = malloc(sizeof(nodeType) + (nops-1) * sizeof(nodeType *))) == NULL)
         yyerror("Memory allocation failed");
 
@@ -2357,16 +2361,6 @@ nodeType *createOperatorNode(int oper, int nops, ...) {
 }
 
 
-void freeNode(nodeType *p) {
-    int i;
-
-    if (!p) return;
-    if (p->type == typeOpr) {
-        for (i = 0; i < p->opr.nops; i++)
-            freeNode(p->opr.op[i]);
-    }
-    free(p);
-}
 int main(int argc, char **argv) {
 
     if (argc != 3) {

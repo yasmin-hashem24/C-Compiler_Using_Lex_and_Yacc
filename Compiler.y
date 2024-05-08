@@ -93,7 +93,7 @@ statement               : declaration_assignment             { $$ = $1; }
 
 
 // Print statement rules
-print_statement         : PRINT '(' expression ')' ';'            {$$= CreateOperatorNode(PRINT, 1, $3);}
+print_statement         : PRINT '(' expression ')' ';'            {$$= createOperatorNode(PRINT, 1, $3);}
                         ;
 
 // Statements rules: Conditional statements
@@ -120,7 +120,7 @@ case_default            : DEFAULT ':' statement_list BREAK ';'                {$
 while_loop              : WHILE '(' expression ')' LBRACE statement_list RBRACE {$$ = createOperatorNode(WHILE, 2, $3, $6);}
                         ;
 
-do_while_loop           : DO LBRACE statement_list RBRACE WHILE '(' expression ')' ';' { $$ = createOperatorNode(DO_WHILE, 2, $3, $7);}
+do_while_loop           : DO LBRACE statement_list RBRACE WHILE '(' expression ')' ';' { $$ = createOperatorNode(DO, 2, $3, $7);}
 
                         ;
 
@@ -128,7 +128,7 @@ for_loop             : FOR '(' declaration_assignment_loop ';' expression ';' de
                      ;
 
 // Functions rules
-function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE  { $$=createOperatorNode(FUNC, 3, createTypeNode($1->typ.type), createIdentifierNode($2), $4, $7, $9);}
+function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE  { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeEnum($1)), createIdentifierNode($2), $4, $7, $9);}
                      | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE   { $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $7);}
                      ;
 
@@ -138,8 +138,8 @@ function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOpera
 function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
                         ;
 
-arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode($1->typ.type), createIdentifierNode($2));}
-                        | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode($1->typ.type), createIdentifierNode($2));}
+arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeEnum($1)), createIdentifierNode($2));}
+                        | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeEnum($1)), createIdentifierNode($2));}
                         ;
 
 arg_list_call           : arg_list_call ',' expression           { $$=createOperatorNode(',', 2, $1, $3);}
@@ -155,10 +155,10 @@ declaration_assignment  : declaration ';'                         {$$=$1;}
 declaration_assignment_loop     : declaration                    { $$=$1;}
                                 | assignment                     { $$=$1;}
                                 ;
-declaration             : type IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR_DECL, 2, createTypeNode($1->typ.type), createIdentifierNode($2)); }
-                        | CONST type IDENTIFIER '=' expression ';'             { $$ = createOperatorNode(CONST_DECL, 2, createTypeNode($2->typ.type), createIdentifierNode($3), $5); }
-                        | ENUM IDENTIFIER LBRACE enum_list RBRACE ';'           { $$ = createOperatorNode(ENUM_DECL, 2, createIdentifierNode($2), $4); }
-                        | VAR IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR_DECL, 2, createTypeNode(typeVar), createIdentifierNode($2)); }
+declaration             : type IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeEnum($1)), createIdentifierNode($2)); }
+                        | CONST type IDENTIFIER '=' expression ';'             { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeEnum($2)), createIdentifierNode($3), $5); }
+                        | ENUM IDENTIFIER LBRACE enum_list RBRACE ';'           { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $4); }
+                        | VAR IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2)); }
                         ;
 
 
@@ -229,15 +229,15 @@ FILE *errorsFile;
 void yyerror(const char *s) {
     fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
+
 nodeType *createTypeNode(conEnum type) {
     nodeType *p;
 
     if ((p = malloc(sizeof(nodeType))) == NULL)
         yyerror("Memory allocation failed");
 
-    /* Copy information */
-    p->type = typeDef;
-    p->typ.type = type;
+    /* Set the node type */
+    p->type = typeDef; // Change to typeDef for a type node
 
     return p;
 }
@@ -257,16 +257,18 @@ nodeType *createConstantNode() {
 nodeType *createIntConstantNode(int value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeInt;
+    p->type = typeCon;
+    p->con.type = typeInt; // Set the constant type
     p->con.iValue = value;
-    
+
     return p;
 }
 
 nodeType *createFloatConstantNode(float value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeFloat;
+    p->type = typeCon;
+    p->con.type = typeFloat; // Set the constant type
     p->con.fValue = value;
 
     return p;
@@ -275,7 +277,8 @@ nodeType *createFloatConstantNode(float value) {
 nodeType *createBoolConstantNode(bool value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeBool;
+    p->type = typeCon;
+    p->con.type = typeBool; // Set the constant type
     p->con.iValue = value;
 
     return p;
@@ -284,7 +287,8 @@ nodeType *createBoolConstantNode(bool value) {
 nodeType *createCharConstantNode(char value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeChar;
+    p->type = typeCon;
+    p->con.type = typeChar; // Set the constant type
     p->con.cValue = value;
 
     return p;
@@ -293,8 +297,9 @@ nodeType *createCharConstantNode(char value) {
 nodeType *createStringConstantNode(char* value) {
     nodeType *p = createConstantNode();
 
-    p->con.type = typeString;
-    p->con.sValue = value;
+    p->type = typeCon;
+    p->con.type = typeString; // Set the constant type
+    p->con.sValue = strdup(value); // Duplicate the string
 
     return p;
 }
@@ -311,12 +316,11 @@ nodeType *createIdentifierNode(char* id) {
     return p;
 }
 
-// Create a node representing an operator
 nodeType *createOperatorNode(int oper, int nops, ...) {
     va_list ap;
     nodeType *p;
     int i;
-
+  
     if ((p = malloc(sizeof(nodeType) + (nops-1) * sizeof(nodeType *))) == NULL)
         yyerror("Memory allocation failed");
 
@@ -331,16 +335,6 @@ nodeType *createOperatorNode(int oper, int nops, ...) {
 }
 
 
-void freeNode(nodeType *p) {
-    int i;
-
-    if (!p) return;
-    if (p->type == typeOpr) {
-        for (i = 0; i < p->opr.nops; i++)
-            freeNode(p->opr.op[i]);
-    }
-    free(p);
-}
 int main(int argc, char **argv) {
 
     if (argc != 3) {
