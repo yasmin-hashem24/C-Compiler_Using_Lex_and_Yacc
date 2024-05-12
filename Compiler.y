@@ -112,7 +112,7 @@ for_loop                : FOR '(' declaration_assignment_loop ';' expression';' 
 // Functions rules
 function_declaration   : type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN statement_list';' RBRACE  {$$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $7, $9);}
                         | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE                     { $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $7);}
-                        |type IDENTIFIER '(' arg_list ')' LBRACE  RETURN statement_list RBRACE                   { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8);}
+                        |type IDENTIFIER '(' arg_list ')' LBRACE  RETURN statement_list ';'RBRACE                   { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8);}
                         ;
 
 function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
