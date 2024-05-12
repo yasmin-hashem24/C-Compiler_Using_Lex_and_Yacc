@@ -6,7 +6,7 @@
     #include <string.h>
     #include <stdarg.h>
     #include "node.h"
-
+    
     void yyerror(const char *s);
   
     int yylex();
@@ -126,7 +126,7 @@ arg_list                : type IDENTIFIER ',' arg_list           { $$=createOper
 
 arg_list_call           : arg_list_call ',' expression           { $$=createOperatorNode(',', 2, $1, $3);}
                         | expression                             { $$=$1;}
-                        |
+                        |                                        { $$=NULL;}
                         ;
                 
 
@@ -216,7 +216,9 @@ void yyerror(const char *s) {
     fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
 
-nodeType *createTypeNode(conEnum type) {
+
+nodeType *createTypeNode(conEnum type)
+{
     nodeType *p;
 
     if ((p = malloc(sizeof(nodeType))) == NULL)
@@ -228,7 +230,8 @@ nodeType *createTypeNode(conEnum type) {
     return p;
 }
 
-nodeType *createConstantNode() {
+nodeType *createConstantNode()
+{
     nodeType *p;
 
     if ((p = malloc(sizeof(nodeType))) == NULL)
@@ -240,7 +243,8 @@ nodeType *createConstantNode() {
     return p;
 }
 
-nodeType *createIntConstantNode(int value) {
+nodeType *createIntConstantNode(int value)
+{
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
@@ -250,7 +254,8 @@ nodeType *createIntConstantNode(int value) {
     return p;
 }
 
-nodeType *createFloatConstantNode(float value) {
+nodeType *createFloatConstantNode(float value)
+{
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
@@ -260,7 +265,8 @@ nodeType *createFloatConstantNode(float value) {
     return p;
 }
 
-nodeType *createBoolConstantNode(bool value) {
+nodeType *createBoolConstantNode(bool value)
+{
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
@@ -270,7 +276,8 @@ nodeType *createBoolConstantNode(bool value) {
     return p;
 }
 
-nodeType *createCharConstantNode(char value) {
+nodeType *createCharConstantNode(char value)
+{
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
@@ -280,17 +287,19 @@ nodeType *createCharConstantNode(char value) {
     return p;
 }
 
-nodeType *createStringConstantNode(char* value) {
+nodeType *createStringConstantNode(char *value)
+{
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeString; // Set the constant type
+    p->con.type = typeString;      // Set the constant type
     p->con.sValue = strdup(value); // Duplicate the string
 
     return p;
 }
 
-nodeType *createIdentifierNode(char* id) {
+nodeType *createIdentifierNode(char *id)
+{
     nodeType *p;
 
     if ((p = malloc(sizeof(nodeType))) == NULL)
@@ -302,12 +311,13 @@ nodeType *createIdentifierNode(char* id) {
     return p;
 }
 
-nodeType *createOperatorNode(int oper, int nops, ...) {
+nodeType *createOperatorNode(int oper, int nops, ...)
+{
     va_list ap;
     nodeType *p;
     int i;
-  
-    if ((p = malloc(sizeof(nodeType) + (nops-1) * sizeof(nodeType *))) == NULL)
+
+    if ((p = malloc(sizeof(nodeType) + (nops - 1) * sizeof(nodeType *))) == NULL)
         yyerror("Memory allocation failed");
 
     p->type = typeOpr;
@@ -315,36 +325,48 @@ nodeType *createOperatorNode(int oper, int nops, ...) {
     p->opr.nops = nops;
     va_start(ap, nops);
     for (i = 0; i < nops; i++)
-        p->opr.op[i] = va_arg(ap, nodeType*);
+        p->opr.op[i] = va_arg(ap, nodeType *);
     va_end(ap);
     return p;
 }
 
-conEnum getTypeOfEnum(const nodeType *node) {
+conEnum getTypeOfEnum(const nodeType *node)
+{
     // Assuming that the identifier is stored in the node and it's a string
     const char *identifier = NULL;
 
     // Determine the identifier based on the node's content
-    switch (node->type) {
-        case typeId:
-            identifier = node->id.id; // Assuming id is the member containing the identifier
-            break;
-        default:
-            // Handle other node types if necessary
-            break;
+    switch (node->type)
+    {
+    case typeId:
+        identifier = node->id.id; // Assuming id is the member containing the identifier
+        break;
+    default:
+        // Handle other node types if necessary
+        break;
     }
 
     // Return the type based on the identifier
-    if (identifier != NULL) {
-        if (strcmp(identifier, "int") == 0) {
+    if (identifier != NULL)
+    {
+        if (strcmp(identifier, "int") == 0)
+        {
             return typeInt;
-        } else if (strcmp(identifier, "float") == 0) {
+        }
+        else if (strcmp(identifier, "float") == 0)
+        {
             return typeFloat;
-        } else if (strcmp(identifier, "string") == 0) {
+        }
+        else if (strcmp(identifier, "string") == 0)
+        {
             return typeString;
-        } else if (strcmp(identifier, "char") == 0) {
+        }
+        else if (strcmp(identifier, "char") == 0)
+        {
             return typeChar;
-        } else if (strcmp(identifier, "bool") == 0) {
+        }
+        else if (strcmp(identifier, "bool") == 0)
+        {
             return typeBool;
         }
     }

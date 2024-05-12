@@ -1,6 +1,9 @@
 #pragma once
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdarg.h>
 // Enumeration for the type of nodes: constants, identifiers, operations, and data types
 typedef enum
 {
@@ -72,6 +75,12 @@ typedef struct nodeTypeTag
         struct typeNodeType typ; // Types
     };
 } nodeType;
+/* Linked List Node */
+typedef struct ListNode
+{
+    nodeType *node;
+    struct ListNode *next;
+} ListNode;
 // Function to determine the type of a node
 
 nodeType *createTypeNode(conEnum type);
