@@ -53,75 +53,67 @@
 %nonassoc NOT     
 
 %type <nPtr> program statement_list statement print_statement
-            if_statement switch_statement case_list case_default while_loop do_while_loop
-            for_loop function_declaration function_call arg_list arg_list_call declaration_assignment declaration function_or_statement
+            if_condition_statement switch_statement case_list case_default while_loop do_while_loop
+            for_loop function_declaration function_call arg_list arg_list_call declaration_assignment declaration 
             assignment enum_declaration enum_list expression type value binary_expression unary_expression function_call_expression declaration_assignment_loop
-
 %%
 
-program                 : function_or_statement              {printf("start of program");}    
+program                 : statement_list                    {printf("start of program");}    
                         ;
 
-function_or_statement   : function_declaration               {$$=$1;}
-                        | statement_list                     {$$=$1;}
-                        ;
 
-statement_list          : statement_list statement           {$$=$1;}
-                        |                                    {$$=NULL;}
-                        ;
+statement_list          : statement                          {$$=$1;}
+                        | statement_list statement           {$$=NULL;}
+                    
+                        ;   
 
 // Statements rules
-statement               : declaration_assignment             { $$ = $1; }
-                        | enum_declaration                  { $$ = $1; }
-                        | function_call                     { $$ = $1; }
-                        | print_statement                   { $$ = $1; }
-                        | if_statement                      { $$ = $1; }
-                        | switch_statement                  { $$ = $1; }
-                        | while_loop                        { $$ = $1; }
-                        | do_while_loop                    { $$ = $1; }
-                        | for_loop                         { $$ = $1; }
+statement               : declaration_assignment            {$$=$1;}
+                        | enum_declaration                  {$$=$1;}
+                        | function_call                     {$$=$1;}
+                        | print_statement                   {$$=$1;}
+                        | if_condition_statement            {$$=$1;}
+                        | switch_statement                  {$$=$1;}
+                        | while_loop                        {$$=$1;}
+                        | do_while_loop                     {$$=$1;}
+                        | for_loop                          {$$=$1;}
+                        |function_declaration               {$$=$1;}
+                        |expression                         {$$=$1;}
                         ;
-
 
 // Print statement rules
-print_statement         : PRINT '(' expression ')' ';'            {$$= createOperatorNode(PRINT, 1, $3);}
-                        ;
+print_statement         : PRINT '(' expression ')' ';'    {$$= createOperatorNode(PRINT, 1, $3);}
 
 // Statements rules: Conditional statements
-if_statement          : IF '(' expression ')' LBRACE statement_list RBRACE %prec IFX {$$ = createOperatorNode(IF,2,$3,$6);}
-                      | IF '(' expression ')' LBRACE statement_list RBRACE ELSE LBRACE statement_list RBRACE %prec IFX {$$ = createOperatorNode(IF, 2, $3, $6, $10);}
-                      ;
-
-
-
-switch_statement        : SWITCH '(' expression ')' LBRACE case_list case_default RBRACE  {$$ = createOperatorNode(SWITCH, 2, $3, $6);}
+if_condition_statement  : IF '(' expression ')' LBRACE statement_list RBRACE   {$$ = createOperatorNode(IF,2,$3,$6);}
+                        | IF '(' expression ')' LBRACE statement_list RBRACE ELSE LBRACE statement_list RBRACE   {$$ = createOperatorNode(IF, 2, $3, $6, $10);}
+                        ;
+switch_statement        : SWITCH '(' expression ')' LBRACE case_list case_default RBRACE    {$$ = createOperatorNode(SWITCH, 2, $3, $6);}
                         ;
 
 case_list            : case_list CASE expression ':' statement_list BREAK ';'  {$$ = createOperatorNode(CASE,3,$1,$3,$5);}
                      | CASE expression ':' statement_list BREAK ';'            {$$ = createOperatorNode(CASE, 2, $2, $4);}
                      ;
 
-               
-
-
-case_default            : DEFAULT ':' statement_list BREAK ';'                {$$ = createOperatorNode(DEFAULT, 1, $3);}
+case_default            : DEFAULT ':' statement_list BREAK ';'                  {$$ = createOperatorNode(DEFAULT, 1, $3);}
                         ;
+
 
 // Statements rules: Loop statements
 while_loop              : WHILE '(' expression ')' LBRACE statement_list RBRACE {$$ = createOperatorNode(WHILE, 2, $3, $6);}
                         ;
 
 do_while_loop           : DO LBRACE statement_list RBRACE WHILE '(' expression ')' ';' { $$ = createOperatorNode(DO, 2, $3, $7);}
-
                         ;
 
-for_loop             : FOR '(' declaration_assignment_loop ';' expression ';' declaration_assignment_loop ')' LBRACE statement_list RBRACE {$$ = createOperatorNode(FOR, 3, $3, $5, $7);}
-                     ;
+for_loop                : FOR '(' declaration_assignment_loop ';' expression';' declaration_assignment_loop ')' LBRACE statement_list RBRACE  {$$ = createOperatorNode(FOR, 3, $3, $5, $7);}
+                        ;
 
 // Functions rules
-function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE  { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $7, $9);}
-                     | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE   { $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $7);}
-                     ;
+function_declaration   : type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN statement_list';' RBRACE  {$$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $7, $9);}
+                        | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE                     { $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $7);}
+                        |type IDENTIFIER '(' arg_list ')' LBRACE  RETURN statement_list RBRACE                   { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8);}
+                        ;
 
 function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
                         ;
@@ -131,34 +123,37 @@ function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOper
 
 arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
                         | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
-                        ;
 
 arg_list_call           : arg_list_call ',' expression           { $$=createOperatorNode(',', 2, $1, $3);}
                         | expression                             { $$=$1;}
-                        
+                        |
                         ;
+                
 
 // Assignments and declarations rules
-declaration_assignment  : declaration ';'                         {$$=$1;}
-                        | assignment ';'                           {$$=$1;}
+
+declaration_assignment  : declaration';'                          { $$=$1;}
+                        | assignment';'                           { $$=$1;}
                         ;
 
-declaration_assignment_loop     : declaration                    { $$=$1;}
-                                | assignment                     { $$=$1;}
+declaration_assignment_loop     : declaration                     { $$=$1;}
+                                | assignment                      { $$=$1;}
                                 ;
-declaration             : type IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)); }
-                        | CONST type IDENTIFIER '=' expression ';'             { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); }
-                        | ENUM IDENTIFIER LBRACE enum_list RBRACE ';'           { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $4); }
-                        | VAR IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2)); }
+
+declaration             : type IDENTIFIER                     /* { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)); }*/
+                        | type IDENTIFIER '=' expression          { $$ = createOperatorNode(VAR, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); }
+                        | CONST type IDENTIFIER '=' expression      /*{ $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); }*/
+                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $5); }
+                        | VAR IDENTIFIER                           { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2)); }
                         ;
 
-
-assignment              : IDENTIFIER '=' expression  { $$=createOperatorNode('=', 2, createIdentifierNode($1), $3);}
-                        ;
-
+assignment              : IDENTIFIER '=' expression              { $$=createOperatorNode('=', 2, createIdentifierNode($1), $3);}
+                        ; 
 // Enum rules
-enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  {$$=createOperatorNode(ENUM, 2, createIdentifierNode($2), $4);}
+// enum Foo { a, b, c = 10, d, e = 1, f, g = f + c };
+enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {$$=createOperatorNode(ENUM, 2, createIdentifierNode($2), $4);}
                         ;
+
 
 enum_list               : enum_list ',' IDENTIFIER                      { $$ = createOperatorNode(ENUM, 1, createIdentifierNode($3)); }
                         | enum_list ',' IDENTIFIER '=' expression      { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($3), $5); }
@@ -166,10 +161,10 @@ enum_list               : enum_list ',' IDENTIFIER                      { $$ = c
                         | IDENTIFIER '=' expression                    { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($1), $3); }
                         ;
 
+// Expressions rules
 
 expression              : binary_expression  { $$=$1;}
                         | unary_expression   { $$=$1;}
-                        ;
 
 binary_expression      : expression '+' expression   { $$=createOperatorNode('+', 2, $1, $3); }
                         | expression '-' expression  { $$=createOperatorNode('-', 2, $1, $3); }
@@ -188,7 +183,6 @@ binary_expression      : expression '+' expression   { $$=createOperatorNode('+'
                         | value                      { $$=$1; }
                         | IDENTIFIER                 { $$=createIdentifierNode($1); }
                         | function_call_expression   { $$=$1;}
-                        ;
 
 unary_expression       : '-' expression %prec UMINUS  { $$ = createOperatorNode('-', 1, $2); }
                         | '!' expression %prec NOT    { $$ = createOperatorNode('!', 1, $2); }
@@ -202,14 +196,15 @@ type                    : INT_TYPE   { $$ = createTypeNode(typeInt); }
                         | STRING_TYPE { $$ = createTypeNode(typeString); }
                         ;
 
-value                   : INTEGER { $$ = createIntConstantNode($1); }
-                        | FLOAT   { $$ = createFloatConstantNode($1); }
-                        | BOOL    { $$ = createBoolConstantNode($1); }
-                        | CHAR    { $$ = createCharConstantNode($1); }
-                        | STRING  { $$ = createStringConstantNode($1); }
-                        | BOOL_TRUE  { $$ = createBoolConstantNode($1); }
-                        | BOOL_FALSE { $$ = createBoolConstantNode($1); }
+value                   : INTEGER
+                        | FLOAT    
+                        | BOOL
+                        | CHAR
+                        | STRING
+                        | BOOL_TRUE
+                        | BOOL_FALSE
                         ;
+
 
 %%
 
