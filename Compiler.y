@@ -140,9 +140,9 @@ declaration_assignment_loop     : declaration                     { $$=$1;}
                                 | assignment                      { $$=$1;}
                                 ;
 
-declaration             : type IDENTIFIER                     /* { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)); }*/
+declaration             : type IDENTIFIER                     { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)); }
                         | type IDENTIFIER '=' expression          { $$ = createOperatorNode(VAR, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); }
-                        | CONST type IDENTIFIER '=' expression      /*{ $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); }*/
+                        | CONST type IDENTIFIER '=' expression     { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); }
                         | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $5); }
                         | VAR IDENTIFIER                           { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2)); }
                         ;
@@ -196,13 +196,13 @@ type                    : INT_TYPE   { $$ = createTypeNode(typeInt); }
                         | STRING_TYPE { $$ = createTypeNode(typeString); }
                         ;
 
-value                   : INTEGER
-                        | FLOAT    
-                        | BOOL
-                        | CHAR
-                        | STRING
-                        | BOOL_TRUE
-                        | BOOL_FALSE
+value                   : INTEGER { $$ = createIntConstantNode($1); }
+                        | FLOAT   { $$ = createFloatConstantNode($1); }
+                        | BOOL    { $$ = createBoolConstantNode($1); }
+                        | CHAR    { $$ = createCharConstantNode($1); }
+                        | STRING  { $$ = createStringConstantNode($1); }
+                        | BOOL_TRUE  { $$ = createBoolConstantNode($1); }
+                        | BOOL_FALSE { $$ = createBoolConstantNode($1); }
                         ;
 
 
