@@ -1,12 +1,14 @@
-int x;
-float y = 4.24;
+enum Color myColor = GREEN;
 string roufy = "i am roufyz";
+float y = 4.24;
+int x;
+
 int z = 0;
 //void yasmin(int x) { x = 4; }
 
 
 enum Color { RED, GREEN, BLUE };
-enum Color myColor = GREEN;
+
 
 /* void yasmin(int x) { x =4;
 }*/

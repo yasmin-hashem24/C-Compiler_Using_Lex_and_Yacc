@@ -8,16 +8,7 @@
     #include "node.h"
 
     void yyerror(const char *s);
-    nodeType *createTypeNode(conEnum type);
-    nodeType *createConstantNode();
-    nodeType *createIntConstantNode(int value);
-    nodeType *createFloatConstantNode(float value);
-    nodeType *createBoolConstantNode(bool value);
-    nodeType *createCharConstantNode(char value);
-    nodeType *createStringConstantNode(char* value);
-    nodeType *createIdentifierNode(char* id);
-    nodeType *createOperatorNode(int oper, int nops, ...);
-    void freeNode(nodeType *p);
+  
     int yylex();
     extern FILE *yyin;
     extern FILE *errorsFile;
@@ -128,7 +119,7 @@ for_loop             : FOR '(' declaration_assignment_loop ';' expression ';' de
                      ;
 
 // Functions rules
-function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE  { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeEnum($1)), createIdentifierNode($2), $4, $7, $9);}
+function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE  { $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $7, $9);}
                      | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE   { $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $7);}
                      ;
 
@@ -138,8 +129,8 @@ function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOpera
 function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
                         ;
 
-arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeEnum($1)), createIdentifierNode($2));}
-                        | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeEnum($1)), createIdentifierNode($2));}
+arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
+                        | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
                         ;
 
 arg_list_call           : arg_list_call ',' expression           { $$=createOperatorNode(',', 2, $1, $3);}
@@ -155,8 +146,8 @@ declaration_assignment  : declaration ';'                         {$$=$1;}
 declaration_assignment_loop     : declaration                    { $$=$1;}
                                 | assignment                     { $$=$1;}
                                 ;
-declaration             : type IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeEnum($1)), createIdentifierNode($2)); }
-                        | CONST type IDENTIFIER '=' expression ';'             { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeEnum($2)), createIdentifierNode($3), $5); }
+declaration             : type IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)); }
+                        | CONST type IDENTIFIER '=' expression ';'             { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); }
                         | ENUM IDENTIFIER LBRACE enum_list RBRACE ';'           { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $4); }
                         | VAR IDENTIFIER ';'                                   { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2)); }
                         ;
@@ -334,7 +325,38 @@ nodeType *createOperatorNode(int oper, int nops, ...) {
     return p;
 }
 
+conEnum getTypeOfEnum(const nodeType *node) {
+    // Assuming that the identifier is stored in the node and it's a string
+    const char *identifier = NULL;
 
+    // Determine the identifier based on the node's content
+    switch (node->type) {
+        case typeId:
+            identifier = node->id.id; // Assuming id is the member containing the identifier
+            break;
+        default:
+            // Handle other node types if necessary
+            break;
+    }
+
+    // Return the type based on the identifier
+    if (identifier != NULL) {
+        if (strcmp(identifier, "int") == 0) {
+            return typeInt;
+        } else if (strcmp(identifier, "float") == 0) {
+            return typeFloat;
+        } else if (strcmp(identifier, "string") == 0) {
+            return typeString;
+        } else if (strcmp(identifier, "char") == 0) {
+            return typeChar;
+        } else if (strcmp(identifier, "bool") == 0) {
+            return typeBool;
+        }
+    }
+
+    // Handle unknown types
+    return typeND;
+}
 int main(int argc, char **argv) {
 
     if (argc != 3) {

@@ -1,6 +1,6 @@
 #pragma once
 #include <stdbool.h>
-
+#include <string.h>
 // Enumeration for the type of nodes: constants, identifiers, operations, and data types
 typedef enum
 {
@@ -72,38 +72,19 @@ typedef struct nodeTypeTag
         struct typeNodeType typ; // Types
     };
 } nodeType;
+// Function to determine the type of a node
 
-// Function to get the conEnum from the type
-conEnum getTypeEnum(char *type)
-{
-    if (strcmp(type, "typeInt") == 0)
-    {
-        return typeInt;
-    }
-    else if (strcmp(type, "typeFloat") == 0)
-    {
-        return typeFloat;
-    }
-    else if (strcmp(type, "typeString") == 0)
-    {
-        return typeString;
-    }
-    else if (strcmp(type, "typeChar") == 0)
-    {
-        return typeChar;
-    }
-    else if (strcmp(type, "typeBool") == 0)
-    {
-        return typeBool;
-    }
-    else if (strcmp(type, "typeVar") == 0)
-    {
-        return typeVar;
-    }
-    else
-    {
-        return typeND; // If type not found, return non-defined
-    }
-}
+nodeType *createTypeNode(conEnum type);
+nodeType *createConstantNode();
+nodeType *createIntConstantNode(int value);
+nodeType *createFloatConstantNode(float value);
+nodeType *createBoolConstantNode(bool value);
+nodeType *createCharConstantNode(char value);
+nodeType *createStringConstantNode(char *value);
+nodeType *createIdentifierNode(char *id);
+nodeType *createOperatorNode(int oper, int nops, ...);
+conEnum getTypeOfEnum(const nodeType *node);
+
+void freeNode(nodeType *p);
 
 extern int sym[26]; // Declaration for external array
