@@ -79,11 +79,12 @@
     void yyerror(const char *s);
   
     int yylex();
+    void addNodeToList(nodeType *node);
     extern FILE *yyin;
     extern FILE *errorsFile;
     extern int currentLineNumber;
 
-#line 87 "y.tab.c"
+#line 88 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -234,7 +235,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "Compiler.y"
+#line 19 "Compiler.y"
 
     int iVal;
     float fVal;
@@ -243,7 +244,7 @@ union YYSTYPE
     char *sVal;
     nodeType *nPtr;
 
-#line 247 "y.tab.c"
+#line 248 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -735,15 +736,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    61,    61,    65,    66,    71,    72,    73,    74,    75,
-      76,    77,    78,    79,    80,    81,    85,    88,    89,    91,
-      94,    95,    98,   103,   106,   109,   113,   114,   115,   118,
-     121,   124,   125,   127,   128,   129,   135,   136,   139,   140,
-     143,   144,   145,   146,   147,   150,   154,   158,   159,   160,
-     161,   166,   167,   169,   170,   171,   172,   173,   174,   175,
-     176,   177,   178,   179,   180,   181,   182,   183,   184,   185,
-     187,   188,   192,   193,   194,   195,   196,   199,   200,   201,
-     202,   203,   204,   205
+       0,    62,    62,    66,    67,    72,    73,    74,    75,    76,
+      77,    78,    79,    80,    81,    82,    86,    89,    90,    92,
+      95,    96,    99,   104,   107,   110,   114,   115,   116,   119,
+     122,   125,   126,   128,   129,   130,   136,   137,   140,   141,
+     144,   145,   146,   147,   148,   151,   155,   159,   160,   161,
+     162,   167,   168,   170,   171,   172,   173,   174,   175,   176,
+     177,   178,   179,   180,   181,   182,   183,   184,   185,   186,
+     188,   189,   193,   194,   195,   196,   197,   200,   201,   202,
+     203,   204,   205,   206
 };
 #endif
 
@@ -1656,499 +1657,499 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: statement_list  */
-#line 61 "Compiler.y"
+#line 62 "Compiler.y"
                                                             {printf("start of program");}
-#line 1662 "y.tab.c"
+#line 1663 "y.tab.c"
     break;
 
   case 3: /* statement_list: statement  */
-#line 65 "Compiler.y"
+#line 66 "Compiler.y"
                                                              {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1668 "y.tab.c"
+#line 1669 "y.tab.c"
     break;
 
   case 4: /* statement_list: statement_list statement  */
-#line 66 "Compiler.y"
+#line 67 "Compiler.y"
                                                              {(yyval.nPtr)=NULL;}
-#line 1674 "y.tab.c"
+#line 1675 "y.tab.c"
     break;
 
   case 5: /* statement: declaration_assignment  */
-#line 71 "Compiler.y"
+#line 72 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1680 "y.tab.c"
+#line 1681 "y.tab.c"
     break;
 
   case 6: /* statement: enum_declaration  */
-#line 72 "Compiler.y"
+#line 73 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1686 "y.tab.c"
+#line 1687 "y.tab.c"
     break;
 
   case 7: /* statement: function_call  */
-#line 73 "Compiler.y"
+#line 74 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1692 "y.tab.c"
+#line 1693 "y.tab.c"
     break;
 
   case 8: /* statement: print_statement  */
-#line 74 "Compiler.y"
+#line 75 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1698 "y.tab.c"
+#line 1699 "y.tab.c"
     break;
 
   case 9: /* statement: if_condition_statement  */
-#line 75 "Compiler.y"
+#line 76 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1704 "y.tab.c"
+#line 1705 "y.tab.c"
     break;
 
   case 10: /* statement: switch_statement  */
-#line 76 "Compiler.y"
+#line 77 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1710 "y.tab.c"
+#line 1711 "y.tab.c"
     break;
 
   case 11: /* statement: while_loop  */
-#line 77 "Compiler.y"
+#line 78 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1716 "y.tab.c"
+#line 1717 "y.tab.c"
     break;
 
   case 12: /* statement: do_while_loop  */
-#line 78 "Compiler.y"
+#line 79 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1722 "y.tab.c"
+#line 1723 "y.tab.c"
     break;
 
   case 13: /* statement: for_loop  */
-#line 79 "Compiler.y"
+#line 80 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1728 "y.tab.c"
+#line 1729 "y.tab.c"
     break;
 
   case 14: /* statement: function_declaration  */
-#line 80 "Compiler.y"
+#line 81 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1734 "y.tab.c"
+#line 1735 "y.tab.c"
     break;
 
   case 15: /* statement: expression  */
-#line 81 "Compiler.y"
+#line 82 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1740 "y.tab.c"
+#line 1741 "y.tab.c"
     break;
 
   case 16: /* print_statement: PRINT '(' expression ')' ';'  */
-#line 85 "Compiler.y"
+#line 86 "Compiler.y"
                                                           {(yyval.nPtr)= createOperatorNode(PRINT, 1, (yyvsp[-2].nPtr));}
-#line 1746 "y.tab.c"
+#line 1747 "y.tab.c"
     break;
 
   case 17: /* if_condition_statement: IF '(' expression ')' LBRACE statement_list RBRACE  */
-#line 88 "Compiler.y"
+#line 89 "Compiler.y"
                                                                                {(yyval.nPtr) = createOperatorNode(IF,2,(yyvsp[-4].nPtr),(yyvsp[-1].nPtr));}
-#line 1752 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 18: /* if_condition_statement: IF '(' expression ')' LBRACE statement_list RBRACE ELSE LBRACE statement_list RBRACE  */
-#line 89 "Compiler.y"
+#line 90 "Compiler.y"
                                                                                                                  {(yyval.nPtr) = createOperatorNode(IF, 2, (yyvsp[-8].nPtr), (yyvsp[-5].nPtr), (yyvsp[-1].nPtr));}
-#line 1758 "y.tab.c"
+#line 1759 "y.tab.c"
     break;
 
   case 19: /* switch_statement: SWITCH '(' expression ')' LBRACE case_list case_default RBRACE  */
-#line 91 "Compiler.y"
+#line 92 "Compiler.y"
                                                                                             {(yyval.nPtr) = createOperatorNode(SWITCH, 2, (yyvsp[-5].nPtr), (yyvsp[-2].nPtr));}
-#line 1764 "y.tab.c"
+#line 1765 "y.tab.c"
     break;
 
   case 20: /* case_list: case_list CASE expression ':' statement_list BREAK ';'  */
-#line 94 "Compiler.y"
+#line 95 "Compiler.y"
                                                                                {(yyval.nPtr) = createOperatorNode(CASE,3,(yyvsp[-6].nPtr),(yyvsp[-4].nPtr),(yyvsp[-2].nPtr));}
-#line 1770 "y.tab.c"
+#line 1771 "y.tab.c"
     break;
 
   case 21: /* case_list: CASE expression ':' statement_list BREAK ';'  */
-#line 95 "Compiler.y"
+#line 96 "Compiler.y"
                                                                                {(yyval.nPtr) = createOperatorNode(CASE, 2, (yyvsp[-4].nPtr), (yyvsp[-2].nPtr));}
-#line 1776 "y.tab.c"
+#line 1777 "y.tab.c"
     break;
 
   case 22: /* case_default: DEFAULT ':' statement_list BREAK ';'  */
-#line 98 "Compiler.y"
+#line 99 "Compiler.y"
                                                                                 {(yyval.nPtr) = createOperatorNode(DEFAULT, 1, (yyvsp[-2].nPtr));}
-#line 1782 "y.tab.c"
+#line 1783 "y.tab.c"
     break;
 
   case 23: /* while_loop: WHILE '(' expression ')' LBRACE statement_list RBRACE  */
-#line 103 "Compiler.y"
+#line 104 "Compiler.y"
                                                                                 {(yyval.nPtr) = createOperatorNode(WHILE, 2, (yyvsp[-4].nPtr), (yyvsp[-1].nPtr));}
-#line 1788 "y.tab.c"
+#line 1789 "y.tab.c"
     break;
 
   case 24: /* do_while_loop: DO LBRACE statement_list RBRACE WHILE '(' expression ')' ';'  */
-#line 106 "Compiler.y"
+#line 107 "Compiler.y"
                                                                                        { (yyval.nPtr) = createOperatorNode(DO, 2, (yyvsp[-6].nPtr), (yyvsp[-2].nPtr));}
-#line 1794 "y.tab.c"
+#line 1795 "y.tab.c"
     break;
 
   case 25: /* for_loop: FOR '(' declaration_assignment_loop ';' expression ';' declaration_assignment_loop ')' LBRACE statement_list RBRACE  */
-#line 109 "Compiler.y"
+#line 110 "Compiler.y"
                                                                                                                                               {(yyval.nPtr) = createOperatorNode(FOR, 3, (yyvsp[-8].nPtr), (yyvsp[-6].nPtr), (yyvsp[-4].nPtr));}
-#line 1800 "y.tab.c"
+#line 1801 "y.tab.c"
     break;
 
   case 26: /* function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE statement_list RETURN statement_list ';' RBRACE  */
-#line 113 "Compiler.y"
+#line 114 "Compiler.y"
                                                                                                                  {(yyval.nPtr)=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum((yyvsp[-10].nPtr))), createIdentifierNode((yyvsp[-9].sVal)), (yyvsp[-7].nPtr), (yyvsp[-4].nPtr), (yyvsp[-2].nPtr));}
-#line 1806 "y.tab.c"
+#line 1807 "y.tab.c"
     break;
 
   case 27: /* function_declaration: VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE statement_list RBRACE  */
-#line 114 "Compiler.y"
+#line 115 "Compiler.y"
                                                                                                                  { (yyval.nPtr)=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode((yyvsp[-6].sVal)), (yyvsp[-4].nPtr), (yyvsp[-1].nPtr));}
-#line 1812 "y.tab.c"
+#line 1813 "y.tab.c"
     break;
 
   case 28: /* function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE RETURN statement_list ';' RBRACE  */
-#line 115 "Compiler.y"
+#line 116 "Compiler.y"
                                                                                                                     { (yyval.nPtr)=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum((yyvsp[-9].nPtr))), createIdentifierNode((yyvsp[-8].sVal)), (yyvsp[-6].nPtr), (yyvsp[-2].nPtr));}
-#line 1818 "y.tab.c"
+#line 1819 "y.tab.c"
     break;
 
   case 29: /* function_call: IDENTIFIER '(' arg_list_call ')' ';'  */
-#line 118 "Compiler.y"
+#line 119 "Compiler.y"
                                                                 { (yyval.nPtr)=createOperatorNode(FUNC, 1, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr));}
-#line 1824 "y.tab.c"
+#line 1825 "y.tab.c"
     break;
 
   case 30: /* function_call_expression: IDENTIFIER '(' arg_list_call ')'  */
-#line 121 "Compiler.y"
+#line 122 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(FUNC, 1, createIdentifierNode((yyvsp[-3].sVal)), (yyvsp[-1].nPtr));}
-#line 1830 "y.tab.c"
+#line 1831 "y.tab.c"
     break;
 
   case 31: /* arg_list: type IDENTIFIER ',' arg_list  */
-#line 124 "Compiler.y"
+#line 125 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)));}
-#line 1836 "y.tab.c"
+#line 1837 "y.tab.c"
     break;
 
   case 32: /* arg_list: type IDENTIFIER  */
-#line 125 "Compiler.y"
+#line 126 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum((yyvsp[-1].nPtr))), createIdentifierNode((yyvsp[0].sVal)));}
-#line 1842 "y.tab.c"
+#line 1843 "y.tab.c"
     break;
 
   case 33: /* arg_list_call: arg_list_call ',' expression  */
-#line 127 "Compiler.y"
+#line 128 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(',', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr));}
-#line 1848 "y.tab.c"
+#line 1849 "y.tab.c"
     break;
 
   case 34: /* arg_list_call: expression  */
-#line 128 "Compiler.y"
+#line 129 "Compiler.y"
                                                                  { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1854 "y.tab.c"
+#line 1855 "y.tab.c"
     break;
 
   case 35: /* arg_list_call: %empty  */
-#line 129 "Compiler.y"
+#line 130 "Compiler.y"
                                                                  { (yyval.nPtr)=NULL;}
-#line 1860 "y.tab.c"
+#line 1861 "y.tab.c"
     break;
 
   case 36: /* declaration_assignment: declaration ';'  */
-#line 135 "Compiler.y"
+#line 136 "Compiler.y"
                                                                   { (yyval.nPtr)=(yyvsp[-1].nPtr);}
-#line 1866 "y.tab.c"
+#line 1867 "y.tab.c"
     break;
 
   case 37: /* declaration_assignment: assignment ';'  */
-#line 136 "Compiler.y"
+#line 137 "Compiler.y"
                                                                   { (yyval.nPtr)=(yyvsp[-1].nPtr);}
-#line 1872 "y.tab.c"
+#line 1873 "y.tab.c"
     break;
 
   case 38: /* declaration_assignment_loop: declaration  */
-#line 139 "Compiler.y"
+#line 140 "Compiler.y"
                                                                   { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1878 "y.tab.c"
+#line 1879 "y.tab.c"
     break;
 
   case 39: /* declaration_assignment_loop: assignment  */
-#line 140 "Compiler.y"
+#line 141 "Compiler.y"
                                                                   { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1884 "y.tab.c"
+#line 1885 "y.tab.c"
     break;
 
   case 40: /* declaration: type IDENTIFIER  */
-#line 143 "Compiler.y"
+#line 144 "Compiler.y"
                                                               { (yyval.nPtr) = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum((yyvsp[-1].nPtr))), createIdentifierNode((yyvsp[0].sVal))); }
-#line 1890 "y.tab.c"
+#line 1891 "y.tab.c"
     break;
 
   case 41: /* declaration: type IDENTIFIER '=' expression  */
-#line 144 "Compiler.y"
+#line 145 "Compiler.y"
                                                                   { (yyval.nPtr) = createOperatorNode(VAR, 3, createTypeNode(getTypeOfEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 1896 "y.tab.c"
+#line 1897 "y.tab.c"
     break;
 
   case 42: /* declaration: CONST type IDENTIFIER '=' expression  */
-#line 145 "Compiler.y"
+#line 146 "Compiler.y"
                                                                    { (yyval.nPtr) = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 1902 "y.tab.c"
+#line 1903 "y.tab.c"
     break;
 
   case 43: /* declaration: ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  */
-#line 146 "Compiler.y"
+#line 147 "Compiler.y"
                                                                      { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-3].sVal)), (yyvsp[0].sVal)); }
-#line 1908 "y.tab.c"
+#line 1909 "y.tab.c"
     break;
 
   case 44: /* declaration: VAR IDENTIFIER  */
-#line 147 "Compiler.y"
+#line 148 "Compiler.y"
                                                                    { (yyval.nPtr) = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode((yyvsp[0].sVal))); }
-#line 1914 "y.tab.c"
+#line 1915 "y.tab.c"
     break;
 
   case 45: /* assignment: IDENTIFIER '=' expression  */
-#line 150 "Compiler.y"
+#line 151 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode('=', 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr));}
-#line 1920 "y.tab.c"
+#line 1921 "y.tab.c"
     break;
 
   case 46: /* enum_declaration: ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  */
-#line 154 "Compiler.y"
+#line 155 "Compiler.y"
                                                                         {(yyval.nPtr)=createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr));}
-#line 1926 "y.tab.c"
+#line 1927 "y.tab.c"
     break;
 
   case 47: /* enum_list: enum_list ',' IDENTIFIER  */
-#line 158 "Compiler.y"
+#line 159 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 1, createIdentifierNode((yyvsp[0].sVal))); }
-#line 1932 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 48: /* enum_list: enum_list ',' IDENTIFIER '=' expression  */
-#line 159 "Compiler.y"
+#line 160 "Compiler.y"
                                                                        { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 1938 "y.tab.c"
+#line 1939 "y.tab.c"
     break;
 
   case 49: /* enum_list: IDENTIFIER  */
-#line 160 "Compiler.y"
+#line 161 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 1, createIdentifierNode((yyvsp[0].sVal))); }
-#line 1944 "y.tab.c"
+#line 1945 "y.tab.c"
     break;
 
   case 50: /* enum_list: IDENTIFIER '=' expression  */
-#line 161 "Compiler.y"
+#line 162 "Compiler.y"
                                                                        { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 1950 "y.tab.c"
+#line 1951 "y.tab.c"
     break;
 
   case 51: /* expression: binary_expression  */
-#line 166 "Compiler.y"
+#line 167 "Compiler.y"
                                              { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1956 "y.tab.c"
+#line 1957 "y.tab.c"
     break;
 
   case 52: /* expression: unary_expression  */
-#line 167 "Compiler.y"
+#line 168 "Compiler.y"
                                              { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1962 "y.tab.c"
+#line 1963 "y.tab.c"
     break;
 
   case 53: /* binary_expression: expression '+' expression  */
-#line 169 "Compiler.y"
+#line 170 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('+', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 1968 "y.tab.c"
+#line 1969 "y.tab.c"
     break;
 
   case 54: /* binary_expression: expression '-' expression  */
-#line 170 "Compiler.y"
+#line 171 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('-', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 1974 "y.tab.c"
+#line 1975 "y.tab.c"
     break;
 
   case 55: /* binary_expression: expression '*' expression  */
-#line 171 "Compiler.y"
+#line 172 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('*', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 1980 "y.tab.c"
+#line 1981 "y.tab.c"
     break;
 
   case 56: /* binary_expression: expression '/' expression  */
-#line 172 "Compiler.y"
+#line 173 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('/', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 1986 "y.tab.c"
+#line 1987 "y.tab.c"
     break;
 
   case 57: /* binary_expression: expression '%' expression  */
-#line 173 "Compiler.y"
+#line 174 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('%', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 1992 "y.tab.c"
+#line 1993 "y.tab.c"
     break;
 
   case 58: /* binary_expression: expression EQ expression  */
-#line 174 "Compiler.y"
+#line 175 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(EQ, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 1998 "y.tab.c"
+#line 1999 "y.tab.c"
     break;
 
   case 59: /* binary_expression: expression NEQ expression  */
-#line 175 "Compiler.y"
+#line 176 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(NEQ, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2004 "y.tab.c"
+#line 2005 "y.tab.c"
     break;
 
   case 60: /* binary_expression: expression LT expression  */
-#line 176 "Compiler.y"
+#line 177 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(LT, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2010 "y.tab.c"
+#line 2011 "y.tab.c"
     break;
 
   case 61: /* binary_expression: expression GT expression  */
-#line 177 "Compiler.y"
+#line 178 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(GT, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2016 "y.tab.c"
+#line 2017 "y.tab.c"
     break;
 
   case 62: /* binary_expression: expression LTE expression  */
-#line 178 "Compiler.y"
+#line 179 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(LTE, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2022 "y.tab.c"
+#line 2023 "y.tab.c"
     break;
 
   case 63: /* binary_expression: expression GTE expression  */
-#line 179 "Compiler.y"
+#line 180 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(GTE, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2028 "y.tab.c"
+#line 2029 "y.tab.c"
     break;
 
   case 64: /* binary_expression: expression AND expression  */
-#line 180 "Compiler.y"
+#line 181 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(AND, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2034 "y.tab.c"
+#line 2035 "y.tab.c"
     break;
 
   case 65: /* binary_expression: expression OR expression  */
-#line 181 "Compiler.y"
+#line 182 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(OR, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2040 "y.tab.c"
+#line 2041 "y.tab.c"
     break;
 
   case 66: /* binary_expression: '(' expression ')'  */
-#line 182 "Compiler.y"
+#line 183 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[-1].nPtr); }
-#line 2046 "y.tab.c"
+#line 2047 "y.tab.c"
     break;
 
   case 67: /* binary_expression: value  */
-#line 183 "Compiler.y"
+#line 184 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[0].nPtr); }
-#line 2052 "y.tab.c"
+#line 2053 "y.tab.c"
     break;
 
   case 68: /* binary_expression: IDENTIFIER  */
-#line 184 "Compiler.y"
+#line 185 "Compiler.y"
                                                      { (yyval.nPtr)=createIdentifierNode((yyvsp[0].sVal)); }
-#line 2058 "y.tab.c"
+#line 2059 "y.tab.c"
     break;
 
   case 69: /* binary_expression: function_call_expression  */
-#line 185 "Compiler.y"
+#line 186 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2064 "y.tab.c"
+#line 2065 "y.tab.c"
     break;
 
   case 70: /* unary_expression: '-' expression  */
-#line 187 "Compiler.y"
+#line 188 "Compiler.y"
                                                       { (yyval.nPtr) = createOperatorNode('-', 1, (yyvsp[0].nPtr)); }
-#line 2070 "y.tab.c"
+#line 2071 "y.tab.c"
     break;
 
   case 71: /* unary_expression: '!' expression  */
-#line 188 "Compiler.y"
+#line 189 "Compiler.y"
                                                       { (yyval.nPtr) = createOperatorNode('!', 1, (yyvsp[0].nPtr)); }
-#line 2076 "y.tab.c"
+#line 2077 "y.tab.c"
     break;
 
   case 72: /* type: INT_TYPE  */
-#line 192 "Compiler.y"
+#line 193 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeInt); }
-#line 2082 "y.tab.c"
+#line 2083 "y.tab.c"
     break;
 
   case 73: /* type: FLOAT_TYPE  */
-#line 193 "Compiler.y"
+#line 194 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeFloat); }
-#line 2088 "y.tab.c"
+#line 2089 "y.tab.c"
     break;
 
   case 74: /* type: BOOL_TYPE  */
-#line 194 "Compiler.y"
+#line 195 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeBool); }
-#line 2094 "y.tab.c"
+#line 2095 "y.tab.c"
     break;
 
   case 75: /* type: CHAR_TYPE  */
-#line 195 "Compiler.y"
+#line 196 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeChar); }
-#line 2100 "y.tab.c"
+#line 2101 "y.tab.c"
     break;
 
   case 76: /* type: STRING_TYPE  */
-#line 196 "Compiler.y"
+#line 197 "Compiler.y"
                                       { (yyval.nPtr) = createTypeNode(typeString); }
-#line 2106 "y.tab.c"
+#line 2107 "y.tab.c"
     break;
 
   case 77: /* value: INTEGER  */
-#line 199 "Compiler.y"
+#line 200 "Compiler.y"
                                   { (yyval.nPtr) = createIntConstantNode((yyvsp[0].iVal)); }
-#line 2112 "y.tab.c"
+#line 2113 "y.tab.c"
     break;
 
   case 78: /* value: FLOAT  */
-#line 200 "Compiler.y"
+#line 201 "Compiler.y"
                                   { (yyval.nPtr) = createFloatConstantNode((yyvsp[0].fVal)); }
-#line 2118 "y.tab.c"
+#line 2119 "y.tab.c"
     break;
 
   case 79: /* value: BOOL  */
-#line 201 "Compiler.y"
+#line 202 "Compiler.y"
                                   { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2124 "y.tab.c"
+#line 2125 "y.tab.c"
     break;
 
   case 80: /* value: CHAR  */
-#line 202 "Compiler.y"
+#line 203 "Compiler.y"
                                   { (yyval.nPtr) = createCharConstantNode((yyvsp[0].cVal)); }
-#line 2130 "y.tab.c"
+#line 2131 "y.tab.c"
     break;
 
   case 81: /* value: STRING  */
-#line 203 "Compiler.y"
+#line 204 "Compiler.y"
                                   { (yyval.nPtr) = createStringConstantNode((yyvsp[0].sVal)); }
-#line 2136 "y.tab.c"
+#line 2137 "y.tab.c"
     break;
 
   case 82: /* value: BOOL_TRUE  */
-#line 204 "Compiler.y"
+#line 205 "Compiler.y"
                                      { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2142 "y.tab.c"
+#line 2143 "y.tab.c"
     break;
 
   case 83: /* value: BOOL_FALSE  */
-#line 205 "Compiler.y"
+#line 206 "Compiler.y"
                                      { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2148 "y.tab.c"
+#line 2149 "y.tab.c"
     break;
 
 
-#line 2152 "y.tab.c"
+#line 2153 "y.tab.c"
 
       default: break;
     }
@@ -2342,7 +2343,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 209 "Compiler.y"
+#line 210 "Compiler.y"
 
 
 
@@ -2354,16 +2355,42 @@ void yyerror(const char *s) {
 }
 
 
-nodeType *createTypeNode(conEnum type)
+ListNode *head = NULL;
+
+void addNodeToList(nodeType *node)
 {
-    nodeType *p;
+    ListNode *newNode = (ListNode *)malloc(sizeof(ListNode));
+    if (newNode == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->node = node;
+    newNode->next = NULL;
 
-    if ((p = malloc(sizeof(nodeType))) == NULL)
+    if (head == NULL)
+    {
+        head = newNode;
+    }
+    else
+    {
+        ListNode *current = head;
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+nodeType *createTypeNode(conEnum type) {
+    nodeType *p = malloc(sizeof(nodeType));
+    if (p == NULL) {
         yyerror("Memory allocation failed");
-
-    /* Set the node type */
+        return NULL;
+    }
     p->type = typeDef; // Change to typeDef for a type node
-
+    addNodeToList(p); 
     return p;
 }
 

@@ -82,7 +82,7 @@ typedef struct ListNode
     struct ListNode *next;
 } ListNode;
 // Function to determine the type of a node
-
+void addNodeToList(nodeType *node);
 nodeType *createTypeNode(conEnum type);
 nodeType *createConstantNode();
 nodeType *createIntConstantNode(int value);
@@ -92,6 +92,7 @@ nodeType *createCharConstantNode(char value);
 nodeType *createStringConstantNode(char *value);
 nodeType *createIdentifierNode(char *id);
 nodeType *createOperatorNode(int oper, int nops, ...);
+
 conEnum getTypeOfEnum(const nodeType *node);
 
 void freeNode(nodeType *p);

@@ -10,6 +10,7 @@
     void yyerror(const char *s);
   
     int yylex();
+    void addNodeToList(nodeType *node);
     extern FILE *yyin;
     extern FILE *errorsFile;
     extern int currentLineNumber;
@@ -217,16 +218,42 @@ void yyerror(const char *s) {
 }
 
 
-nodeType *createTypeNode(conEnum type)
+ListNode *head = NULL;
+
+void addNodeToList(nodeType *node)
 {
-    nodeType *p;
+    ListNode *newNode = (ListNode *)malloc(sizeof(ListNode));
+    if (newNode == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->node = node;
+    newNode->next = NULL;
 
-    if ((p = malloc(sizeof(nodeType))) == NULL)
+    if (head == NULL)
+    {
+        head = newNode;
+    }
+    else
+    {
+        ListNode *current = head;
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+nodeType *createTypeNode(conEnum type) {
+    nodeType *p = malloc(sizeof(nodeType));
+    if (p == NULL) {
         yyerror("Memory allocation failed");
-
-    /* Set the node type */
+        return NULL;
+    }
     p->type = typeDef; // Change to typeDef for a type node
-
+    addNodeToList(p); 
     return p;
 }
 
