@@ -15,8 +15,10 @@
     extern FILE *errorsFile;
     extern int currentLineNumber;
 
-    int currentScope = 0;
-    SymbolTable *table = createSymbolTable("global", NULL);
+    int currentScope = -1;
+    SymbolTable *globalTable;
+    SymbolTable *currTable;
+
 %}
 
 %union {
@@ -63,7 +65,7 @@
             start_scope end_scope
 %%
 
-program                 : statement_list                    {printf("start of program\n");}    
+program                 : start_scope statement_list                    {printf("start of program\n");}    
                         ;
 
 
@@ -144,11 +146,15 @@ declaration_assignment_loop     : declaration       {}
                                 | assignment        {}
                                 ;
 
-declaration             : type IDENTIFIER                           {  }
-                        | type IDENTIFIER '=' expression            { }
+declaration             : type IDENTIFIER                           
+                                            { 
+                                                
+
+                                            }
+                        | type IDENTIFIER '=' expression            {  }
                         | CONST type IDENTIFIER '=' expression      {  }
-                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER { }
-                        | VAR IDENTIFIER                            { }
+                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER {  }
+                        | VAR IDENTIFIER                            {  }
                         ;
 
 assignment              : IDENTIFIER '=' expression              {printf("hi assign\n");}
@@ -209,10 +215,28 @@ value                   : INTEGER
                         | BOOL_FALSE
                         ;
 
-start_scope             :   {printf("start of scope\n");}
+start_scope             :   {
+                                printf("start of scope\n");
+                                //we want to increment scope and add new ST (child to current scope)
+                                currentScope++;
+                                if(currentScope==0){
+                                    globalTable = createSymbolTable("global", NULL);
+                                    currTable = globalTable;
+                                }
+                                else{
+                                    SymbolTable *childTable = createSymbolTable("local", currTable);
+                                    addChildrenToSymbolTable(currTable,childTable );
+                                    currTable = childTable;
+                                }
+                                
+                            }
                         ;
 
-end_scope               :   {printf("end of scope\n");}
+end_scope               :   {
+                                printf("end of scope\n");
+                                currentScope--;
+                                currTable = currTable->parent;
+                            }
 
 %%
 

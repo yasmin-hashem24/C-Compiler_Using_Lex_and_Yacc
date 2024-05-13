@@ -33,6 +33,17 @@ SymbolTable *createSymbolTable(const char *name, SymbolTable *parent) {
 //     }
 // }
 
+void addChildrenToSymbolTable(SymbolTable * table, SymbolTable *child ){
+    if(table->childCount==0){
+        table->children = malloc(sizeof(SymbolTable *));
+        table->children[0] = child;
+    }
+    else{
+        table->children= realloc(table->children, (table->childCount + 1) * sizeof(SymbolEntry *));
+        table->children[table->childCount] = child; 
+    }
+    table->childCount++;
+}
 
 void addSymbolEntry(SymbolTable *table, SymbolEntry *entry) {
     if (table->size == 0) {

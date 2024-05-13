@@ -1,5 +1,5 @@
-#ifndef SymbolEntry_H
-#define SymbolEntry_H
+// #ifndef SymbolEntry_H
+// #define SymbolEntry_H
 
 
 // name (Identifier name)
@@ -83,4 +83,4 @@ void setArgTypes(SymbolEntry *entry, char **argTypes);
 void setLineNo(SymbolEntry *entry, int lineNo);
 void destroy_SymbolEntry(SymbolEntry *entry);
 
-#endif /* SymbolEntry_H */
+// #endif /* SymbolEntry_H */
