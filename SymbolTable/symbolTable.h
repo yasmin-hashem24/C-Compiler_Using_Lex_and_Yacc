@@ -1,5 +1,5 @@
-// #ifndef SYMBOLTABLE_H
-// #define SYMBOLTABLE_H
+#ifndef SYMBOLTABLE_H
+#define SYMBOLTABLE_H
 
 #include "SymbolEntry.h"
 
@@ -33,6 +33,7 @@ void addSymbolEntry(SymbolTable *table, SymbolEntry *entry);
 SymbolEntry *getSymbolEntryWithName(SymbolTable *table, const char *name);
 void addChildrenToSymbolTable(SymbolTable * table, SymbolTable *child );
 void modifySymbolEntry(SymbolTable *table, const char *name, SymbolEntry *entry);
-void printSymbolTable(SymbolTable *table);
+void writeSymbolTableToFile(SymbolTable *table, FILE *file);
+void writeAllSymbolTablesToFile(SymbolTable *table, FILE *file);
 
-// #endif /* SYMBOLTABLE_H */
+#endif /* SYMBOLTABLE_H */

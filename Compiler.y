@@ -7,12 +7,17 @@
     #include <stdarg.h>
     #include "node.h"
     #include "symbolTable/symbolTable.h"
+    #include "symbolTable/symbolEntry.h"
+    #include "Errors/error.h"
 
     void yyerror(const char *s);
   
     int yylex();
     extern FILE *yyin;
-    extern FILE *errorsFile;
+    FILE *syntaxErrorsFile;
+    FILE *semanticErrorsFile;
+    FILE *warningFile;
+    FILE *symbolTableFile;
     extern int currentLineNumber;
 
     int currentScope = -1;
@@ -92,8 +97,8 @@ statement               : declaration_assignment            {}
 print_statement         : PRINT '(' expression ')' ';'    {}
 
 // Statements rules: Conditional statements
-if_condition_statement  : IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope                                                              {printf("hi if 1\n");}
-                        | IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope      {printf("hi if 2\n");}
+if_condition_statement  : IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope                                                              {}
+                        | IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope      {}
                         ;
 switch_statement        : SWITCH '(' expression ')' LBRACE case_list case_default RBRACE                                                  {}
                         ;
@@ -147,17 +152,26 @@ declaration_assignment_loop     : declaration       {}
                                 ;
 
 declaration             : type IDENTIFIER                           
-                                            { 
-                                                
+                                                                    { 
+                                                                        SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
 
-                                            }
+                                                                        if(entry == NULL){
+                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry($2, $1, 0, 0, 0, NULL, currentLineNumber);
+                                                                            printf("Adding variable %s to symbol table\n", $2);
+                                                                            addSymbolEntry(currTable, newEntry);
+                                                                        }
+                                                                        else{
+                                                                            throwError("Variable already declared in this scope", 1, semanticErrorsFile);
+                                                                        }
+                                                                    
+                                                                    }
                         | type IDENTIFIER '=' expression            {  }
                         | CONST type IDENTIFIER '=' expression      {  }
                         | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER {  }
                         | VAR IDENTIFIER                            {  }
                         ;
 
-assignment              : IDENTIFIER '=' expression              {printf("hi assign\n");}
+assignment              : IDENTIFIER '=' expression              {}
                         ; 
 // Enum rules
 // enum Foo { a, b, c = 10, d, e = 1, f, g = f + c };
@@ -237,15 +251,12 @@ end_scope               :   {
                                 currentScope--;
                                 currTable = currTable->parent;
                             }
+                        ;
 
 %%
 
-
-extern FILE *yyin;
-FILE *errorsFile;
-
 void yyerror(const char *s) {
-    fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
+    fprintf(syntaxErrorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
 
 nodeType *createTypeNode(conEnum type) {
@@ -384,10 +395,12 @@ conEnum getTypeOfEnum(const nodeType *node) {
     // Handle unknown types
     return typeND;
 }
+
+
 int main(int argc, char **argv) {
 
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
         return 1;
     }
 
@@ -397,21 +410,61 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    FILE *outputFile = fopen(argv[2], "w");
-    if (!outputFile) {
-        perror("Error opening output file");
+    yyin = fp;
+
+
+    syntaxErrorsFile = fopen("syntax_errors.txt", "w");
+    if (!syntaxErrorsFile) {
+        perror("Error opening syntax errors file");
         fclose(fp);
         return 1;
     }
 
-    errorsFile = outputFile;
+    semanticErrorsFile = fopen("semantic_errors.txt", "w");
+    if (!syntaxErrorsFile) {
+        perror("Error opening syntax errors file");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        return 1;
+    }
 
-    yyin = fp;
+    warningFile = fopen("warnings.txt", "w");
+    if (!warningFile) {
+        perror("Error opening warnings file");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        return 1;
+    }
 
-    yyparse();
+    symbolTableFile = fopen("symbol_table.txt", "w");
+    if (!symbolTableFile) {
+        perror("Error opening symbol table file");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        fclose(warningFile);
+        return 1;
+    }
 
-    fclose(fp);
-    fclose(outputFile);
+    if(!yyparse()) {
+        printf("Parsing successful\n");
+        writeAllSymbolTablesToFile(globalTable, symbolTableFile);
 
+
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        fclose(warningFile);
+        fclose(symbolTableFile);
+    }
+    else {
+        printf("Parsing failed\n");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        fclose(warningFile);
+        fclose(symbolTableFile);
+    }
     return 0;
 }

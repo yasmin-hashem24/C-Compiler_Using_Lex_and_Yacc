@@ -76,12 +76,17 @@
     #include <stdarg.h>
     #include "node.h"
     #include "symbolTable/symbolTable.h"
+    #include "symbolTable/symbolEntry.h"
+    #include "Errors/error.h"
 
     void yyerror(const char *s);
   
     int yylex();
     extern FILE *yyin;
-    extern FILE *errorsFile;
+    FILE *syntaxErrorsFile;
+    FILE *semanticErrorsFile;
+    FILE *warningFile;
+    FILE *symbolTableFile;
     extern int currentLineNumber;
 
     int currentScope = -1;
@@ -89,7 +94,7 @@
     SymbolTable *currTable;
 
 
-#line 93 "y.tab.c"
+#line 98 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -240,7 +245,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "Compiler.y"
+#line 29 "Compiler.y"
 
     int iVal;
     float fVal;
@@ -249,7 +254,7 @@ union YYSTYPE
     char *sVal;
     nodeType *nPtr;
 
-#line 253 "y.tab.c"
+#line 258 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -751,15 +756,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    68,    68,    72,    73,    78,    79,    80,    81,    82,
-      83,    84,    85,    86,    87,    88,    92,    95,    96,    98,
-     101,   102,   105,   110,   112,   115,   119,   120,   121,   124,
-     127,   130,   131,   133,   134,   135,   141,   142,   145,   146,
-     149,   154,   155,   156,   157,   160,   164,   168,   169,   170,
-     171,   176,   177,   179,   180,   181,   182,   183,   184,   185,
-     186,   187,   188,   189,   190,   191,   192,   193,   194,   195,
-     197,   198,   202,   203,   204,   205,   206,   209,   210,   211,
-     212,   213,   214,   215,   218,   235
+       0,    73,    73,    77,    78,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    97,   100,   101,   103,
+     106,   107,   110,   115,   117,   120,   124,   125,   126,   129,
+     132,   135,   136,   138,   139,   140,   146,   147,   150,   151,
+     154,   168,   169,   170,   171,   174,   178,   182,   183,   184,
+     185,   190,   191,   193,   194,   195,   196,   197,   198,   199,
+     200,   201,   202,   203,   204,   205,   206,   207,   208,   209,
+     211,   212,   216,   217,   218,   219,   220,   223,   224,   225,
+     226,   227,   228,   229,   232,   249
 };
 #endif
 
@@ -1662,454 +1667,463 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: start_scope statement_list  */
-#line 68 "Compiler.y"
+#line 73 "Compiler.y"
                                                                         {printf("start of program\n");}
-#line 1668 "y.tab.c"
+#line 1673 "y.tab.c"
     break;
 
   case 3: /* statement_list: statement  */
-#line 72 "Compiler.y"
+#line 77 "Compiler.y"
                                                              {}
-#line 1674 "y.tab.c"
+#line 1679 "y.tab.c"
     break;
 
   case 4: /* statement_list: statement_list statement  */
-#line 73 "Compiler.y"
+#line 78 "Compiler.y"
                                                              {}
-#line 1680 "y.tab.c"
+#line 1685 "y.tab.c"
     break;
 
   case 5: /* statement: declaration_assignment  */
-#line 78 "Compiler.y"
+#line 83 "Compiler.y"
                                                             {}
-#line 1686 "y.tab.c"
+#line 1691 "y.tab.c"
     break;
 
   case 6: /* statement: enum_declaration  */
-#line 79 "Compiler.y"
+#line 84 "Compiler.y"
                                                             {}
-#line 1692 "y.tab.c"
+#line 1697 "y.tab.c"
     break;
 
   case 7: /* statement: function_call  */
-#line 80 "Compiler.y"
+#line 85 "Compiler.y"
                                                             {}
-#line 1698 "y.tab.c"
+#line 1703 "y.tab.c"
     break;
 
   case 8: /* statement: print_statement  */
-#line 81 "Compiler.y"
+#line 86 "Compiler.y"
                                                             {}
-#line 1704 "y.tab.c"
+#line 1709 "y.tab.c"
     break;
 
   case 9: /* statement: if_condition_statement  */
-#line 82 "Compiler.y"
+#line 87 "Compiler.y"
                                                             {}
-#line 1710 "y.tab.c"
+#line 1715 "y.tab.c"
     break;
 
   case 10: /* statement: switch_statement  */
-#line 83 "Compiler.y"
+#line 88 "Compiler.y"
                                                             {}
-#line 1716 "y.tab.c"
+#line 1721 "y.tab.c"
     break;
 
   case 11: /* statement: while_loop  */
-#line 84 "Compiler.y"
+#line 89 "Compiler.y"
                                                             {}
-#line 1722 "y.tab.c"
+#line 1727 "y.tab.c"
     break;
 
   case 12: /* statement: do_while_loop  */
-#line 85 "Compiler.y"
+#line 90 "Compiler.y"
                                                             {}
-#line 1728 "y.tab.c"
+#line 1733 "y.tab.c"
     break;
 
   case 13: /* statement: for_loop  */
-#line 86 "Compiler.y"
+#line 91 "Compiler.y"
                                                             {}
-#line 1734 "y.tab.c"
+#line 1739 "y.tab.c"
     break;
 
   case 14: /* statement: function_declaration  */
-#line 87 "Compiler.y"
+#line 92 "Compiler.y"
                                                             {}
-#line 1740 "y.tab.c"
+#line 1745 "y.tab.c"
     break;
 
   case 15: /* statement: expression  */
-#line 88 "Compiler.y"
+#line 93 "Compiler.y"
                                                             {}
-#line 1746 "y.tab.c"
+#line 1751 "y.tab.c"
     break;
 
   case 16: /* print_statement: PRINT '(' expression ')' ';'  */
-#line 92 "Compiler.y"
+#line 97 "Compiler.y"
                                                           {}
-#line 1752 "y.tab.c"
+#line 1757 "y.tab.c"
     break;
 
   case 17: /* if_condition_statement: IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope  */
-#line 95 "Compiler.y"
-                                                                                                                                                                {printf("hi if 1\n");}
-#line 1758 "y.tab.c"
+#line 100 "Compiler.y"
+                                                                                                                                                                {}
+#line 1763 "y.tab.c"
     break;
 
   case 18: /* if_condition_statement: IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope  */
-#line 96 "Compiler.y"
-                                                                                                                                                                {printf("hi if 2\n");}
-#line 1764 "y.tab.c"
+#line 101 "Compiler.y"
+                                                                                                                                                                {}
+#line 1769 "y.tab.c"
     break;
 
   case 19: /* switch_statement: SWITCH '(' expression ')' LBRACE case_list case_default RBRACE  */
-#line 98 "Compiler.y"
+#line 103 "Compiler.y"
                                                                                                                                           {}
-#line 1770 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 20: /* case_list: case_list CASE expression ':' statement_list BREAK ';'  */
-#line 101 "Compiler.y"
+#line 106 "Compiler.y"
                                                                                {}
-#line 1776 "y.tab.c"
+#line 1781 "y.tab.c"
     break;
 
   case 21: /* case_list: CASE expression ':' statement_list BREAK ';'  */
-#line 102 "Compiler.y"
+#line 107 "Compiler.y"
                                                                                {}
-#line 1782 "y.tab.c"
+#line 1787 "y.tab.c"
     break;
 
   case 22: /* case_default: DEFAULT ':' statement_list BREAK ';'  */
-#line 105 "Compiler.y"
+#line 110 "Compiler.y"
                                                                                 {}
-#line 1788 "y.tab.c"
+#line 1793 "y.tab.c"
     break;
 
   case 23: /* while_loop: WHILE '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope  */
-#line 110 "Compiler.y"
+#line 115 "Compiler.y"
                                                                                                                 {}
-#line 1794 "y.tab.c"
+#line 1799 "y.tab.c"
     break;
 
   case 24: /* do_while_loop: DO LBRACE start_scope statement_list RBRACE end_scope WHILE '(' expression ')' ';'  */
-#line 112 "Compiler.y"
+#line 117 "Compiler.y"
                                                                                                                 {}
-#line 1800 "y.tab.c"
+#line 1805 "y.tab.c"
     break;
 
   case 25: /* for_loop: FOR '(' declaration_assignment_loop ';' expression ';' declaration_assignment_loop ')' LBRACE start_scope statement_list RBRACE end_scope  */
-#line 115 "Compiler.y"
+#line 120 "Compiler.y"
                                                                                                                                                                     {}
-#line 1806 "y.tab.c"
+#line 1811 "y.tab.c"
     break;
 
   case 26: /* function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RETURN statement_list ';' RBRACE end_scope  */
-#line 119 "Compiler.y"
+#line 124 "Compiler.y"
                                                                                                                                        {}
-#line 1812 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 27: /* function_declaration: VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RBRACE end_scope  */
-#line 120 "Compiler.y"
+#line 125 "Compiler.y"
                                                                                                                                        {}
-#line 1818 "y.tab.c"
+#line 1823 "y.tab.c"
     break;
 
   case 28: /* function_declaration: type IDENTIFIER '(' arg_list ')' LBRACE start_scope RETURN statement_list RBRACE end_scope  */
-#line 121 "Compiler.y"
+#line 126 "Compiler.y"
                                                                                                                                        {}
-#line 1824 "y.tab.c"
+#line 1829 "y.tab.c"
     break;
 
   case 29: /* function_call: IDENTIFIER '(' arg_list_call ')' ';'  */
-#line 124 "Compiler.y"
+#line 129 "Compiler.y"
                                                                 {}
-#line 1830 "y.tab.c"
+#line 1835 "y.tab.c"
     break;
 
   case 30: /* function_call_expression: IDENTIFIER '(' arg_list_call ')'  */
-#line 127 "Compiler.y"
+#line 132 "Compiler.y"
                                                                 {}
-#line 1836 "y.tab.c"
+#line 1841 "y.tab.c"
     break;
 
   case 31: /* arg_list: type IDENTIFIER ',' arg_list  */
-#line 130 "Compiler.y"
+#line 135 "Compiler.y"
                                                                 {}
-#line 1842 "y.tab.c"
+#line 1847 "y.tab.c"
     break;
 
   case 32: /* arg_list: type IDENTIFIER  */
-#line 131 "Compiler.y"
+#line 136 "Compiler.y"
                                                                 {}
-#line 1848 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 33: /* arg_list_call: arg_list_call ',' expression  */
-#line 133 "Compiler.y"
+#line 138 "Compiler.y"
                                                                 {}
-#line 1854 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
   case 34: /* arg_list_call: expression  */
-#line 134 "Compiler.y"
+#line 139 "Compiler.y"
                                                                 {}
-#line 1860 "y.tab.c"
+#line 1865 "y.tab.c"
     break;
 
   case 36: /* declaration_assignment: declaration ';'  */
-#line 141 "Compiler.y"
+#line 146 "Compiler.y"
                                             {}
-#line 1866 "y.tab.c"
+#line 1871 "y.tab.c"
     break;
 
   case 37: /* declaration_assignment: assignment ';'  */
-#line 142 "Compiler.y"
+#line 147 "Compiler.y"
                                             {}
-#line 1872 "y.tab.c"
+#line 1877 "y.tab.c"
     break;
 
   case 38: /* declaration_assignment_loop: declaration  */
-#line 145 "Compiler.y"
+#line 150 "Compiler.y"
                                                     {}
-#line 1878 "y.tab.c"
+#line 1883 "y.tab.c"
     break;
 
   case 39: /* declaration_assignment_loop: assignment  */
-#line 146 "Compiler.y"
+#line 151 "Compiler.y"
                                                     {}
-#line 1884 "y.tab.c"
+#line 1889 "y.tab.c"
     break;
 
   case 40: /* declaration: type IDENTIFIER  */
-#line 150 "Compiler.y"
-                                            { 
-                                                
+#line 155 "Compiler.y"
+                                                                    { 
+                                                                        SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[0].sVal));
 
-                                            }
-#line 1893 "y.tab.c"
+                                                                        if(entry == NULL){
+                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry((yyvsp[0].sVal), (yyvsp[-1].nPtr), 0, 0, 0, NULL, currentLineNumber);
+                                                                            printf("Adding variable %s to symbol table\n", (yyvsp[0].sVal)->sValue);
+                                                                            addSymbolEntry(currTable, newEntry);
+                                                                        }
+                                                                        else{
+                                                                            throwError("Variable already declared in this scope", 1, semanticErrorsFile);
+                                                                        }
+                                                                    
+                                                                    }
+#line 1907 "y.tab.c"
     break;
 
   case 41: /* declaration: type IDENTIFIER '=' expression  */
-#line 154 "Compiler.y"
+#line 168 "Compiler.y"
                                                                     {  }
-#line 1899 "y.tab.c"
+#line 1913 "y.tab.c"
     break;
 
   case 42: /* declaration: CONST type IDENTIFIER '=' expression  */
-#line 155 "Compiler.y"
+#line 169 "Compiler.y"
                                                                     {  }
-#line 1905 "y.tab.c"
+#line 1919 "y.tab.c"
     break;
 
   case 43: /* declaration: ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  */
-#line 156 "Compiler.y"
+#line 170 "Compiler.y"
                                                                     {  }
-#line 1911 "y.tab.c"
+#line 1925 "y.tab.c"
     break;
 
   case 44: /* declaration: VAR IDENTIFIER  */
-#line 157 "Compiler.y"
+#line 171 "Compiler.y"
                                                                     {  }
-#line 1917 "y.tab.c"
+#line 1931 "y.tab.c"
     break;
 
   case 45: /* assignment: IDENTIFIER '=' expression  */
-#line 160 "Compiler.y"
-                                                                 {printf("hi assign\n");}
-#line 1923 "y.tab.c"
+#line 174 "Compiler.y"
+                                                                 {}
+#line 1937 "y.tab.c"
     break;
 
   case 46: /* enum_declaration: ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  */
-#line 164 "Compiler.y"
+#line 178 "Compiler.y"
                                                                         {}
-#line 1929 "y.tab.c"
+#line 1943 "y.tab.c"
     break;
 
   case 47: /* enum_list: enum_list ',' IDENTIFIER  */
-#line 168 "Compiler.y"
+#line 182 "Compiler.y"
                                                                         { }
-#line 1935 "y.tab.c"
+#line 1949 "y.tab.c"
     break;
 
   case 48: /* enum_list: enum_list ',' IDENTIFIER '=' expression  */
-#line 169 "Compiler.y"
+#line 183 "Compiler.y"
                                                                         { }
-#line 1941 "y.tab.c"
+#line 1955 "y.tab.c"
     break;
 
   case 49: /* enum_list: IDENTIFIER  */
-#line 170 "Compiler.y"
+#line 184 "Compiler.y"
                                                                         { }
-#line 1947 "y.tab.c"
+#line 1961 "y.tab.c"
     break;
 
   case 50: /* enum_list: IDENTIFIER '=' expression  */
-#line 171 "Compiler.y"
+#line 185 "Compiler.y"
                                                                         { }
-#line 1953 "y.tab.c"
+#line 1967 "y.tab.c"
     break;
 
   case 51: /* expression: binary_expression  */
-#line 176 "Compiler.y"
+#line 190 "Compiler.y"
                                              { }
-#line 1959 "y.tab.c"
+#line 1973 "y.tab.c"
     break;
 
   case 52: /* expression: unary_expression  */
-#line 177 "Compiler.y"
+#line 191 "Compiler.y"
                                              { }
-#line 1965 "y.tab.c"
+#line 1979 "y.tab.c"
     break;
 
   case 53: /* binary_expression: expression '+' expression  */
-#line 179 "Compiler.y"
+#line 193 "Compiler.y"
                                                      { }
-#line 1971 "y.tab.c"
+#line 1985 "y.tab.c"
     break;
 
   case 54: /* binary_expression: expression '-' expression  */
-#line 180 "Compiler.y"
+#line 194 "Compiler.y"
                                                      { }
-#line 1977 "y.tab.c"
+#line 1991 "y.tab.c"
     break;
 
   case 55: /* binary_expression: expression '*' expression  */
-#line 181 "Compiler.y"
+#line 195 "Compiler.y"
                                                      { }
-#line 1983 "y.tab.c"
+#line 1997 "y.tab.c"
     break;
 
   case 56: /* binary_expression: expression '/' expression  */
-#line 182 "Compiler.y"
+#line 196 "Compiler.y"
                                                      { }
-#line 1989 "y.tab.c"
+#line 2003 "y.tab.c"
     break;
 
   case 57: /* binary_expression: expression '%' expression  */
-#line 183 "Compiler.y"
+#line 197 "Compiler.y"
                                                      { }
-#line 1995 "y.tab.c"
+#line 2009 "y.tab.c"
     break;
 
   case 58: /* binary_expression: expression EQ expression  */
-#line 184 "Compiler.y"
+#line 198 "Compiler.y"
                                                      { }
-#line 2001 "y.tab.c"
+#line 2015 "y.tab.c"
     break;
 
   case 59: /* binary_expression: expression NEQ expression  */
-#line 185 "Compiler.y"
+#line 199 "Compiler.y"
                                                      { }
-#line 2007 "y.tab.c"
+#line 2021 "y.tab.c"
     break;
 
   case 60: /* binary_expression: expression LT expression  */
-#line 186 "Compiler.y"
+#line 200 "Compiler.y"
                                                      {}
-#line 2013 "y.tab.c"
+#line 2027 "y.tab.c"
     break;
 
   case 61: /* binary_expression: expression GT expression  */
-#line 187 "Compiler.y"
+#line 201 "Compiler.y"
                                                      {}
-#line 2019 "y.tab.c"
+#line 2033 "y.tab.c"
     break;
 
   case 62: /* binary_expression: expression LTE expression  */
-#line 188 "Compiler.y"
+#line 202 "Compiler.y"
                                                      { }
-#line 2025 "y.tab.c"
+#line 2039 "y.tab.c"
     break;
 
   case 63: /* binary_expression: expression GTE expression  */
-#line 189 "Compiler.y"
+#line 203 "Compiler.y"
                                                      { }
-#line 2031 "y.tab.c"
+#line 2045 "y.tab.c"
     break;
 
   case 64: /* binary_expression: expression AND expression  */
-#line 190 "Compiler.y"
+#line 204 "Compiler.y"
                                                      { }
-#line 2037 "y.tab.c"
+#line 2051 "y.tab.c"
     break;
 
   case 65: /* binary_expression: expression OR expression  */
-#line 191 "Compiler.y"
+#line 205 "Compiler.y"
                                                      {}
-#line 2043 "y.tab.c"
+#line 2057 "y.tab.c"
     break;
 
   case 66: /* binary_expression: '(' expression ')'  */
-#line 192 "Compiler.y"
+#line 206 "Compiler.y"
                                                      {  }
-#line 2049 "y.tab.c"
+#line 2063 "y.tab.c"
     break;
 
   case 67: /* binary_expression: value  */
-#line 193 "Compiler.y"
+#line 207 "Compiler.y"
                                                      {  }
-#line 2055 "y.tab.c"
+#line 2069 "y.tab.c"
     break;
 
   case 68: /* binary_expression: IDENTIFIER  */
-#line 194 "Compiler.y"
+#line 208 "Compiler.y"
                                                      {}
-#line 2061 "y.tab.c"
+#line 2075 "y.tab.c"
     break;
 
   case 69: /* binary_expression: function_call_expression  */
-#line 195 "Compiler.y"
+#line 209 "Compiler.y"
                                                      { }
-#line 2067 "y.tab.c"
+#line 2081 "y.tab.c"
     break;
 
   case 70: /* unary_expression: '-' expression  */
-#line 197 "Compiler.y"
+#line 211 "Compiler.y"
                                                       { }
-#line 2073 "y.tab.c"
+#line 2087 "y.tab.c"
     break;
 
   case 71: /* unary_expression: '!' expression  */
-#line 198 "Compiler.y"
+#line 212 "Compiler.y"
                                                       { }
-#line 2079 "y.tab.c"
+#line 2093 "y.tab.c"
     break;
 
   case 72: /* type: INT_TYPE  */
-#line 202 "Compiler.y"
+#line 216 "Compiler.y"
                                         {  }
-#line 2085 "y.tab.c"
+#line 2099 "y.tab.c"
     break;
 
   case 73: /* type: FLOAT_TYPE  */
-#line 203 "Compiler.y"
+#line 217 "Compiler.y"
                                         {  }
-#line 2091 "y.tab.c"
+#line 2105 "y.tab.c"
     break;
 
   case 74: /* type: BOOL_TYPE  */
-#line 204 "Compiler.y"
+#line 218 "Compiler.y"
                                         {  }
-#line 2097 "y.tab.c"
+#line 2111 "y.tab.c"
     break;
 
   case 75: /* type: CHAR_TYPE  */
-#line 205 "Compiler.y"
+#line 219 "Compiler.y"
                                         {  }
-#line 2103 "y.tab.c"
+#line 2117 "y.tab.c"
     break;
 
   case 76: /* type: STRING_TYPE  */
-#line 206 "Compiler.y"
+#line 220 "Compiler.y"
                                         {  }
-#line 2109 "y.tab.c"
+#line 2123 "y.tab.c"
     break;
 
   case 84: /* start_scope: %empty  */
-#line 218 "Compiler.y"
+#line 232 "Compiler.y"
                             {
                                 printf("start of scope\n");
                                 //we want to increment scope and add new ST (child to current scope)
@@ -2125,21 +2139,21 @@ yyreduce:
                                 }
                                 
                             }
-#line 2129 "y.tab.c"
+#line 2143 "y.tab.c"
     break;
 
   case 85: /* end_scope: %empty  */
-#line 235 "Compiler.y"
+#line 249 "Compiler.y"
                             {
                                 printf("end of scope\n");
                                 currentScope--;
                                 currTable = currTable->parent;
                             }
-#line 2139 "y.tab.c"
+#line 2153 "y.tab.c"
     break;
 
 
-#line 2143 "y.tab.c"
+#line 2157 "y.tab.c"
 
       default: break;
     }
@@ -2332,15 +2346,11 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 241 "Compiler.y"
+#line 256 "Compiler.y"
 
-
-
-extern FILE *yyin;
-FILE *errorsFile;
 
 void yyerror(const char *s) {
-    fprintf(errorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
+    fprintf(syntaxErrorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
 
 nodeType *createTypeNode(conEnum type) {
@@ -2479,10 +2489,12 @@ conEnum getTypeOfEnum(const nodeType *node) {
     // Handle unknown types
     return typeND;
 }
+
+
 int main(int argc, char **argv) {
 
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
         return 1;
     }
 
@@ -2492,21 +2504,61 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    FILE *outputFile = fopen(argv[2], "w");
-    if (!outputFile) {
-        perror("Error opening output file");
+    yyin = fp;
+
+
+    syntaxErrorsFile = fopen("syntax_errors.txt", "w");
+    if (!syntaxErrorsFile) {
+        perror("Error opening syntax errors file");
         fclose(fp);
         return 1;
     }
 
-    errorsFile = outputFile;
+    semanticErrorsFile = fopen("semantic_errors.txt", "w");
+    if (!syntaxErrorsFile) {
+        perror("Error opening syntax errors file");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        return 1;
+    }
 
-    yyin = fp;
+    warningFile = fopen("warnings.txt", "w");
+    if (!warningFile) {
+        perror("Error opening warnings file");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        return 1;
+    }
 
-    yyparse();
+    symbolTableFile = fopen("symbol_table.txt", "w");
+    if (!symbolTableFile) {
+        perror("Error opening symbol table file");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        fclose(warningFile);
+        return 1;
+    }
 
-    fclose(fp);
-    fclose(outputFile);
+    if(!yyparse()) {
+        printf("Parsing successful\n");
+        writeAllSymbolTablesToFile(globalTable, symbolTableFile);
 
+
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        fclose(warningFile);
+        fclose(symbolTableFile);
+    }
+    else {
+        printf("Parsing failed\n");
+        fclose(fp);
+        fclose(syntaxErrorsFile);
+        fclose(semanticErrorsFile);
+        fclose(warningFile);
+        fclose(symbolTableFile);
+    }
     return 0;
 }

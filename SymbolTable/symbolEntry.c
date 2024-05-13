@@ -3,16 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-SymbolEntry *create_variable_SymbolEntry(const char *name, const char *kind, const char *type, int isInitialized, int isConstant, int isUsed, char* value, int lineNo) {
+SymbolEntry *create_variable_SymbolEntry(const char *name, const char *type, int isInitialized, int isConstant, int isUsed, char* value, int lineNo) {
     SymbolEntry *entry = malloc(sizeof(SymbolEntry));
 
     entry->name = strdup(name);
-    entry->kind = strdup(kind);
+    entry->kind = VARIABLE_E;
     entry->type = strdup(type);
     entry->isInitialized = isInitialized;
     entry->isConstant = isConstant;
     entry->isUsed = isUsed;
-    entry->value = strdup(value);
+    entry->value = (value == NULL) ? NULL : strdup(value);
 
     entry->isFunction = 0; // Not a function
     entry->argCount = -1;  // Not applicable
@@ -26,11 +26,11 @@ SymbolEntry *create_variable_SymbolEntry(const char *name, const char *kind, con
     return entry;
 }
 
-SymbolEntry *create_function_SymbolEntry(const char *name, const char *kind, int isUsed, int isInitialized, int lineNo, int argCount, char **argTypes, char *returnType) {
+SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int argCount, char **argTypes, char *returnType) {
     SymbolEntry *entry = malloc(sizeof(SymbolEntry));
 
     entry->name = strdup(name);
-    entry->kind = strdup(kind);
+    entry->kind = FUNCTION_E;
     entry->isUsed = isUsed;
     entry->isInitialized = isInitialized;
     entry->isConstant = -1;   // Not applicable
@@ -50,11 +50,11 @@ SymbolEntry *create_function_SymbolEntry(const char *name, const char *kind, int
     return entry;
 }
 
-SymbolEntry *create_enum_SymbolEntry(const char *name, const char *kind, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypes) {
+SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypes) {
     SymbolEntry *entry = malloc(sizeof(SymbolEntry));
 
     entry->name = strdup(name);
-    entry->kind = strdup(kind);
+    entry->kind = ENUM_E;
     entry->isUsed = isUsed;
     entry->isInitialized = isInitialized; 
     entry->isConstant = -1;    // Not applicable
@@ -79,7 +79,7 @@ char *getName(SymbolEntry *entry) {
     return entry->name;
 }
 
-char *getKind(SymbolEntry *entry) {
+SymbolKind getKind(SymbolEntry *entry) {
     return entry->kind;
 }
 
@@ -140,9 +140,8 @@ void setName(SymbolEntry *entry, const char *name) {
     entry->name = strdup(name);
 }
 
-void setKind(SymbolEntry *entry, const char *kind) {
-    free(entry->kind);
-    entry->kind = strdup(kind);
+void setKind(SymbolEntry *entry, SymbolKind kind) {
+    entry->kind = kind;
 }
 
 void setType(SymbolEntry *entry, const char *type) {
@@ -216,7 +215,6 @@ void setLineNo(SymbolEntry *entry, int lineNo) {
 void destroy_SymbolEntry(SymbolEntry *entry) {
     if (entry != NULL) {
         free(entry->name);
-        free(entry->kind);
         free(entry->type);
         for (int i = 0; i < entry->argCount; i++) {
             free(entry->argTypes[i]);

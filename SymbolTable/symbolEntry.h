@@ -1,5 +1,5 @@
-// #ifndef SymbolEntry_H
-// #define SymbolEntry_H
+#ifndef SymbolEntry_H
+#define SymbolEntry_H
 
 
 // name (Identifier name)
@@ -26,9 +26,16 @@
 
 // lineNo (line number where the variable, function or enum is declared)
 
+
+typedef enum {
+    VARIABLE_E,
+    FUNCTION_E,
+    ENUM_E
+} SymbolKind;
+
 typedef struct {
     char *name;
-    char *kind;
+    SymbolKind kind;
     int isUsed;
     int isInitialized;
 
@@ -50,9 +57,11 @@ typedef struct {
 } SymbolEntry;
 
 
-
+SymbolEntry *create_variable_SymbolEntry(const char *name, const char *type, int isInitialized, int isConstant, int isUsed, char* value, int lineNo);
+SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int argCount, char **argTypes, char *returnType);
+SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypes);
 char *getName(SymbolEntry *entry);
-char *getKind(SymbolEntry *entry);
+SymbolKind getKind(SymbolEntry *entry);
 char *getType(SymbolEntry *entry);
 int getIsInitialized(SymbolEntry *entry);
 int getIsConstant(SymbolEntry *entry);
@@ -67,7 +76,7 @@ int getArgCount(SymbolEntry *entry);
 char **getArgTypes(SymbolEntry *entry);
 int getLineNo(SymbolEntry *entry);
 void setName(SymbolEntry *entry, const char *name);
-void setKind(SymbolEntry *entry, const char *kind);
+void setKind(SymbolEntry *entry, SymbolKind kind);
 void setType(SymbolEntry *entry, const char *type);
 void setIsInitialized(SymbolEntry *entry, int isInitialized);
 void setIsConstant(SymbolEntry *entry, int isConstant);
@@ -83,4 +92,4 @@ void setArgTypes(SymbolEntry *entry, char **argTypes);
 void setLineNo(SymbolEntry *entry, int lineNo);
 void destroy_SymbolEntry(SymbolEntry *entry);
 
-// #endif /* SymbolEntry_H */
+#endif /* SymbolEntry_H */

@@ -89,51 +89,61 @@ void modifySymbolEntry(SymbolTable *table, const char *name, SymbolEntry *entry)
     }
 }
 
+const char *symbolKindToString(SymbolKind kind) {
+    switch (kind) {
+        case VARIABLE_E:
+            return "Variable";
+        case FUNCTION_E:
+            return "Function";
+        case ENUM_E:
+            return "Enum";
+        default:
+            return "Unknown";
+    }
+}
 
-void printSymbolTable(SymbolTable *table) {
-    printf("Symbol Table: %s\t\t Scope: %d\n", table->name, table->scope);
-    printf("-------------------------------------\n");
-    printf("Name\t\tKind\t\tVarType\t\tInitialized\t\tConstant\tUsed\t\tValue\t\tagrCount\t\tArgumentTypes\t\tReturnType\t\tEnumCount\t\tEnumTypes\n");
+void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
+    fprintf(file, "Symbol Table: %s\t\t Scope: %d\n", table->name, table->scope);
+    fprintf(file, "-------------------------------------\n");
+    fprintf(file, "Name\t\tKind\t\tVarType\t\tInitialized\t\tConstant\tUsed\t\tValue\t\tagrCount\t\tArgumentTypes\t\tReturnType\t\tEnumCount\t\tEnumTypes\n");
     for (size_t i = 0; i < table->size; i++) {
-        // printf("%s\t\t%s\t\t%s\t\t%d\t\t%d\t\t%d\t\t%s\t\t%d\t\t  %s\t\t%s\t\t %d\t\t  %s\n",
-        //        table->entries[i]->name, table->entries[i]->kind, 
-        //        table->entries[i]->type, table->entries[i]->isInitialized, table->entries[i]->isConstant, table->entries[i]->isUsed, table->entries[i]->value,
-        //        table->entries[i]->argCount, table->entries[i]->argTypes, table->entries[i]->returnType,
-        //        table->entries[i]->enumCount, table->entries[i]->enumTypes
-        //        );
-        printf("%s\t\t%s\t\t%s\t\t%d\t\t%d\t\t%d\t\t%s\t\t%d\t\t",
-        table->entries[i]->name, table->entries[i]->kind, 
-        table->entries[i]->type, table->entries[i]->isInitialized, table->entries[i]->isConstant, table->entries[i]->isUsed, table->entries[i]->value,
-        table->entries[i]->argCount);
-        
+        fprintf(file, "%s\t\t%s\t\t%s\t\t%d\t\t%d\t\t%d\t\t%s\t\t%d\t\t",
+                table->entries[i]->name, symbolKindToString(table->entries[i]->kind),
+                table->entries[i]->type, table->entries[i]->isInitialized, table->entries[i]->isConstant, table->entries[i]->isUsed, table->entries[i]->value,
+                table->entries[i]->argCount);
+
+
         // for argtypes:
         if (table->entries[i]->argCount > 0) {
             for (int j = 0; j < table->entries[i]->argCount; j++) {
-                printf("%s\t\t", table->entries[i]->argTypes[j]);
+                fprintf(file, "%s\t\t", table->entries[i]->argTypes[j]);
             }
         } else {
-            printf("-\t\t");
+            fprintf(file, "-\t\t");
         }
 
-        printf("%s\t\t%d\t\t", 
-        table->entries[i]->returnType, 
-        table->entries[i]->enumCount);
+        fprintf(file, "%s\t\t%d\t\t",
+                table->entries[i]->returnType,
+                table->entries[i]->enumCount);
 
-        //for enumtypes:
-        if(table->entries[i]->enumCount>0){
-            for(int j=0; j< table->entries[i]->enumCount; j++){
-                printf("%s\t\t", table->entries[i]->enumTypes[j]);
+        // for enumtypes:
+        if (table->entries[i]->enumCount > 0) {
+            for (int j = 0; j < table->entries[i]->enumCount; j++) {
+                fprintf(file, "%s\t\t", table->entries[i]->enumTypes[j]);
             }
-            print("\n");
-        }
-        else{
-            printf("-\t\t");
+            fprintf(file, "\n");
+        } else {
+            fprintf(file, "-\t\t");
         }
 
     }
-    printf("-------------------------------------\n\n");
+    fprintf(file, "-------------------------------------\n\n");
+}
 
+void writeAllSymbolTablesToFile(SymbolTable *table, FILE *file) {
+    writeSymbolTableToFile(table, file);
     for (size_t i = 0; i < table->childCount; i++) {
-        printSymbolTable(table->children[i]);
+        writeAllSymbolTablesToFile(table->children[i], file);
     }
 }
+
