@@ -55,11 +55,14 @@
 //else {
 
 //this is the right else if
-//if(x<0){
-//    x=1;
-//} else {if (x==1) {
-//    x = 9;
-//}}
+
+x=1;
+
+if(x<0){
+    x=1;
+} else {
+    x = 9;
+}
 
 //if(x<0){
 //    x=1;
@@ -84,8 +87,10 @@
 //    break;
 //}
 
-switch(x){
-    case 1: 
-    print("this is case 1 missing default");
-    break;
-}
+//switch(x){
+//    case 1: 
+//    print("this is case 1 missing default");
+//    break;
+//    default:
+//    print("this is case 1 missing default");
+//}
