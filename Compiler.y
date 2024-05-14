@@ -173,15 +173,25 @@ declaration             : type IDENTIFIER
 
                                                                         if(entry == NULL){
                                                                             //check error type mismatch
-                                                                            
-                                                                            // todo: di 8alat hya el mfrod mtkonsh ivalue, it should be generalized!!!!!!!!!!
-                                                                            int integerValue = $4->con.iValue;
-                                                                            char integerValueStr[20]; // Assuming a maximum integer value length of 20 characters
-                                                                            sprintf(integerValueStr, "%d", integerValue);
-
-                                                                            CheckTypeFunc checkFunc = getCheckFunction($1->type);
-                                                                            if(checkFunc(integerValueStr)){
-                                                                                SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, integerValueStr, currentLineNumber);
+                                                                            char* typeUnion;
+                                                                            CheckTypeFunc checkFunc = getCheckFunction($1->type, &typeUnion);
+                                                                            if(checkFunc($4->con.type)){
+                                                                                char symbolValue[20];
+                                                                                if(strcmp(typeUnion, "int") == 0){
+                                                                                    int integerValue = $4->con.iValue;
+                                                                                    sprintf(symbolValue, "%d", integerValue);
+                                                                                }
+                                                                                else if(strcmp(typeUnion, "float") == 0){
+                                                                                }
+                                                                                else if(strcmp(typeUnion, "bool") == 0){
+                                                                                }
+                                                                                else if(strcmp(typeUnion, "char") == 0){
+                                                                                    int integerValue = $4->con.iValue;
+                                                                                    sprintf(symbolValue, "%d", integerValue);
+                                                                                }
+                                                                                else if(strcmp(typeUnion, "string") == 0){
+                                                                                }
+                                                                                SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, symbolValue, currentLineNumber);
                                                                                 addSymbolEntry(currTable, newEntry);
                                                                             }
                                                                             else{
@@ -222,29 +232,29 @@ enum_list               : enum_list ',' IDENTIFIER                      { }
 
 // Expressions rules
 
-expression              : binary_expression  { }
-                        | unary_expression   { }
+expression              : binary_expression  { $$=$1;}
+                        | unary_expression   { $$=$1;}
 
-binary_expression      : expression '+' expression   { }
-                        | expression '-' expression  { }
-                        | expression '*' expression  { }
-                        | expression '/' expression  { }
-                        | expression '%' expression  { }
-                        | expression EQ expression   { }
-                        | expression NEQ expression  { }
-                        | expression LT expression   {}
-                        | expression GT expression   {}
-                        | expression LTE expression  { }
-                        | expression GTE expression  { }
-                        | expression AND expression  { }
-                        | expression OR expression   {}
-                        | '(' expression ')'         {  }
-                        | value                      {  }
-                        | IDENTIFIER                 {}
-                        | function_call_expression   { }
+binary_expression       : expression '+' expression  { $$=createOperatorNode('+', 2, $1, $3); }
+                        | expression '-' expression  { $$=createOperatorNode('-', 2, $1, $3); }
+                        | expression '*' expression  { $$=createOperatorNode('*', 2, $1, $3); }
+                        | expression '/' expression  { $$=createOperatorNode('/', 2, $1, $3); }
+                        | expression '%' expression  { $$=createOperatorNode('%', 2, $1, $3); }
+                        | expression EQ expression   { $$=createOperatorNode(EQ, 2, $1, $3); }
+                        | expression NEQ expression  { $$=createOperatorNode(NEQ, 2, $1, $3); }
+                        | expression LT expression   { $$=createOperatorNode(LT, 2, $1, $3); }
+                        | expression GT expression   { $$=createOperatorNode(GT, 2, $1, $3); }
+                        | expression LTE expression  { $$=createOperatorNode(LTE, 2, $1, $3); }
+                        | expression GTE expression  { $$=createOperatorNode(GTE, 2, $1, $3); }
+                        | expression AND expression  { $$=createOperatorNode(AND, 2, $1, $3); }
+                        | expression OR expression   { $$=createOperatorNode(OR, 2, $1, $3); }
+                        | '(' expression ')'         { $$=$2; }
+                        | value                      { $$=$1; }
+                        | IDENTIFIER                 { $$=createIdentifierNode($1); }
+                        | function_call_expression   { $$=$1;}
 
-unary_expression       : '-' expression %prec UMINUS  { }
-                        | '!' expression %prec NOT    { }
+unary_expression        : '-' expression %prec UMINUS  { $$ = createOperatorNode('-', 1, $2); }
+                        | '!' expression %prec NOT    { $$ = createOperatorNode('!', 1, $2); }
                         ;
 
 

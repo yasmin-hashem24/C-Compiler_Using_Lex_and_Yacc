@@ -10,13 +10,13 @@
 
 void throwError(const char *message, int lineNo, FILE *file);
 // Define the function pointer type
-typedef bool (*CheckTypeFunc)(const char *value);
-CheckTypeFunc getCheckFunction(conEnum type);
-bool checkTypeInt(const char *value);
-bool checkTypeFloat(const char *value);
-bool checkTypeChar(const char *value);
-bool checkTypeString(const char *value);
-bool checkTypeBool(const char *value);
+typedef bool (*CheckTypeFunc)(conEnum type);
+CheckTypeFunc getCheckFunction(conEnum type, char **typeEnum);
+bool checkTypeInt(conEnum type);
+bool checkTypeFloat(conEnum type);
+bool checkTypeChar(conEnum type);
+bool checkTypeString(conEnum type);
+bool checkTypeBool(conEnum type);
 
 
 
