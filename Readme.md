@@ -2,7 +2,7 @@
 
 - Yasmin Hashem Niazy - 4200013
 - Rofayda Bassem - 1190220
-- Mahinour Alaa Edlin Elsarky - 1190339
+- Mahinour Alaaeldin Elsarky - 1190339
 - Salma Ahmed Mahfouz - 1190253
 
 ## Usage Example

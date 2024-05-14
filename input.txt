@@ -56,13 +56,26 @@
 
 //this is the right else if
 
-int x;
-int y = 1000;
-if(x<0){
-    int y;
-} else {
-    int y;
-}
+//int x;
+//int y = 1000;
+//if(x<0){
+//    int y;
+//} else {
+//    int y;
+//}
+
+
+//testcase1:
+char ch= 'a';
+//testcase2:
+//char c1='b';
+char c2= c1;
+
+
+
+
+
+
 
 //if(x<0){
 //    x=1;
