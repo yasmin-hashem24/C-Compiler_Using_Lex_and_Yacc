@@ -57,11 +57,11 @@
 //this is the right else if
 
 int x;
-
+int y = 1000;
 if(x<0){
-    x=1;
+    int y;
 } else {
-    x = 9;
+    int y;
 }
 
 //if(x<0){

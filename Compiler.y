@@ -20,9 +20,12 @@
     FILE *symbolTableFile;
     extern int currentLineNumber;
 
+
     int currentScope = -1;
     SymbolTable *globalTable;
     SymbolTable *currTable;
+
+    const char *conEnumToString(conEnum enumValue);
 
 %}
 
@@ -156,8 +159,7 @@ declaration             : type IDENTIFIER
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
 
                                                                         if(entry == NULL){
-                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry($2, $1, 0, 0, 0, NULL, currentLineNumber);
-                                                                            printf("Adding variable %s to symbol table\n", $2);
+                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 0, 0, 0, NULL, currentLineNumber);
                                                                             addSymbolEntry(currTable, newEntry);
                                                                         }
                                                                         else{
@@ -165,10 +167,41 @@ declaration             : type IDENTIFIER
                                                                         }
                                                                     
                                                                     }
-                        | type IDENTIFIER '=' expression            {  }
-                        | CONST type IDENTIFIER '=' expression      {  }
-                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER {  }
-                        | VAR IDENTIFIER                            {  }
+                        | type IDENTIFIER '=' expression            
+                                                                    {  
+                                                                        SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
+
+                                                                        if(entry == NULL){
+                                                                            //check error type mismatch
+                                                                            int integerValue = $4->con.iValue;
+                                                                            char integerValueStr[20]; // Assuming a maximum integer value length of 20 characters
+                                                                            sprintf(integerValueStr, "%d", integerValue);
+
+                                                                            CheckTypeFunc checkFunc = getCheckFunction($1->type);
+                                                                            if(checkFunc(conEnumToString($1->type), integerValueStr)){
+                                                                                SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, integerValueStr, currentLineNumber);
+                                                                                addSymbolEntry(currTable, newEntry);
+                                                                            }
+                                                                            else{
+                                                                                throwError("Type mismatch", 1, semanticErrorsFile);
+                                                                            }
+                                                                        }
+                                                                        else{
+                                                                            throwError("Variable already declared in this scope", 1, semanticErrorsFile);
+                                                                        }
+                                                                    }
+                        | CONST type IDENTIFIER '=' expression      
+                                                                    { 
+
+                                                                    }
+                        | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER 
+                                                                    {  
+
+                                                                    }
+                        | VAR IDENTIFIER                            
+                                                                    {  
+                                                                        
+                                                                    }
                         ;
 
 assignment              : IDENTIFIER '=' expression              {}
@@ -213,20 +246,19 @@ unary_expression       : '-' expression %prec UMINUS  { }
                         ;
 
 
-type                    : INT_TYPE      {  }
-                        | FLOAT_TYPE    {  }
-                        | BOOL_TYPE     {  }
-                        | CHAR_TYPE     {  }
-                        | STRING_TYPE   {  }
-                        ;
+type                    : INT_TYPE      { $$ = createTypeNode(typeInt); }
+                        | FLOAT_TYPE    { $$ = createTypeNode(typeFloat); }
+                        | BOOL_TYPE     { $$ = createTypeNode(typeBool); }
+                        | CHAR_TYPE     { $$ = createTypeNode(typeChar); }
+                        | STRING_TYPE   { $$ = createTypeNode(typeString); }
 
-value                   : INTEGER
-                        | FLOAT    
-                        | BOOL
-                        | CHAR
-                        | STRING
-                        | BOOL_TRUE
-                        | BOOL_FALSE
+value                   : INTEGER       { $$ = createIntConstantNode($1); }
+                        | FLOAT         { $$ = createFloatConstantNode($1); }
+                        | BOOL          { $$ = createBoolConstantNode($1); }
+                        | CHAR          { $$ = createCharConstantNode($1); }
+                        | STRING        { $$ = createStringConstantNode($1); }
+                        | BOOL_TRUE     { $$ = createBoolConstantNode($1); }
+                        | BOOL_FALSE    { $$ = createBoolConstantNode($1); }
                         ;
 
 start_scope             :   {
@@ -394,6 +426,31 @@ conEnum getTypeOfEnum(const nodeType *node) {
 
     // Handle unknown types
     return typeND;
+}
+
+const char *conEnumToString(conEnum enumValue) {
+    switch (enumValue) {
+        case typeInt:
+            return "Integer";
+        case typeFloat:
+            return "Float";
+        case typeString:
+            return "String";
+        case typeChar:
+            return "Char";
+        case typeBool:
+            return "Boolean";
+        case typeConst:
+            return "Constant";
+        case typeND:
+            return "Non-Defined";
+        case typeVoid:
+            return "Void";
+        case typeVar:
+            return "Variable";
+        default:
+            return "Unknown";
+    }
 }
 
 
