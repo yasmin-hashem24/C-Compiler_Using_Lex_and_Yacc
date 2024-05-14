@@ -763,11 +763,11 @@ static const yytype_int16 yyrline[] =
       91,    92,    93,    94,    95,    96,   100,   103,   104,   106,
      109,   110,   113,   118,   120,   123,   127,   128,   129,   132,
      135,   138,   139,   141,   142,   143,   149,   150,   153,   154,
-     157,   170,   193,   210,   211,   214,   218,   222,   223,   224,
-     225,   230,   231,   233,   234,   235,   236,   237,   238,   239,
-     240,   241,   242,   243,   244,   245,   246,   247,   248,   249,
-     251,   252,   256,   257,   258,   259,   260,   262,   263,   264,
-     265,   266,   267,   268,   271,   288
+     157,   170,   195,   199,   203,   209,   213,   217,   218,   219,
+     220,   225,   226,   228,   229,   230,   231,   232,   233,   234,
+     235,   236,   237,   238,   239,   240,   241,   242,   243,   244,
+     246,   247,   251,   252,   253,   254,   255,   257,   258,   259,
+     260,   261,   262,   263,   266,   283
 };
 #endif
 
@@ -1915,12 +1915,14 @@ yyreduce:
 
                                                                         if(entry == NULL){
                                                                             //check error type mismatch
+                                                                            
+                                                                            // todo: di 8alat hya el mfrod mtkonsh ivalue, it should be generalized!!!!!!!!!!
                                                                             int integerValue = (yyvsp[0].nPtr)->con.iValue;
                                                                             char integerValueStr[20]; // Assuming a maximum integer value length of 20 characters
                                                                             sprintf(integerValueStr, "%d", integerValue);
-                                                                                
+
                                                                             CheckTypeFunc checkFunc = getCheckFunction((yyvsp[-3].nPtr)->type);
-                                                                            if(checkFunc(conEnumToString((yyvsp[-3].nPtr)->type), integerValueStr)){
+                                                                            if(checkFunc(integerValueStr)){
                                                                                 SymbolEntry *newEntry = create_variable_SymbolEntry((yyvsp[-2].sVal), conEnumToString((yyvsp[-3].nPtr)->type), 1, 0, 1, integerValueStr, currentLineNumber);
                                                                                 addSymbolEntry(currTable, newEntry);
                                                                             }
@@ -1932,278 +1934,269 @@ yyreduce:
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 1936 "y.tab.c"
+#line 1938 "y.tab.c"
     break;
 
   case 42: /* declaration: CONST type IDENTIFIER '=' expression  */
-#line 194 "Compiler.y"
+#line 196 "Compiler.y"
                                                                     { 
-                                                                        SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
 
-                                                                        if(entry == NULL){
-                                                                            //check error type
-
-                                                                            int integerValue = (yyvsp[0].nPtr)->con.iValue;
-                                                                            char integerValueStr[20]; // Assuming a maximum integer value length of 20 characters
-                                                                            sprintf(integerValueStr, "%d", integerValue);
-                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry((yyvsp[-2].sVal), conEnumToString((yyvsp[-3].nPtr)->type), 1, 1, 1, integerValueStr, currentLineNumber);
-                                                                            addSymbolEntry(currTable, newEntry);
-                                                                        }
-                                                                        else{
-                                                                            throwError("Variable already declared in this scope", 1, semanticErrorsFile);
-                                                                        }
                                                                     }
-#line 1957 "y.tab.c"
+#line 1946 "y.tab.c"
     break;
 
   case 43: /* declaration: ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  */
-#line 210 "Compiler.y"
-                                                                    {  }
-#line 1963 "y.tab.c"
+#line 200 "Compiler.y"
+                                                                    {  
+
+                                                                    }
+#line 1954 "y.tab.c"
     break;
 
   case 44: /* declaration: VAR IDENTIFIER  */
-#line 211 "Compiler.y"
-                                                                    {  }
-#line 1969 "y.tab.c"
+#line 204 "Compiler.y"
+                                                                    {  
+
+                                                                    }
+#line 1962 "y.tab.c"
     break;
 
   case 45: /* assignment: IDENTIFIER '=' expression  */
-#line 214 "Compiler.y"
+#line 209 "Compiler.y"
                                                                  {}
-#line 1975 "y.tab.c"
+#line 1968 "y.tab.c"
     break;
 
   case 46: /* enum_declaration: ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  */
-#line 218 "Compiler.y"
+#line 213 "Compiler.y"
                                                                         {}
-#line 1981 "y.tab.c"
+#line 1974 "y.tab.c"
     break;
 
   case 47: /* enum_list: enum_list ',' IDENTIFIER  */
-#line 222 "Compiler.y"
+#line 217 "Compiler.y"
                                                                         { }
-#line 1987 "y.tab.c"
+#line 1980 "y.tab.c"
     break;
 
   case 48: /* enum_list: enum_list ',' IDENTIFIER '=' expression  */
-#line 223 "Compiler.y"
+#line 218 "Compiler.y"
                                                                         { }
-#line 1993 "y.tab.c"
+#line 1986 "y.tab.c"
     break;
 
   case 49: /* enum_list: IDENTIFIER  */
-#line 224 "Compiler.y"
+#line 219 "Compiler.y"
                                                                         { }
-#line 1999 "y.tab.c"
+#line 1992 "y.tab.c"
     break;
 
   case 50: /* enum_list: IDENTIFIER '=' expression  */
-#line 225 "Compiler.y"
+#line 220 "Compiler.y"
                                                                         { }
-#line 2005 "y.tab.c"
+#line 1998 "y.tab.c"
     break;
 
   case 51: /* expression: binary_expression  */
-#line 230 "Compiler.y"
+#line 225 "Compiler.y"
                                              { }
-#line 2011 "y.tab.c"
+#line 2004 "y.tab.c"
     break;
 
   case 52: /* expression: unary_expression  */
-#line 231 "Compiler.y"
+#line 226 "Compiler.y"
                                              { }
-#line 2017 "y.tab.c"
+#line 2010 "y.tab.c"
     break;
 
   case 53: /* binary_expression: expression '+' expression  */
-#line 233 "Compiler.y"
+#line 228 "Compiler.y"
                                                      { }
-#line 2023 "y.tab.c"
+#line 2016 "y.tab.c"
     break;
 
   case 54: /* binary_expression: expression '-' expression  */
-#line 234 "Compiler.y"
+#line 229 "Compiler.y"
                                                      { }
-#line 2029 "y.tab.c"
+#line 2022 "y.tab.c"
     break;
 
   case 55: /* binary_expression: expression '*' expression  */
-#line 235 "Compiler.y"
+#line 230 "Compiler.y"
                                                      { }
-#line 2035 "y.tab.c"
+#line 2028 "y.tab.c"
     break;
 
   case 56: /* binary_expression: expression '/' expression  */
-#line 236 "Compiler.y"
+#line 231 "Compiler.y"
                                                      { }
-#line 2041 "y.tab.c"
+#line 2034 "y.tab.c"
     break;
 
   case 57: /* binary_expression: expression '%' expression  */
-#line 237 "Compiler.y"
+#line 232 "Compiler.y"
                                                      { }
-#line 2047 "y.tab.c"
+#line 2040 "y.tab.c"
     break;
 
   case 58: /* binary_expression: expression EQ expression  */
-#line 238 "Compiler.y"
+#line 233 "Compiler.y"
                                                      { }
-#line 2053 "y.tab.c"
+#line 2046 "y.tab.c"
     break;
 
   case 59: /* binary_expression: expression NEQ expression  */
-#line 239 "Compiler.y"
+#line 234 "Compiler.y"
                                                      { }
-#line 2059 "y.tab.c"
+#line 2052 "y.tab.c"
     break;
 
   case 60: /* binary_expression: expression LT expression  */
-#line 240 "Compiler.y"
+#line 235 "Compiler.y"
                                                      {}
-#line 2065 "y.tab.c"
+#line 2058 "y.tab.c"
     break;
 
   case 61: /* binary_expression: expression GT expression  */
-#line 241 "Compiler.y"
+#line 236 "Compiler.y"
                                                      {}
-#line 2071 "y.tab.c"
+#line 2064 "y.tab.c"
     break;
 
   case 62: /* binary_expression: expression LTE expression  */
-#line 242 "Compiler.y"
+#line 237 "Compiler.y"
                                                      { }
-#line 2077 "y.tab.c"
+#line 2070 "y.tab.c"
     break;
 
   case 63: /* binary_expression: expression GTE expression  */
-#line 243 "Compiler.y"
+#line 238 "Compiler.y"
                                                      { }
-#line 2083 "y.tab.c"
+#line 2076 "y.tab.c"
     break;
 
   case 64: /* binary_expression: expression AND expression  */
-#line 244 "Compiler.y"
+#line 239 "Compiler.y"
                                                      { }
-#line 2089 "y.tab.c"
+#line 2082 "y.tab.c"
     break;
 
   case 65: /* binary_expression: expression OR expression  */
-#line 245 "Compiler.y"
+#line 240 "Compiler.y"
                                                      {}
-#line 2095 "y.tab.c"
+#line 2088 "y.tab.c"
     break;
 
   case 66: /* binary_expression: '(' expression ')'  */
-#line 246 "Compiler.y"
+#line 241 "Compiler.y"
                                                      {  }
-#line 2101 "y.tab.c"
+#line 2094 "y.tab.c"
     break;
 
   case 67: /* binary_expression: value  */
-#line 247 "Compiler.y"
+#line 242 "Compiler.y"
                                                      {  }
-#line 2107 "y.tab.c"
+#line 2100 "y.tab.c"
     break;
 
   case 68: /* binary_expression: IDENTIFIER  */
-#line 248 "Compiler.y"
+#line 243 "Compiler.y"
                                                      {}
-#line 2113 "y.tab.c"
+#line 2106 "y.tab.c"
     break;
 
   case 69: /* binary_expression: function_call_expression  */
-#line 249 "Compiler.y"
+#line 244 "Compiler.y"
                                                      { }
-#line 2119 "y.tab.c"
+#line 2112 "y.tab.c"
     break;
 
   case 70: /* unary_expression: '-' expression  */
-#line 251 "Compiler.y"
+#line 246 "Compiler.y"
                                                       { }
-#line 2125 "y.tab.c"
+#line 2118 "y.tab.c"
     break;
 
   case 71: /* unary_expression: '!' expression  */
-#line 252 "Compiler.y"
+#line 247 "Compiler.y"
                                                       { }
-#line 2131 "y.tab.c"
+#line 2124 "y.tab.c"
     break;
 
   case 72: /* type: INT_TYPE  */
-#line 256 "Compiler.y"
+#line 251 "Compiler.y"
                                         { (yyval.nPtr) = createTypeNode(typeInt); }
-#line 2137 "y.tab.c"
+#line 2130 "y.tab.c"
     break;
 
   case 73: /* type: FLOAT_TYPE  */
-#line 257 "Compiler.y"
+#line 252 "Compiler.y"
                                         { (yyval.nPtr) = createTypeNode(typeFloat); }
-#line 2143 "y.tab.c"
+#line 2136 "y.tab.c"
     break;
 
   case 74: /* type: BOOL_TYPE  */
-#line 258 "Compiler.y"
+#line 253 "Compiler.y"
                                         { (yyval.nPtr) = createTypeNode(typeBool); }
-#line 2149 "y.tab.c"
+#line 2142 "y.tab.c"
     break;
 
   case 75: /* type: CHAR_TYPE  */
-#line 259 "Compiler.y"
+#line 254 "Compiler.y"
                                         { (yyval.nPtr) = createTypeNode(typeChar); }
-#line 2155 "y.tab.c"
+#line 2148 "y.tab.c"
     break;
 
   case 76: /* type: STRING_TYPE  */
-#line 260 "Compiler.y"
+#line 255 "Compiler.y"
                                         { (yyval.nPtr) = createTypeNode(typeString); }
-#line 2161 "y.tab.c"
+#line 2154 "y.tab.c"
     break;
 
   case 77: /* value: INTEGER  */
-#line 262 "Compiler.y"
+#line 257 "Compiler.y"
                                         { (yyval.nPtr) = createIntConstantNode((yyvsp[0].iVal)); }
-#line 2167 "y.tab.c"
+#line 2160 "y.tab.c"
     break;
 
   case 78: /* value: FLOAT  */
-#line 263 "Compiler.y"
+#line 258 "Compiler.y"
                                         { (yyval.nPtr) = createFloatConstantNode((yyvsp[0].fVal)); }
-#line 2173 "y.tab.c"
+#line 2166 "y.tab.c"
     break;
 
   case 79: /* value: BOOL  */
-#line 264 "Compiler.y"
+#line 259 "Compiler.y"
                                         { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2179 "y.tab.c"
+#line 2172 "y.tab.c"
     break;
 
   case 80: /* value: CHAR  */
-#line 265 "Compiler.y"
+#line 260 "Compiler.y"
                                         { (yyval.nPtr) = createCharConstantNode((yyvsp[0].cVal)); }
-#line 2185 "y.tab.c"
+#line 2178 "y.tab.c"
     break;
 
   case 81: /* value: STRING  */
-#line 266 "Compiler.y"
+#line 261 "Compiler.y"
                                         { (yyval.nPtr) = createStringConstantNode((yyvsp[0].sVal)); }
-#line 2191 "y.tab.c"
+#line 2184 "y.tab.c"
     break;
 
   case 82: /* value: BOOL_TRUE  */
-#line 267 "Compiler.y"
+#line 262 "Compiler.y"
                                         { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2197 "y.tab.c"
+#line 2190 "y.tab.c"
     break;
 
   case 83: /* value: BOOL_FALSE  */
-#line 268 "Compiler.y"
+#line 263 "Compiler.y"
                                         { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2203 "y.tab.c"
+#line 2196 "y.tab.c"
     break;
 
   case 84: /* start_scope: %empty  */
-#line 271 "Compiler.y"
+#line 266 "Compiler.y"
                             {
                                 printf("start of scope\n");
                                 //we want to increment scope and add new ST (child to current scope)
@@ -2219,21 +2212,21 @@ yyreduce:
                                 }
                                 
                             }
-#line 2223 "y.tab.c"
+#line 2216 "y.tab.c"
     break;
 
   case 85: /* end_scope: %empty  */
-#line 288 "Compiler.y"
+#line 283 "Compiler.y"
                             {
                                 printf("end of scope\n");
                                 currentScope--;
                                 currTable = currTable->parent;
                             }
-#line 2233 "y.tab.c"
+#line 2226 "y.tab.c"
     break;
 
 
-#line 2237 "y.tab.c"
+#line 2230 "y.tab.c"
 
       default: break;
     }
@@ -2426,7 +2419,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 295 "Compiler.y"
+#line 290 "Compiler.y"
 
 
 void yyerror(const char *s) {

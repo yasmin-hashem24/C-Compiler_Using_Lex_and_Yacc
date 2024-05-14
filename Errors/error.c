@@ -22,22 +22,22 @@ CheckTypeFunc getCheckFunction(conEnum type) {
     }
 }
 
-bool checkTypeInt(const char *type, const char *value) {
+bool checkTypeInt(const char *value) {
     return 0;
 }
 
-bool checkTypeFloat(const char *type, const char *value) {
+bool checkTypeFloat(const char *value) {
     return 0;
 }
 
-bool checkTypeChar(const char *type, const char *value) {
+bool checkTypeChar(const char *value) {
     return 0;
 }
 
-bool checkTypeString(const char *type, const char *value) {
+bool checkTypeString(const char *value) {
     return 0;
 }
 
-bool checkTypeBool(const char *type, const char *value) {
+bool checkTypeBool(const char *value) {
     return 0;
 }

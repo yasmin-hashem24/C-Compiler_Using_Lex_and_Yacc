@@ -173,12 +173,14 @@ declaration             : type IDENTIFIER
 
                                                                         if(entry == NULL){
                                                                             //check error type mismatch
+                                                                            
+                                                                            // todo: di 8alat hya el mfrod mtkonsh ivalue, it should be generalized!!!!!!!!!!
                                                                             int integerValue = $4->con.iValue;
                                                                             char integerValueStr[20]; // Assuming a maximum integer value length of 20 characters
                                                                             sprintf(integerValueStr, "%d", integerValue);
 
                                                                             CheckTypeFunc checkFunc = getCheckFunction($1->type);
-                                                                            if(checkFunc(conEnumToString($1->type), integerValueStr)){
+                                                                            if(checkFunc(integerValueStr)){
                                                                                 SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, integerValueStr, currentLineNumber);
                                                                                 addSymbolEntry(currTable, newEntry);
                                                                             }
@@ -200,7 +202,7 @@ declaration             : type IDENTIFIER
                                                                     }
                         | VAR IDENTIFIER                            
                                                                     {  
-                                                                        
+
                                                                     }
                         ;
 
