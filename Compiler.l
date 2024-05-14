@@ -6,6 +6,8 @@
     #include <string.h>
     #include "node.h"
     #include "y.tab.h"
+    #include <unistd.h>
+    #include "y.tab.h"
     int currentLineNumber = 1;
 %}
 
@@ -80,7 +82,7 @@
                       /* Mathematical and logical expressions */
 [0-9]+              { yylval.iVal = atoi(yytext); printf("INTEGER: %s\n", yytext); return INTEGER; }
 \'[a-zA-Z0-9]\'    { yylval.cVal = strdup(yytext); printf("CHAR: %s\n", yytext); return CHAR; }
-[0-9]*\.[0-9]+      { yylval.fVal =  atof(yytext); printf("FLOAT: %s\n", yytext); return FLOAT; }
+[0-9]*\.[0-9]+      { yylval.fVal =  atof(yytext); printf("FLOAT: %f\n", yytext); return FLOAT; }
 \"[_!\.@%&#$?^~'a-zA-Z0-9 ]*\"  { yylval.sVal = strdup(yytext); printf("STRING: %s\n", yytext); return STRING; }
 [_a-zA-Z][_a-zA-Z0-9]*       { yylval.sVal = strdup(yytext); printf("IDENTIFIER: %s\n", yytext); return IDENTIFIER; }               /* identifiers and variable names */
 

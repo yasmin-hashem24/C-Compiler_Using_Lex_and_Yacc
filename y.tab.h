@@ -54,50 +54,50 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    INTEGER = 258,                 /* INTEGER  */
-    FLOAT = 259,                   /* FLOAT  */
-    BOOL = 260,                    /* BOOL  */
-    CHAR = 261,                    /* CHAR  */
-    STRING = 262,                  /* STRING  */
-    IDENTIFIER = 263,              /* IDENTIFIER  */
-    BOOL_FALSE = 264,              /* BOOL_FALSE  */
-    BOOL_TRUE = 265,               /* BOOL_TRUE  */
-    INT_TYPE = 266,                /* INT_TYPE  */
-    FLOAT_TYPE = 267,              /* FLOAT_TYPE  */
-    BOOL_TYPE = 268,               /* BOOL_TYPE  */
-    CHAR_TYPE = 269,               /* CHAR_TYPE  */
-    STRING_TYPE = 270,             /* STRING_TYPE  */
-    VOID_TYPE = 271,               /* VOID_TYPE  */
-    LBRACE = 272,                  /* LBRACE  */
-    RBRACE = 273,                  /* RBRACE  */
-    EQ = 274,                      /* EQ  */
-    NEQ = 275,                     /* NEQ  */
-    LT = 276,                      /* LT  */
-    GT = 277,                      /* GT  */
-    LTE = 278,                     /* LTE  */
-    GTE = 279,                     /* GTE  */
-    AND = 280,                     /* AND  */
-    OR = 281,                      /* OR  */
-    CONST = 282,                   /* CONST  */
-    FUNC = 283,                    /* FUNC  */
-    MAIN = 284,                    /* MAIN  */
-    INCLUDE = 285,                 /* INCLUDE  */
-    DEFINE = 286,                  /* DEFINE  */
-    VAR = 287,                     /* VAR  */
-    IF = 288,                      /* IF  */
-    ELSE = 289,                    /* ELSE  */
-    WHILE = 290,                   /* WHILE  */
-    DO = 291,                      /* DO  */
-    FOR = 292,                     /* FOR  */
-    SWITCH = 293,                  /* SWITCH  */
-    CASE = 294,                    /* CASE  */
-    DEFAULT = 295,                 /* DEFAULT  */
-    BREAK = 296,                   /* BREAK  */
-    RETURN = 297,                  /* RETURN  */
-    EXIT = 298,                    /* EXIT  */
-    CONTINUE = 299,                /* CONTINUE  */
-    PRINT = 300,                   /* PRINT  */
-    ENUM = 301,                    /* ENUM  */
+    INT_TYPE = 258,                /* INT_TYPE  */
+    FLOAT_TYPE = 259,              /* FLOAT_TYPE  */
+    BOOL_TYPE = 260,               /* BOOL_TYPE  */
+    CHAR_TYPE = 261,               /* CHAR_TYPE  */
+    STRING_TYPE = 262,             /* STRING_TYPE  */
+    VOID_TYPE = 263,               /* VOID_TYPE  */
+    LBRACE = 264,                  /* LBRACE  */
+    RBRACE = 265,                  /* RBRACE  */
+    EQ = 266,                      /* EQ  */
+    NEQ = 267,                     /* NEQ  */
+    LT = 268,                      /* LT  */
+    GT = 269,                      /* GT  */
+    LTE = 270,                     /* LTE  */
+    GTE = 271,                     /* GTE  */
+    AND = 272,                     /* AND  */
+    OR = 273,                      /* OR  */
+    CONST = 274,                   /* CONST  */
+    FUNC = 275,                    /* FUNC  */
+    MAIN = 276,                    /* MAIN  */
+    INCLUDE = 277,                 /* INCLUDE  */
+    DEFINE = 278,                  /* DEFINE  */
+    VAR = 279,                     /* VAR  */
+    IF = 280,                      /* IF  */
+    ELSE = 281,                    /* ELSE  */
+    WHILE = 282,                   /* WHILE  */
+    DO = 283,                      /* DO  */
+    FOR = 284,                     /* FOR  */
+    SWITCH = 285,                  /* SWITCH  */
+    CASE = 286,                    /* CASE  */
+    DEFAULT = 287,                 /* DEFAULT  */
+    BREAK = 288,                   /* BREAK  */
+    RETURN = 289,                  /* RETURN  */
+    EXIT = 290,                    /* EXIT  */
+    CONTINUE = 291,                /* CONTINUE  */
+    PRINT = 292,                   /* PRINT  */
+    ENUM = 293,                    /* ENUM  */
+    INTEGER = 294,                 /* INTEGER  */
+    FLOAT = 295,                   /* FLOAT  */
+    BOOL = 296,                    /* BOOL  */
+    CHAR = 297,                    /* CHAR  */
+    STRING = 298,                  /* STRING  */
+    IDENTIFIER = 299,              /* IDENTIFIER  */
+    BOOL_FALSE = 300,              /* BOOL_FALSE  */
+    BOOL_TRUE = 301,               /* BOOL_TRUE  */
     IFX = 302,                     /* IFX  */
     UMINUS = 303,                  /* UMINUS  */
     NOT = 304                      /* NOT  */
@@ -109,50 +109,50 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define INTEGER 258
-#define FLOAT 259
-#define BOOL 260
-#define CHAR 261
-#define STRING 262
-#define IDENTIFIER 263
-#define BOOL_FALSE 264
-#define BOOL_TRUE 265
-#define INT_TYPE 266
-#define FLOAT_TYPE 267
-#define BOOL_TYPE 268
-#define CHAR_TYPE 269
-#define STRING_TYPE 270
-#define VOID_TYPE 271
-#define LBRACE 272
-#define RBRACE 273
-#define EQ 274
-#define NEQ 275
-#define LT 276
-#define GT 277
-#define LTE 278
-#define GTE 279
-#define AND 280
-#define OR 281
-#define CONST 282
-#define FUNC 283
-#define MAIN 284
-#define INCLUDE 285
-#define DEFINE 286
-#define VAR 287
-#define IF 288
-#define ELSE 289
-#define WHILE 290
-#define DO 291
-#define FOR 292
-#define SWITCH 293
-#define CASE 294
-#define DEFAULT 295
-#define BREAK 296
-#define RETURN 297
-#define EXIT 298
-#define CONTINUE 299
-#define PRINT 300
-#define ENUM 301
+#define INT_TYPE 258
+#define FLOAT_TYPE 259
+#define BOOL_TYPE 260
+#define CHAR_TYPE 261
+#define STRING_TYPE 262
+#define VOID_TYPE 263
+#define LBRACE 264
+#define RBRACE 265
+#define EQ 266
+#define NEQ 267
+#define LT 268
+#define GT 269
+#define LTE 270
+#define GTE 271
+#define AND 272
+#define OR 273
+#define CONST 274
+#define FUNC 275
+#define MAIN 276
+#define INCLUDE 277
+#define DEFINE 278
+#define VAR 279
+#define IF 280
+#define ELSE 281
+#define WHILE 282
+#define DO 283
+#define FOR 284
+#define SWITCH 285
+#define CASE 286
+#define DEFAULT 287
+#define BREAK 288
+#define RETURN 289
+#define EXIT 290
+#define CONTINUE 291
+#define PRINT 292
+#define ENUM 293
+#define INTEGER 294
+#define FLOAT 295
+#define BOOL 296
+#define CHAR 297
+#define STRING 298
+#define IDENTIFIER 299
+#define BOOL_FALSE 300
+#define BOOL_TRUE 301
 #define IFX 302
 #define UMINUS 303
 #define NOT 304

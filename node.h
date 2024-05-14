@@ -66,7 +66,6 @@ struct typeNodeType
 typedef struct nodeTypeTag
 {
     nodeEnum type; // Type of node
-
     union
     {
         struct conNodeType con;  // Constants
@@ -92,7 +91,7 @@ nodeType *createCharConstantNode(char value);
 nodeType *createStringConstantNode(char *value);
 nodeType *createIdentifierNode(char *id);
 nodeType *createOperatorNode(int oper, int nops, ...);
-
+void execute(nodeType *p);
 conEnum getTypeOfEnum(const nodeType *node);
 
 void freeNode(nodeType *p);
