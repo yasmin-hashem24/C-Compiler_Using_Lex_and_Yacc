@@ -16,5 +16,5 @@
  bison --yacc -d Compiler.y
  lex Compiler.l
  cc lex.yy.c y.tab.c -o bas.exe
- ./bas.exe input.txt output.txt
+ ./bas.exe input.txt
 ```
