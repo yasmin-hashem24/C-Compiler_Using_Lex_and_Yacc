@@ -37,7 +37,6 @@ struct conNodeType
     {
         int iValue;
         float fValue;
-        bool bValue;
         char *sValue;
         char cValue;
     };
@@ -45,8 +44,8 @@ struct conNodeType
 
 /* Identifiers */
 struct idNodeType
-{  
-     char *id; // Pointer to the identifiers table
+{
+    char *id; // Pointer to the identifiers table
 };
 
 /* Operators */
@@ -94,6 +93,7 @@ nodeType *createIdentifierNode(char *id);
 nodeType *createOperatorNode(int oper, int nops, ...);
 void execute(nodeType *p);
 conEnum getTypeOfEnum(const nodeType *node);
+const char *conEnumToString(conEnum enumValue) ;
 
 void freeNode(nodeType *p);
 

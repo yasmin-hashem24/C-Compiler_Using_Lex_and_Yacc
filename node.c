@@ -354,3 +354,28 @@ void freeNode(nodeType *p)
     }
     free(p);
 }
+
+const char *conEnumToString(conEnum enumValue) {
+    switch (enumValue) {
+        case typeInt:
+            return "Integer";
+        case typeFloat:
+            return "Float";
+        case typeString:
+            return "String";
+        case typeChar:
+            return "Char";
+        case typeBool:
+            return "Boolean";
+        case typeConst:
+            return "Constant";
+        case typeND:
+            return "Non-Defined";
+        case typeVoid:
+            return "Void";
+        case typeVar:
+            return "Variable";
+        default:
+            return "Unknown";
+    }
+}

@@ -1,5 +1,4 @@
 enum Color myColor = GREEN;
-string roufy = "i am roufyz";
 float y = 4.24;
 int x;
 
