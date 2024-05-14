@@ -170,37 +170,100 @@ declaration             : type IDENTIFIER
                         | type IDENTIFIER '=' expression            
                                                                     {  
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
-
                                                                         if(entry == NULL){
+
                                                                             //check error type mismatch
+
                                                                             char* typeUnion;
                                                                             CheckTypeFunc checkFunc = getCheckFunction($1->type, &typeUnion);
-                                                                            if(checkFunc($4->con.type)){
-                                                                                char symbolValue[20];
-                                                                                if(strcmp(typeUnion, "int") == 0){
-                                                                                    int integerValue = $4->con.iValue;
-                                                                                    sprintf(symbolValue, "%d", integerValue);
+
+                                                                            //expression can be => con, ID or op
+                                                                            if($4->type == typeCon){
+                                                                                //i.e. int x= 5;
+                                                                                
+                                                                                printf("Inside type conEnum\n");
+                                                                                
+                                                                                
+                                                                                if(checkFunc($4->con.type)){
+                                                                                    char symbolValue[20];
+
+                                                                                     printf("Inside Check Func\n");
+
+                                                                                    if(strcmp(typeUnion, "Integer") == 0){
+                                                                                        int integerValue = $4->con.iValue;
+                                                                                        sprintf(symbolValue, "%d", integerValue);
+                                                                                    }
+                                                                                    else if(strcmp(typeUnion, "Float") == 0){
+                                                                                        float floatValue = $4->con.fValue;
+                                                                                        sprintf(symbolValue, "%f", floatValue);
+                                                                                    }
+                                                                                    else if(strcmp(typeUnion, "Boolean") == 0){
+                                                                                        //msh la2ya con.bValue?
+                                                                                        sprintf(symbolValue, "%s", $4->con.bValue ? "true" : "false");
+                                                                                    }
+                                                                                    else if(strcmp(typeUnion, "Char") == 0){
+                                                                                        int charValue = $4->con.cValue;
+                                                                                        sprintf(symbolValue, "%c", charValue);
+                                                                                    }
+                                                                                    else if(strcmp(typeUnion, "String") == 0){
+                                                                                        int stringValue = $4->con.sValue;
+                                                                                        sprintf(symbolValue, "%s", stringValue);
+                                                                                    }
+
+                                                                                    SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, symbolValue, currentLineNumber);
+                                                                                    addSymbolEntry(currTable, newEntry);
+                                                                                
                                                                                 }
-                                                                                else if(strcmp(typeUnion, "float") == 0){
+                                                                                else{
+                                                                                    throwError("Type mismatch", 1, semanticErrorsFile);
                                                                                 }
-                                                                                else if(strcmp(typeUnion, "bool") == 0){
-                                                                                }
-                                                                                else if(strcmp(typeUnion, "char") == 0){
-                                                                                    int integerValue = $4->con.iValue;
-                                                                                    sprintf(symbolValue, "%d", integerValue);
-                                                                                }
-                                                                                else if(strcmp(typeUnion, "string") == 0){
-                                                                                }
-                                                                                SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, symbolValue, currentLineNumber);
-                                                                                addSymbolEntry(currTable, newEntry);
                                                                             }
-                                                                            else{
-                                                                                throwError("Type mismatch", 1, semanticErrorsFile);
+                                                                            else if($4->type==typeId){
+                                                                                // i.e. int x= y
+                                                                                //checks:
+                                                                                //1. check if it already exists in ST
+                                                                                 SymbolEntry *idEntry = getSymbolEntryFomCurrentScope(currTable,$4->id.id);
+                                                                                 if(idEntry==NULL){
+                                                                                    idEntry = getSymbolEntryFromParentScope(currTable,$4->id.id);
+                                                                                 }
+                                                                                 if(idEntry!=NULL){
+                                                                                    //2. if exists: check if it was initialized
+                                                                                    bool isInitialized=getIsInitialized(idEntry);
+                                                                                    if(isInitialized){
+                                                                                        //3. if initialized: get value & type and change it to used if not used before
+                                                                                        setIsInitialized(idEntry, 1);
+                                                                                        setIsUsed(idEntry,1);
+                                                                                        char * idEntryValue= getValue(idEntry);
+                                                                                        char * idEntryType= getType(idEntry);
+                                                                                        //4. check that type is = type
+                                                                                        //ana msh mot2kda fl entry type lama d5lnaha string kdah htb2a maktoba similar wla la2 -----need to check this
+                                                                                         if(strcmp(typeUnion, idEntryType) == 0){
+                                                                                            //5. if similar add value to the entry
+                                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 1, 0, 1, idEntryValue, currentLineNumber);
+                                                                                            addSymbolEntry(currTable, newEntry);
+
+                                                                                         }
+                                                                                         else{
+                                                                                             throwError("Type mismatch", 1, semanticErrorsFile);
+                                                                                         }
+                                                                                    }
+                                                                                    else{
+                                                                                         throwError("Variable has not been initialized before", 1, semanticErrorsFile);
+                                                                                    }
+
+                                                                                 }else{
+                                                                                     throwError("There is no such variable existing", 1, semanticErrorsFile);
+                                                                                 }
+                                                                            }
+                                                                            else if($4->type==typeOpr){
+                                                                                //i.e. int x = expr operation exper
+
                                                                             }
                                                                         }
                                                                         else{
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
+                                                                      
                                                                     }
                         | CONST type IDENTIFIER '=' expression      
                                                                     { 

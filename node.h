@@ -34,6 +34,7 @@ struct conNodeType
     {
         int iValue;
         float fValue;
+        bool bValue;
         char *sValue;
         char cValue;
     };
@@ -41,8 +42,8 @@ struct conNodeType
 
 /* Identifiers */
 struct idNodeType
-{
-    char *id; // Pointer to the identifiers table
+{  
+     char *id; // Pointer to the identifiers table
 };
 
 /* Operators */

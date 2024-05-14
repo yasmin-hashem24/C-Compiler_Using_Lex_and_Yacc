@@ -28,9 +28,12 @@ struct SymbolTable {
 
 
 SymbolTable *createSymbolTable(const char *name, SymbolTable *parent);
-void destroySymbolTable(SymbolTable *table);
+// void destroySymbolTable(SymbolTable *table);
 void addSymbolEntry(SymbolTable *table, SymbolEntry *entry);
-SymbolEntry *getSymbolEntryWithName(SymbolTable *table, const char *name);
+// SymbolEntry *getSymbolEntryWithName(SymbolTable *table, const char *name);
+SymbolEntry *getSymbolEntryFomCurrentScope(SymbolTable *table, const char *name) ;
+SymbolEntry *getSymbolEntryFromParentScope(SymbolTable *table, const char *name);
+const char *symbolKindToString(SymbolKind kind);
 void addChildrenToSymbolTable(SymbolTable * table, SymbolTable *child );
 void modifySymbolEntry(SymbolTable *table, const char *name, SymbolEntry *entry);
 void writeSymbolTableToFile(SymbolTable *table, FILE *file);
