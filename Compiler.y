@@ -73,8 +73,8 @@
             start_scope end_scope
 %%
 
-program                 : program statement_list                    {execute($2);freeNode($2);} 
-                        |                                           {$$=NULL;}     
+program                 : start_scope statement_list     {execute($2);freeNode($2);} 
+                        |                                {$$=NULL;}     
                         ;
 
 
