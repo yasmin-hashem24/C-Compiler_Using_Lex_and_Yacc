@@ -93,7 +93,8 @@ nodeType *createIdentifierNode(char *id);
 nodeType *createOperatorNode(int oper, int nops, ...);
 void execute(nodeType *p);
 conEnum getTypeOfEnum(const nodeType *node);
-const char *conEnumToString(conEnum enumValue) ;
+const char *conEnumToString(conEnum enumValue);
+conEnum stringToConEnum(const char *str);
 
 void freeNode(nodeType *p);
 

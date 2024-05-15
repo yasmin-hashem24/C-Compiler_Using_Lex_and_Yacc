@@ -66,10 +66,12 @@
 
 
 //testcase1:
-char ch= 'a';
+const char ch= 'a';
+const char x = 'a';
+x = ch;
 //testcase2:
 //char c1='b';
-char c2= c1;
+//char c2= c1 + c1 + c;
 
 
 

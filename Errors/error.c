@@ -47,3 +47,38 @@ bool checkTypeString(conEnum   typeEnum) {
 bool checkTypeBool(conEnum typeEnum) {
     return typeEnum == typeBool;
 }
+
+bool checkTypeMismatchConNode(nodeType* node, char* symbolValue, char* typeUnion, CheckTypeFunc checkFunc) {
+                                                                          
+    if(checkFunc(node->con.type)){
+        if(strcmp(typeUnion, "Integer") == 0){
+            int integerValue = node->con.iValue;
+            sprintf(symbolValue, "%d", integerValue);
+        }
+        else if(strcmp(typeUnion, "Float") == 0){
+            float floatValue = node->con.fValue;
+            sprintf(symbolValue, "%f", floatValue);
+        }
+        else if(strcmp(typeUnion, "Boolean") == 0){
+            sprintf(symbolValue, "%s", node->con.iValue ? "true" : "false");
+        }
+        else if(strcmp(typeUnion, "Char") == 0){
+            char charValue = node->con.cValue;
+            sprintf(symbolValue, "%c", charValue);
+        }
+        else if(strcmp(typeUnion, "String") == 0){
+            char* stringValue = node->con.sValue;
+            sprintf(symbolValue, "%s", stringValue);
+        }
+        return true;
+    }
+    return false;
+}
+
+SymbolEntry* checkIdNodeDeclaration(SymbolTable *currTable, const char *id) {
+    SymbolEntry *idEntry = getSymbolEntryFomCurrentScope(currTable,id);
+    if(idEntry==NULL){
+       idEntry = getSymbolEntryFromParentScope(currTable,id);
+    }
+    return idEntry;
+}

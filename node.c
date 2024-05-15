@@ -379,3 +379,26 @@ const char *conEnumToString(conEnum enumValue) {
             return "Unknown";
     }
 }
+
+conEnum stringToConEnum(const char *str) {
+    if (strcmp(str, "Integer") == 0) {
+        return typeInt;
+    } else if (strcmp(str, "Float") == 0) {
+        return typeFloat;
+    } else if (strcmp(str, "String") == 0) {
+        return typeString;
+    } else if (strcmp(str, "Char") == 0) {
+        return typeChar;
+    } else if (strcmp(str, "Boolean") == 0) {
+        return typeBool;
+    } else if (strcmp(str, "Constant") == 0) {
+        return typeConst;
+    } else if (strcmp(str, "Non-Defined") == 0) {
+        return typeND;
+    } else if (strcmp(str, "Void") == 0) {
+        return typeVoid;
+    } else {
+        return typeVar;
+    }
+}
+
