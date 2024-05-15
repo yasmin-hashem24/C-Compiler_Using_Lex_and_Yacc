@@ -1682,7 +1682,7 @@ yyreduce:
     {
   case 2: /* program: start_scope statement_list  */
 #line 76 "Compiler.y"
-                                                         {execute((yyvsp[0].nPtr));freeNode((yyvsp[0].nPtr));}
+                                                         {execute((yyvsp[0].nPtr),1);freeNode((yyvsp[0].nPtr));}
 #line 1687 "y.tab.c"
     break;
 

@@ -91,9 +91,9 @@ nodeType *createCharConstantNode(char value);
 nodeType *createStringConstantNode(char *value);
 nodeType *createIdentifierNode(char *id);
 nodeType *createOperatorNode(int oper, int nops, ...);
-void execute(nodeType *p);
+void execute(nodeType *p, int first);
 conEnum getTypeOfEnum(const nodeType *node);
-const char *conEnumToString(conEnum enumValue) ;
+const char *conEnumToString(conEnum enumValue);
 
 void freeNode(nodeType *p);
 
