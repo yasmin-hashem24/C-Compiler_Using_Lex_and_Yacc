@@ -150,12 +150,12 @@ arg_list_call           : arg_list_call ',' expression           { $$=createOper
 
 // Assignments and declarations rules
 
-declaration_assignment : declaration ';' { $$ = $1; printf("declaration_assignment: declaration\n"); }
-                        | assignment ';' { $$ = $1; printf("declaration_assignment: assignment\n"); }
+declaration_assignment : declaration ';' { $$ = $1;}
+                        | assignment ';' { $$ = $1; }
                         ;
 
-declaration_assignment_loop : declaration { $$ = $1; printf("declaration_assignment_loop: declaration\n"); }
-                                | assignment { $$ = $1; printf("declaration_assignment_loop: assignment\n"); }
+declaration_assignment_loop : declaration { $$ = $1; }
+                                | assignment { $$ = $1; }
                                 ;
 
 
@@ -167,7 +167,7 @@ declaration             : type IDENTIFIER
                                                                             SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 0, 0, 0, NULL, currentLineNumber);
                                                                             addSymbolEntry(currTable, newEntry);
 
-                                                                            $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)); printf("declaration: type IDENTIFIER (type: %d, identifier: %s)\n", getTypeOfEnum($1), $2); 
+                                                                            $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));  
                                                                         }
                                                                         else{
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
