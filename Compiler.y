@@ -74,7 +74,7 @@
 %%
 
 program                 : start_scope statement_list     {execute($2);freeNode($2);} 
-                        |                                {$$=NULL;}     
+                      
                         ;
 
 
