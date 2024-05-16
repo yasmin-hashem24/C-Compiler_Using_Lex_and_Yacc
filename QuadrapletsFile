@@ -1,10 +1,15 @@
 
-nknown
-
 ASSIGN x 5 
 
-GrTn x 3 
+GrTn 
 
-CALL printf 
+LL0 :
+x 3 CALL printf 
 
-L0 :/nx 3 JNZ L1 L1 
+ASSIGN x ADD x 1 
+
+
+	jz	L0
+	jmp	L1
+L1:
+

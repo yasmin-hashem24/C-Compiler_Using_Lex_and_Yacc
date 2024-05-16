@@ -1,6 +1,6 @@
 int x=5;
 while(x>3)
 {
-    printf(x);
-    x=x-1;
+   printf(x);
+    x=x+1;
 }
