@@ -5,4 +5,6 @@ ASSIGN x 5
 
 GrTn x 3 
 
+CALL printf 
+
 L0 :/nx 3 JNZ L1 L1 
