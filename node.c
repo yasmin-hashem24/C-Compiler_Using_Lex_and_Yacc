@@ -373,6 +373,52 @@ void execute(nodeType *p, int first, int insideScope)
                 memset(Result, 0, sizeof(Result));
             }
             break;
+        case FOR:
+            if (insideScope == 1)
+            {
+
+                sprintf(Result, "\nL%d :\n", LoopsNames);
+
+                execute(p->opr.op[0], 0, 1);
+                strcat(Result, "\n");
+                execute(p->opr.op[1], 0, 1);
+                strcat(Result, "\n");
+
+                execute(p->opr.op[2], 0, 1);
+
+                execute(p->opr.op[3], 0, 1);
+                strcat(Result, "\n");
+
+                sprintf(Result, "%s jmp\tL%d\n", Result, LoopsNames);
+
+                fprintf(outputFile, "\nL%d:\n", LoopsNames);
+
+                LoopsNames++;
+                sprintf(Result, "%s\n", Result);
+            }
+            else
+            {
+                sprintf(Result, "\nL%d :\n", LoopsNames);
+                execute(p->opr.op[0], 0, 1);
+                fprintf(outputFile, "\n");
+
+                execute(p->opr.op[1], 0, 1);
+                fprintf(outputFile, "\n");
+
+                execute(p->opr.op[2], 0, 1);
+                fprintf(outputFile, "\n");
+
+                execute(p->opr.op[3], 0, 1);
+                fprintf(outputFile, "\n");
+
+                fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
+
+                fprintf(outputFile, "\nL%d:\n", LoopsNames);
+
+                LoopsNames++;
+            }
+            insideScope = 0;
+            break;
         case '=':
             switch (p->opr.nops)
             {
