@@ -55,7 +55,7 @@
 %token LBRACE RBRACE
 %token EQ NEQ LT GT LTE GTE AND OR
 %token CONST FUNC MAIN INCLUDE DEFINE VAR
-%token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT BREAK RETURN EXIT CONTINUE PRINT ENUM
+%token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT BREAK RETURN EXIT CONTINUE PRINT ENUM CALL
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -75,7 +75,7 @@
 %type <nPtr> program statement_list statement print_statement
             if_condition_statement switch_statement case_list case_default while_loop do_while_loop
             for_loop function_declaration function_call arg_list arg_list_call declaration_assignment declaration 
-            assignment enum_declaration enum_list expression type value binary_expression unary_expression function_call_expression declaration_assignment_loop
+            assignment enum_declaration enum_list expression type value binary_expression unary_expression declaration_assignment_loop
             start_scope end_scope
 %%
 
@@ -145,7 +145,7 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                                                                                                                                                     // Itirate over the arguments types to add them
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8, $10);
+                                                                                                                                                    $$=createOperatorNode(FUNC, 5, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8, $10);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -196,14 +196,13 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                         ;
 
 
-function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
+function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);}
                         ;
 
-function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
-                        ;
 
-arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
-                        | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
+
+arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2,createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2)),$4);}
+                        | type IDENTIFIER                        { $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));  }
                         |                                        { $$=NULL;}
                         ;
 
@@ -402,7 +401,7 @@ binary_expression      : expression '+' expression   { $$=createOperatorNode('+'
                         | '(' expression ')'         { $$=$2; }
                         | value                      { $$=$1; }
                         | IDENTIFIER                 { $$=createIdentifierNode($1); }
-                        | function_call_expression   { $$=$1;}
+                  
 
 unary_expression       : '-' expression %prec UMINUS  { $$ = createOperatorNode('-', 1, $2); }
                         | '!' expression %prec NOT    { $$ = createOperatorNode('!', 1, $2); }

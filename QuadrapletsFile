@@ -1,7 +1,8 @@
 
 nknown
 
-ASSIGN x 5.100000 
-unknown
+ASSIGN x 5 
 
-ASSIGN yasmina 1 
+GrTn x 3 
+
+L0 :/nx 3 JNZ L1 L1 

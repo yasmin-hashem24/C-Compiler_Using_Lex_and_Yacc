@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.7.5.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -98,9 +98,10 @@ extern int yydebug;
     CONTINUE = 299,                /* CONTINUE  */
     PRINT = 300,                   /* PRINT  */
     ENUM = 301,                    /* ENUM  */
-    IFX = 302,                     /* IFX  */
-    UMINUS = 303,                  /* UMINUS  */
-    NOT = 304                      /* NOT  */
+    CALL = 302,                    /* CALL  */
+    IFX = 303,                     /* IFX  */
+    UMINUS = 304,                  /* UMINUS  */
+    NOT = 305                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -153,9 +154,10 @@ extern int yydebug;
 #define CONTINUE 299
 #define PRINT 300
 #define ENUM 301
-#define IFX 302
-#define UMINUS 303
-#define NOT 304
+#define CALL 302
+#define IFX 303
+#define UMINUS 304
+#define NOT 305
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -170,7 +172,7 @@ union YYSTYPE
     char *sVal;
     nodeType *nPtr;
 
-#line 174 "y.tab.h"
+#line 176 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -181,8 +183,6 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
-
 int yyparse (void);
-
 
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */
