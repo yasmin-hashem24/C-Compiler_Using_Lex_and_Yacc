@@ -17,6 +17,8 @@
     bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10);
     bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10);
     void getArgList(nodeType *node, int *argCount, char*** argList);
+    void getEnumDeclarationList(nodeType node, int *argCount, char** argList);
+    void getArgPassList(nodeType *node, int *argCount, nodeType ***argList);
     bool doesStringExist(char *str, char **array, int size);
 
     int yylex();
@@ -356,7 +358,7 @@ declaration             : type IDENTIFIER
                                                                         //3rd id check that its in the enum types
                                                                         //if no errors make new var with type enum
 
-                                                                        bool noError=true;
+                                                                        bool noError=1;
                                                                         
                                                                         SymbolEntry *varEntry=getSymbolEntryFomCurrentScope(currTable, $3);
                                                                         if(varEntry==NULL){
@@ -380,19 +382,20 @@ declaration             : type IDENTIFIER
                                                                                     addSymbolEntry(currTable, newEntry);
                                                                                }
                                                                                else{
-                                                                                    noError=false;
+                                                                                    noError=0;
                                                                                     throwError("There is no such enumerator existing in the Enum", currentLineNumber, semanticErrorsFile);
                                                                                }
 
 
                                                                             }
                                                                             else{
-                                                                                noError=false;
+                                                                                noError=0;
+                                                                                printf("We have error\n");
                                                                                 throwError("No such enum exists. Enum has not been declared before", currentLineNumber, semanticErrorsFile);
                                                                             }
                                                                         }
                                                                         else{
-                                                                            noError=false;
+                                                                            noError=0;
                                                                             throwError("Variable has been declared before in same scope", currentLineNumber, semanticErrorsFile);
                                                                         }
 
@@ -471,7 +474,9 @@ assignment              : IDENTIFIER '=' expression
                         ; 
 // Enum rules
 // enum Foo { a, b, c = 10, d, e = 1, f, g = f + c };
-enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {
+enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   
+                                                                    
+                                                                        {
                                                                             //elana fhmah en enum_list hena is operator node either having 1 arg or 2 arg
                                                                             //1 yb2a id bs
                                                                             //2 yb2a id=expression
@@ -482,13 +487,25 @@ enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {
 
                                                                             //enum errors check:
                                                                             //1.check that its not declared before:
-                                                                            printf("hereeeeeeeeeeeeeee");
+
+                                                                        
+                                                                            
                                                                             printf("enum_declaration\n");
+
+                                                                            printf("enum_declaration\n");
+
+                                                                            printf("identifier %s \n", $2);
+                                                                            
+
+                                                               
                                                                             SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
-                                                                            bool noError=false;
+                                                                            printf("entry\n");
+
+                                                                            bool noError=1;
                                                                     
                                                                             if(entry == NULL){
-                                                                                printf("entry not null!!!!!");
+                                                                                printf("entry not null!!!!!\n");
+
                                                                                 //enum_list can be id,id,id
                                                                                 //or id= expression, id, id
                                                                                 // or id= expression , id=expression, id=expression
@@ -499,62 +516,96 @@ enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {
                                                                                 //check if some are initialized that their type is int
                                                                                 // check that multiple id's dont have same value if initialized
                                                                                 //check that enums have id's onlyyy
-
-
                                                                                 
                                                                                 //get nops
-                                                                                int enumListCount= 1;     //idk where to get that yet so its 1 for now
+                                                                               int enumListCount= 1;     //idk where to get that yet so its 1 for now
 
                                                                                 //save types (strings and ints)
                                                                                 char **typesStrings=malloc(enumListCount * sizeof(char *));
-                                                                                int *typesInt=malloc(enumListCount * sizeof(int));
+                                                                               int *typesInt=malloc(enumListCount * sizeof(int));
                                                                                 int counter=0;
                                                                                 
                                                                                
-                                                                                
+                                                                                printf("before for loop\n");
+
 
                                                                                 for(int i=0; i<enumListCount; i++){
                                                                                     //check the nops
                                                                                     int nops=$4->opr.nops;   //for only 1 =>enum_list[i]
-                                                                                    printf("lets see nops:%d", nops);
+
+                                                                                    printf("lets see nops:%d\n", nops);
+
 
                                                                                     //if 1 then its iD
                                                                                     //if 2 then its an (id=expression)
 
-                                                                                    if(nops==1){
-                                                                                        if($4->opr.op[i]->type == typeId){
+                                                                                    if(nops==1 || nops==2){
+                                                                                        if($4->opr.op[0]->type == typeId){
+                                                                                            printf("If we reached here, then operand ID type is an ID \n");
                                                                                             
                                                                                             //check that ID is not defined in same scope elsehwere (if we have int x we cannot use x inside enum)
+                                                                                            printf("check ID type of enumerator from string: %s \n", $4->opr.op[0]->id.id);
+
                                                                                             SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $4->opr.op[0]->id.id);
                                                                                             if(entry ==NULL){
-                                                                                                //check that ID is not existing before in the Enum itself
+
+
+                                                                                                printf("we checked that its not repeated before in same scope\n");
+
+
                                                                                                 if(!doesStringExist($4->opr.op[0]->id.id, typesStrings, enumListCount)){
-                                                                                                    //add it
+                                                                                                    noError=1;
+                                                                                                }
+
+
+                                                                                                //check that ID is not existing before in the Enum itself
+                                                                                                if(typesStrings==NULL){
+                                                                                                    printf("typesStrings null\n");
+
                                                                                                     typesStrings[i] = strdup($4->opr.op[0]->id.id);
                                                                                                     typesInt[i]= counter;
                                                                                                     counter++;
-                                                                                                }else{
-                                                                                                   //error
-                                                                                                    noError=false;
-                                                                                                    throwError("redeclaration of enumerator inside ENUM", currentLineNumber, semanticErrorsFile);
-                                                                                                    break;
+
+                                                                                                    printf("first time and we have counter %d\n", counter);
+
+                                                                                                }
+                                                                                                else{
+                                                                                                    if(!doesStringExist($4->opr.op[0]->id.id, typesStrings, enumListCount)){
+                                                                                                            //add it
+                                                                                                            printf("string doesnt exist in enum itself\n");
+
+                                                                                                            typesStrings[i] = strdup($4->opr.op[0]->id.id);
+                                                                                                            typesInt[i]= counter;
+                                                                                                            counter++;
+                                                                                                             printf("counter %d\n", counter);
+
+                                                                                                    } else{
+                                                                                                         //error
+                                                                                                        noError=0;
+                                                                                                        throwError("redeclaration of enumerator inside ENUM", currentLineNumber, semanticErrorsFile);
+                                                                                                        //break;
+                                                                                                    }
                                                                                                 }
                                                                                             }
                                                                                             else{
                                                                                                 //Error of redecleration
-                                                                                                noError=false;
+                                                                                                noError=0;
                                                                                                 throwError("redeclaration of identifer in the same scope", currentLineNumber, semanticErrorsFile);
-                                                                                                break;
+                                                                                               // break;
                                                                                             }
                                                                                         }
                                                                                         else{
                                                                                             //unexpected error
+                                                                                            noError=0;
+                                                                                           // break;
                                                                                             throwError("Expected an Identifier", currentLineNumber, semanticErrorsFile);
-                                                                                            noError=false;
-                                                                                            break;
+                                                                                            
                                                                                         }
                                                                                     }
-                                                                                    else if(nops==2){ 
+                                                                                    if(nops==2){ 
+
+                                                                                        printf("inside nops=2\n");
+
                                                                                         // id= expression [conenum, id, oper] 
 
                                                                                         //Errors on ID :  same as above
@@ -563,18 +614,36 @@ enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {
                                                                                         //EXPRESSION PART:
                                                                                         //---------------
                                                                                         if($4->opr.op[1]->type == typeCon){
-
+                                                                                            
                                                                                            //must be an integer only else Error message: enumerator value is Not an integer constant
                                                                                            //must be iValue
-                                                                                         //not sure of condition
+                                                                                           //not sure of condition
+                                                                                           printf("inside typecon with 2 operands\n");
+
+                                                                                           printf("type %s \n", conEnumToString($4->opr.op[1]->typ.type) );
+
+                                                                                           char *type=conEnumToString($4->opr.op[1]->typ.type);
                                                                                         
-                                                                                           if(conEnumToString($4->opr.op[1]->typ.type)=='Integer'){
+                                                                                           if((strcmp(type, "Integer")==0)){
                                                                                                 typesInt[i]=$4->opr.op[1]->con.iValue;
                                                                                                 //increment the counter to after it
                                                                                                 counter= ($4->opr.op[1]->con.iValue) +1;
                                                                                            }
+
+                                                                                           else
+                                                                                           
+                                                                                           {
+                                                                                                printf("not an integer error\n");
+                                                                                                noError=0;
+                                                                                             
+
+                                                                                                throwError("Variable is not an integer constant", currentLineNumber, semanticErrorsFile);
+                                                                                              
+
+                                                                                           }
                                                                                         }
                                                                                         else if($4->opr.op[1]->type == typeId){
+                                                                                            printf("inside ID\n");
                                                                                             //first check if we have id declared and initialized before else error
                                                                                             //check that the type is int else error
                                                                                             //
@@ -582,7 +651,14 @@ enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {
 
                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $4->opr.op[1]->id.id);
                                                                                             if(entry!=NULL){
-                                                                                                if(getType(entry)=="Integer"){
+                                                                                                
+                                                                                                if(!getIsInitialized(entry)){
+
+                                                                                                     throwError("Variable is not initialized", currentLineNumber, semanticErrorsFile);
+                                                                                                      noError=0;
+
+                                                                                                }else{
+                                                                                                if((strcmp(getType(entry), "Integer")==0)){
                                                                                                    char *charValue= getValue(entry);
                                                                                                    int intValue = atoi(charValue);
                                                                                                    typesInt[i]= intValue;
@@ -590,44 +666,47 @@ enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {
                                                                                                 }
                                                                                                 else{
                                                                                                     throwError("Variable is not an integer constant", currentLineNumber, semanticErrorsFile);
-                                                                                                    noError=false;
-                                                                                                    break;
+                                                                                                    noError=0;
+                                                                                                   // break;
+                                                                                                }
                                                                                                 }
 
                                                                                             }
                                                                                             else{
                                                                                                 throwError("Variable not declared before", currentLineNumber, semanticErrorsFile);
-                                                                                                noError=false;
-                                                                                                break;
+                                                                                                noError=0;
+                                                                                               // break;
                                                                                             }
                                                                                           
 
                                                                                         }
-                                                                                        else if($4->opr.op[1]->type == typeOpr){
-                                                                                            //missing
-                                                                                            //also need execute 3shan nt2kd en value Int w 
-                                                                                            //increment counter= value+1
-                                                                                        }
+                                                                                        
 
 
                                                                                     }
                                                                                 }
-                                                                                
+
+                                                                    
                                                                                 if(noError){
-                                                                                    
-                                                                                    SymbolEntry *newEntryEnum =create_enum_SymbolEntry($2, 0, 0, currentLineNumber, enumListCount, typesStrings,typesInt);
+
+                                                                                    printf("No errors\n");
+
+                                                                                   // SymbolEntry *newEntryEnum =create_enum_SymbolEntry($2, 0, 0, currentLineNumber, enumListCount, typesStrings,typesInt);
+                                                                                    SymbolEntry *newEntryEnum =create_enum_SymbolEntry($2, 0, 0, currentLineNumber, 1, typesStrings,typesInt);
                                                                                     addSymbolEntry(currTable, newEntryEnum);
-                                                                                    //msh mot2kda de mknha eh:
+                                                                                    printf("after adding entry\n");
+                                                                                    
                                                                                     $$=createOperatorNode(ENUM, 2, createIdentifierNode($2), $4);
+                                                                                }
+                                                                                else{
+                                                                                    printf("Error !!\n");
+
                                                                                 }
                                                                             }
                                                                             else{
                                                                                 throwError("redeclaration of ENUM", currentLineNumber, semanticErrorsFile);
                                                                                 
                                                                             }
-
-                                                                            
-
                                                                         }
                         ;
 
@@ -714,9 +793,16 @@ void yyerror(const char *s) {
     fprintf(syntaxErrorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
 }
 
+
+
 bool doesStringExist(char *str, char **array, int size) {
+    printf("inside does string exists with size %d and str %s and first str in array %s \n", size, str, array[0]);
+    
     for (int i = 0; i < size; i++) {
-        if (strcmp(str, array[i]) == 0) {
+        if(array[i]==NULL){
+            return false;
+        }
+        else if (strcmp(str, array[i]) == 0) {
             return true; 
         }
     }
@@ -910,9 +996,61 @@ void checkArgListTpes(nodeType *node, int *argCount, char*** argList) {
     }
 }
 
+void getArgPassList(nodeType *node, int *argCount, nodeType ***argList) {
+    if (node->type == typeOpr) {
+        for (int i = 0; i < node->opr.nops; i++) {
+            getArgPassList(node->opr.op[i], argCount, argList);
+        }
+    } else if (node->type == typeId) {
+        // Get the id type from the symbol table
+        SymbolEntry *entry = checkIdNodeDeclaration(currTable, node->id.id);
+        if (entry != NULL) {
+            if (getIsInitialized(entry)) {
+                setIsUsed(entry, 1);
+                // Allocate memory for the new argument in argList
+                (argList) = realloc((*argList), ((*argCount) + 1) * sizeof(nodeType));
+                // Create a copy of the argument node and add it to argList
+                (*argList)[*argCount] = node;
+                (*argCount)++;
+            } else {
+                throwError("Variable passed to the function has not been initialized before", currentLineNumber, semanticErrorsFile);
+                return;
+            }
+        } else {
+            throwError("Variable passed to the function is not declared", currentLineNumber, semanticErrorsFile);
+            return;
+        }
+    } else if (node->type == typeCon) {
+        // Allocate memory for the new argument in argList
+        (argList) = realloc((*argList), ((*argCount) + 1) * sizeof(nodeType));
+        // Create a copy of the argument node and add it to argList
+        (*argList)[*argCount] = node;
+        (*argCount)++;
+    } else {
+        throwError("Invalid argument type", currentLineNumber, semanticErrorsFile);
+        return;
+    }
+}
+// Here we are assuming that only id can be in the enum list
+void getEnumDeclarationList(nodeType node, int *argCount, char** argList) {
+    printf("node %s \n", node.type);
 
-int main(int argc, char **argv) {
-
+    if (node.type == typeOpr) {
+        for (int i = 0; i < node.opr.nops; i++) {
+            getArgPassList(node.opr.op[i], argCount, argList);
+        }
+    } 
+    else if (node.type == typeId) {
+        // Allocate memory for the new argument in argList
+        (argList) = realloc((*argList), ((*argCount) + 1) * sizeof(char));
+        // Allocate memory for the argument string
+        (*argList)[*argCount] = malloc((strlen(node.id.id) + 1) * sizeof(char));
+        // Copy the argument string into the allocated memory
+        strcpy((*argList)[*argCount], node.id.id);
+        (*argCount)++;
+    }
+}
+int main(int argc, char **argv)  {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
         return 1;

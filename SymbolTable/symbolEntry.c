@@ -211,11 +211,11 @@ void setEnumCount(SymbolEntry *entry, int enumCount) {
 }
 
 void setEnumTypes(SymbolEntry *entry, char **enumTypesString, int* enumTypesInt) {
-    for (int i = 0; i < entry->enumCount; i++) {
-        free(entry->enumTypesString[i]);
-    }
-    free(entry->enumTypesString);
-    free(entry->enumTypesInt);
+    // for (int i = 0; i < entry->enumCount; i++) {
+    //     free(entry->enumTypesString[i]);
+    // }
+    // free(entry->enumTypesString);
+    // free(entry->enumTypesInt);
     entry->enumTypesString = malloc(entry->enumCount * sizeof(char *));
     entry->enumTypesInt = malloc(entry->enumCount * sizeof(int));
     for (int i = 0; i < entry->enumCount; i++) {

@@ -76,22 +76,20 @@
 
 
 //functions
-int hello(int x, float y, int y) {
-  x = 1;
-  return 1;
-}
-
-void fg(string x, string y, char x){
-  char x = '1';
-}
-hello();
-int x = hello();
+//int hello(int x, float y, int y) {
+//  x = 1;
+//  return 1;
+//}
+//
+//void fg(string x, string y, char x){
+//  char x = '1';
+//}
+//hello();
+//int x = hello();
 
 //for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
 
-enum hello{ 
-A 
-};
+
 
 //if(x<0){
 //    x=1;
@@ -123,3 +121,15 @@ A
 //    default:
 //    print("this is case 1 missing default");
 //}
+
+
+
+int x=5;
+
+enum hello{ 
+B =x
+};
+
+
+
+enum hello helloEntry = A;
