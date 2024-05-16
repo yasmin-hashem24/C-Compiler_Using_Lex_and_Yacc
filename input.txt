@@ -82,16 +82,16 @@ int hello(int x, float y, int y) {
 }
 
 void fg(string x, string y, char x){
-  char x = '1';
+   x = '1';
 }
-hello();
-int x = hello();
+
+int x =1;
+float t=2.0;
+int y=3;
+
+hello(t, t, y);
 
 //for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
-
-enum hello{ 
-A 
-};
 
 //if(x<0){
 //    x=1;

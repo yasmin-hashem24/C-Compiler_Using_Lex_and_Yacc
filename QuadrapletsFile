@@ -19,12 +19,23 @@ NOT
 NOT x 
 NOT 
 
+
+
+ASSIGN x 0 
 fg :
 END OF FUNCTION
 
 
 
-ASSIGN x 
+ASSIGN x 1 
+
+
+
+ASSIGN t 2.000000 
+
+
+
+ASSIGN y 3 
+
+
 CALL hello 
-
-
