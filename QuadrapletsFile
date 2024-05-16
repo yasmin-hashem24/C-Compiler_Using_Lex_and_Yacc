@@ -1,41 +1,38 @@
 
 
-ASSIGN x 1 
 
 hello :
+
+ASSIGN 1 x 
 RETURN 1 
 END OF FUNCTION
-x 
-NOT 
-y 
-NOT 
-x 
-NOT 
-
-NOT y 
-NOT 
 
 
-NOT x 
-NOT 
-
-
-
-ASSIGN x 0 
 fg :
+
+ASSIGN 0 x 
+
 END OF FUNCTION
 
 
 
-ASSIGN x 1 
+ASSIGN 
+ASSIGN 0 x 
+1 x 
 
 
 
-ASSIGN t 2.000000 
+
+ASSIGN 2.000000 t 
 
 
 
-ASSIGN y 3 
+
+ASSIGN 3 y 
+
 
 
 CALL hello 
+
+ASSIGN u 
+

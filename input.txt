@@ -89,7 +89,7 @@ int x =1;
 float t=2.0;
 int y=3;
 
-hello(t, t, y);
+int u = hello(6, t, y);
 
 //for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
 
