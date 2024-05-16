@@ -143,6 +143,8 @@ void execute(nodeType *p, int first, int insideScope)
     }
     switch (p->type)
     {
+    case typeDef:
+        break;
     case typeCon:
 
         switch (p->con.typeConst)
@@ -200,6 +202,7 @@ void execute(nodeType *p, int first, int insideScope)
             }
             else
             {
+                
                 sprintf(Result, "\nL%d :\n", LoopsNames);
                 execute(p->opr.op[0], 0, 1);
                 fprintf(outputFile, "\n");
@@ -388,10 +391,10 @@ void execute(nodeType *p, int first, int insideScope)
 
                 execute(p->opr.op[3], 0, 1);
                 strcat(Result, "\n");
-
+                LoopsNames++;
                 sprintf(Result, "%s jmp\tL%d\n", Result, LoopsNames);
 
-                fprintf(outputFile, "\nL%d:\n", LoopsNames);
+                fprintf(outputFile, "L%d:\n", LoopsNames);
 
                 LoopsNames++;
                 sprintf(Result, "%s\n", Result);
@@ -400,20 +403,16 @@ void execute(nodeType *p, int first, int insideScope)
             {
                 sprintf(Result, "\nL%d :\n", LoopsNames);
                 execute(p->opr.op[0], 0, 1);
-                fprintf(outputFile, "\n");
 
                 execute(p->opr.op[1], 0, 1);
-                fprintf(outputFile, "\n");
 
                 execute(p->opr.op[2], 0, 1);
-                fprintf(outputFile, "\n");
 
                 execute(p->opr.op[3], 0, 1);
-                fprintf(outputFile, "\n");
 
                 fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
 
-                fprintf(outputFile, "\nL%d:\n", LoopsNames);
+                fprintf(outputFile, "L%d:\n", LoopsNames);
 
                 LoopsNames++;
             }
@@ -436,7 +435,7 @@ void execute(nodeType *p, int first, int insideScope)
                     execute(p->opr.op[1], 0, 0);
                     execute(p->opr.op[0], 0, 0);
                     fprintf(outputFile, Result);
-                    fprintf(outputFile, "\n");
+
                     memset(Result, 0, sizeof(Result));
                 }
                 break;
@@ -716,6 +715,7 @@ void execute(nodeType *p, int first, int insideScope)
         fprintf(outputFile, "\n");
         break;
     }
+
     fclose(outputFile);
 }
 

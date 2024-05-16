@@ -133,7 +133,7 @@ while_loop              : WHILE '(' expression ')' LBRACE start_scope statement_
 do_while_loop           : DO LBRACE start_scope statement_list RBRACE end_scope WHILE '(' expression ')' ';'    { $$ = createOperatorNode(DO, 2, $4, $9);}
                         ;
 
-for_loop                : FOR start_scope '(' declaration_assignment_loop ';' expression';' declaration_assignment_loop ')' LBRACE  statement_list RBRACE end_scope  {$$ = createOperatorNode(FOR, 3, $4, $6, $8);}
+for_loop                : FOR start_scope '(' declaration_assignment_loop ';' expression';' declaration_assignment_loop ')' LBRACE  statement_list RBRACE end_scope  {$$ = createOperatorNode(FOR, 4, $4, $6, $8,$11);}
                         ;
 
 // Functions rules
