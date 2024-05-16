@@ -16,6 +16,7 @@
     bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst);
     bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10);
     bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10);
+    void getArgList(nodeType *node, int *argCount, char*** argList);
 
     int yylex();
     extern FILE *yyin;
@@ -30,6 +31,7 @@
     SymbolTable *globalTable;
     SymbolTable *currTable;
     SymbolTable *prevTable;
+    char** argList;  // List of arguments of the function declaration
 
     const char *conEnumToString(conEnum enumValue);
 
@@ -143,9 +145,12 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
 
                                                                                                                                                 if (noError) {
                                                                                                                                                     // Itirate over the arguments types to add them
-                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
+                                                                                                                                                    int argCount = 0;
+                                                                                                                                                    char** argList = NULL;
+                                                                                                                                                    getArgList($5, &argCount, &argList);
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, argCount, argList, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $5, $8, $10);
+                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -183,7 +188,7 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                                                                                                                                                     // Itirate over the arguments types to add them
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $5, $9);
+                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $9);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -202,9 +207,23 @@ function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOpera
 function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
                         ;
 
-arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
-                        | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
-                        |                                        { $$=NULL;}
+arg_list                : type IDENTIFIER ',' arg_list          { 
+                                                                    //add the variable in arg list to the symbol table
+                                                                    SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->typ.type), 1, 0, 0, NULL, currentLineNumber);
+                                                                    addSymbolEntry(currTable, newEntry);
+                                                                    $$=createOperatorNode(',', 2, createTypeNode($1->typ.type), createIdentifierNode($2));
+                                                                    // Concatenate the current node with the rest of the list
+                                                                    $$ = createOperatorNode(',', 2, $$, $4);
+                                                                }
+                        | type IDENTIFIER                           
+                                                                { 
+                                                                    $$=createOperatorNode(',', 2, createTypeNode($1->typ.type), createIdentifierNode($2));
+                                                                    
+                                                                    //add the variable in arg list to the symbol table
+                                                                    SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->typ.type), 1, 0, 0, NULL, currentLineNumber);
+                                                                    addSymbolEntry(currTable, newEntry);
+                                                                }
+                        |                                       { $$=NULL;}
                         ;
 
 arg_list_call           : arg_list_call ',' expression           { $$=createOperatorNode(',', 2, $1, $3);}
@@ -232,7 +251,7 @@ declaration             : type IDENTIFIER
                                                                         if(entry == NULL){
                                                                             SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->typ.type), 0, 0, 0, NULL, currentLineNumber);
                                                                             addSymbolEntry(currTable, newEntry);
-                                                                            $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));  
+                                                                            $$ = createOperatorNode(VAR, 2, createTypeNode($1->typ.type), createIdentifierNode($2));  
                                                                         }
                                                                         else{
                                                                             throwError("Variable already declared in this scope", currentLineNumber, semanticErrorsFile);
@@ -262,7 +281,7 @@ declaration             : type IDENTIFIER
                                                                             }
 
                                                                             if(noError){
-                                                                                $$ = createOperatorNode('=', 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); 
+                                                                                $$ = createOperatorNode('=', 3, createTypeNode($1->typ.type), createIdentifierNode($2), $4); 
                                                                             }
 
                                                                         }
@@ -294,7 +313,7 @@ declaration             : type IDENTIFIER
                                                                             }
 
                                                                             if(noError){
-                                                                                $$ = createOperatorNode(CONST, 3, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5);
+                                                                                $$ = createOperatorNode(CONST, 3, createTypeNode($1->typ.type), createIdentifierNode($3), $5);
                                                                             }
 
                                                                         }
@@ -609,6 +628,24 @@ bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10
     }
     return true;
 }
+
+void getArgList(nodeType *node, int *argCount, char*** argList) {
+    if (node->type == typeOpr) {
+        for (int i = 0; i < node->opr.nops; i++) {
+            getArgList(node->opr.op[i], argCount, argList);
+        }
+    } else if (node->type == typeDef) {
+        // Allocate memory for the new argument in argList
+        (*argList) = realloc((*argList), ((*argCount) + 1) * sizeof(char*));
+        // Allocate memory for the argument string
+        (*argList)[*argCount] = malloc((strlen(conEnumToString(node->typ.type)) + 1) * sizeof(char));
+        // Copy the argument string into the allocated memory
+        strcpy((*argList)[*argCount], conEnumToString(node->typ.type));
+        printf("string: %s\n", (*argList)[*argCount]);
+        (*argCount)++;
+    }
+}
+
 
 int main(int argc, char **argv) {
 
