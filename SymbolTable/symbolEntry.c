@@ -20,7 +20,8 @@ SymbolEntry *create_variable_SymbolEntry(const char *name, const char *type, int
     entry->argTypes = NULL; // Not applicable
     entry->isEnum = 0;     // Not an enum
     entry->enumCount = -1; // Not applicable
-    entry->enumTypes = NULL; // Not applicable
+    entry->enumTypesString = NULL; // Not applicable
+    entry->enumTypesInt= NULL; //Not applicable
     entry->lineNo = lineNo;
 
     return entry;
@@ -45,13 +46,38 @@ SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isIni
     entry->returnType = strdup(returnType);
     entry->isEnum = 0;         // Not an enum
     entry->enumCount = -1;     // Not applicable
-    entry->enumTypes = NULL;   // Not applicable
+    entry->enumTypesString = NULL;   // Not applicable
+    entry->enumTypesInt=NULL; //Not applicable
     entry->lineNo = lineNo;
 
     return entry;
 }
 
-SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypes) {
+// SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypes) {
+//     SymbolEntry *entry = malloc(sizeof(SymbolEntry));
+
+//     entry->name = strdup(name);
+//     entry->kind = ENUM_E;
+//     entry->isUsed = isUsed;
+//     entry->isInitialized = isInitialized; 
+//     entry->isConstant = -1;    // Not applicable
+//     entry->value = NULL;       // Not applicable
+//     entry->isFunction = 0;     // Not a function
+//     entry->argCount = -1;      // Not applicable
+//     entry->argTypes = NULL;    // Not applicable
+//     entry->returnType = NULL; // Not applicable
+//     entry->isEnum = 1;         // Is an enum
+//     entry->enumCount = enumCount;
+//     entry->enumTypes = malloc(enumCount * sizeof(char *));
+//     for (int i = 0; i < enumCount; i++) {
+//         entry->enumTypes[i] = strdup(enumTypes[i]);
+//     }
+//     entry->lineNo = lineNo;
+
+//     return entry;
+// }
+
+SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypesString,int *enumTypesInt) {
     SymbolEntry *entry = malloc(sizeof(SymbolEntry));
 
     entry->name = strdup(name);
@@ -66,15 +92,16 @@ SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitial
     entry->returnType = NULL; // Not applicable
     entry->isEnum = 1;         // Is an enum
     entry->enumCount = enumCount;
-    entry->enumTypes = malloc(enumCount * sizeof(char *));
+    entry->enumTypesString = malloc(enumCount * sizeof(char *));
+    entry->enumTypesInt = malloc(enumCount * sizeof(int));
     for (int i = 0; i < enumCount; i++) {
-        entry->enumTypes[i] = strdup(enumTypes[i]);
+        entry->enumTypesString[i] = strdup(enumTypesString[i]);
+        entry->enumTypesInt[i]=enumTypesInt[i];
     }
     entry->lineNo = lineNo;
 
     return entry;
 }
-
 
 char *getName(SymbolEntry *entry) {
     return entry->name;
@@ -116,8 +143,12 @@ int getEnumCount(SymbolEntry *entry) {
     return entry->enumCount;
 }
 
-char **getEnumTypes(SymbolEntry *entry) {
-    return entry->enumTypes;
+char **getEnumTypesString(SymbolEntry *entry) {
+    return entry->enumTypesString;
+}
+
+int *getEnumTypesInts(SymbolEntry *entry) {
+    return entry->enumTypesInt;
 }
 
 int getIsFunction(SymbolEntry *entry) {
@@ -179,14 +210,17 @@ void setEnumCount(SymbolEntry *entry, int enumCount) {
     entry->enumCount = enumCount;
 }
 
-void setEnumTypes(SymbolEntry *entry, char **enumTypes) {
+void setEnumTypes(SymbolEntry *entry, char **enumTypesString, int* enumTypesInt) {
     for (int i = 0; i < entry->enumCount; i++) {
-        free(entry->enumTypes[i]);
+        free(entry->enumTypesString[i]);
     }
-    free(entry->enumTypes);
-    entry->enumTypes = malloc(entry->enumCount * sizeof(char *));
+    free(entry->enumTypesString);
+    free(entry->enumTypesInt);
+    entry->enumTypesString = malloc(entry->enumCount * sizeof(char *));
+    entry->enumTypesInt = malloc(entry->enumCount * sizeof(int));
     for (int i = 0; i < entry->enumCount; i++) {
-        entry->enumTypes[i] = strdup(enumTypes[i]);
+        entry->enumTypesString[i] = strdup(enumTypesString[i]);
+        entry->enumTypesInt[i] = enumTypesInt[i];
     }
 }
 
@@ -224,9 +258,10 @@ void destroy_SymbolEntry(SymbolEntry *entry) {
 
         if (entry->isEnum) {
             for (int i = 0; i < entry->enumCount; i++) {
-                free(entry->enumTypes[i]);
+                free(entry->enumTypesString[i]);
             }
-            free(entry->enumTypes);
+            free(entry->enumTypesString);
+            free(entry->enumTypesInt);
         }
 
         free(entry);

@@ -23,9 +23,8 @@ fg :
 END OF FUNCTION
 
 
-CALL hello 
-
 
 ASSIGN x 
 CALL hello 
+
 

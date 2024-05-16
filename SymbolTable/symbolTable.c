@@ -151,7 +151,7 @@ void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
         
             // Concatenate each element of the enumTypes array
             for (int j = 0; j < table->entries[i]->enumCount; j++) {
-                int charsCopied = snprintf(concatenatedEnumString + currentIndex, sizeof(concatenatedEnumString) - currentIndex, "%s, ", table->entries[i]->enumTypes[j]);
+                int charsCopied = snprintf(concatenatedEnumString + currentIndex, sizeof(concatenatedEnumString) - currentIndex, "%s, ", table->entries[i]->enumTypesString[j]);
                 if (charsCopied > 0) {
                     currentIndex += charsCopied;
                 }
