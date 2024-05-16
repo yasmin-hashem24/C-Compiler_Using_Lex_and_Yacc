@@ -81,7 +81,7 @@
             start_scope end_scope
 %%
 
-program                 : start_scope statement_list     {execute($2,1);freeNode($2);} 
+program                 : start_scope statement_list     {execute($2,1,0);freeNode($2);} 
                       
                         ;
 
@@ -125,10 +125,7 @@ case_default            : DEFAULT ':' statement_list BREAK ';'                  
 
 // Statements rules: Loop statements
 while_loop              : WHILE '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope           {
-                                                                                                                                printf("Content of expression node: ");
-                                                                                                                                            printNode($3);
-                                                                                                                                            printf("Content of statement list node: ");
-                                                                                                                                            printNode($7);
+                                                                                                                              
                                                                                                                                 $$ = createOperatorNode(WHILE, 2, $3, $7);
                                                                                                                                 }
                                                                                                                                                     ;
@@ -142,7 +139,7 @@ for_loop                : FOR start_scope '(' declaration_assignment_loop ';' ex
 // Functions rules
 function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  statement_list RETURN expression ';' RBRACE end_scope     
                                                                                                                                         { 
-
+ 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
                                                                     
                                                                                                                                             if(entry == NULL){

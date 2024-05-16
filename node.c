@@ -117,7 +117,7 @@ nodeType *createOperatorNode(int oper, int nops, ...)
     return p;
 }
 
-void execute(nodeType *p, int first)
+void execute(nodeType *p, int first, int insideScope)
 {
 
     FILE *outputFile;
@@ -181,60 +181,96 @@ void execute(nodeType *p, int first)
         switch (p->opr.oper)
         {
         case WHILE:
-            sprintf(Result, "L%s%d :\n", Result, LoopsNames);
-            execute(p->opr.op[0], 0);
-            fprintf(outputFile, "\n");
-            execute(p->opr.op[1], 0);
+            if (insideScope == 1)
+            {
+                sprintf(Result, "\nL%d :\n", LoopsNames);
+                execute(p->opr.op[0], 0, 1);
+                strcat(Result, "\n");
 
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
-            fprintf(outputFile, "jz\tL%d\n", LoopsNames);
+                execute(p->opr.op[1], 0, 1);
 
-            LoopsNames++;
+                sprintf(Result, "%s jz\tL%d\n", Result, LoopsNames);
 
-            fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
-            fprintf(outputFile, "L%d:\n", LoopsNames);
+                LoopsNames++;
+                sprintf(Result, "%sjmp\tL%d\n", Result, LoopsNames);
 
-            LoopsNames += 1;
+                fprintf(outputFile, "\nL%d:\n", LoopsNames);
+
+                LoopsNames += 1;
+            }
+            else
+            {
+                sprintf(Result, "\nL%d :\n", LoopsNames);
+                execute(p->opr.op[0], 0, 1);
+                fprintf(outputFile, "\n");
+                execute(p->opr.op[1], 0, 1);
+
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                fprintf(outputFile, "jz\tL%d\n", LoopsNames);
+
+                LoopsNames++;
+
+                fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
+                fprintf(outputFile, "\nL%d:\n", LoopsNames);
+
+                LoopsNames += 1;
+            }
+            insideScope = 0;
             break;
 
         case IF:
-            fprintf(outputFile, "if(");
-            execute(p->opr.op[0], 0);
-            fprintf(outputFile, ") ");
-            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "\nIFScope:\n");
+            execute(p->opr.op[0], 0, 1);
+
+            execute(p->opr.op[1], 0, 1);
             if (p->opr.nops > 2)
             {
                 fprintf(outputFile, " else ");
-                execute(p->opr.op[2], 0);
+                execute(p->opr.op[2], 0, 1);
             }
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            fprintf(outputFile, "ENDIF\n");
+            insideScope = 0;
             break;
         case PRINT:
-            fprintf(outputFile, "print ");
-            execute(p->opr.op[0], 0);
-            fprintf(outputFile, "\n");
+            if (insideScope == 1)
+            {
+                strcat(Result, "print ");
+
+                execute(p->opr.op[0], 0, 1);
+                strcat(Result, "\n ");
+            }
+            else
+            {
+                fprintf(outputFile, "print ");
+                execute(p->opr.op[0], 0, 0);
+                fprintf(outputFile, "\n");
+            }
+
             break;
         case ENUM:
             switch (p->opr.nops)
             {
             case 1:
                 strcat(Result, "EnumDef ");
-                execute(p->opr.op[0], 0);
+                execute(p->opr.op[0], 0, 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result)); // Clear Result after printing
                 break;
             case 2:
                 strcat(Result, "EnumDef ");
-                execute(p->opr.op[0], 0);
-                execute(p->opr.op[1], 0);
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
             case 3:
                 strcat(Result, "EnumDef ");
-                execute(p->opr.op[0], 0);
-                execute(p->opr.op[1], 0);
-                execute(p->opr.op[2], 0);
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                execute(p->opr.op[2], 0, 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
@@ -243,17 +279,36 @@ void execute(nodeType *p, int first)
             }
             break;
         case VAR:
-            fprintf(outputFile, "INIT  ");
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "VAR ");
+                execute(p->opr.op[0], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "VAR ");
+                execute(p->opr.op[0], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
+
             break;
         case CONST:
-            fprintf(outputFile, "CONST ");
-            execute(p->opr.op[1], 0);
-            execute(p->opr.op[2], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "CONST ");
+                execute(p->opr.op[1], 0, 1);
+                execute(p->opr.op[2], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "CONST ");
+                execute(p->opr.op[1], 0, 0);
+                execute(p->opr.op[2], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
+
             break;
         case FUNC:
             switch (p->opr.nops)
@@ -264,26 +319,24 @@ void execute(nodeType *p, int first)
                         $$ = createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
                     0->type 1->identifier 2->arg_list 3->statement_list 4->expression*/
 
-                execute(p->opr.op[1], 0);
+                execute(p->opr.op[1], 0, 1);
                 strcat(Result, ":\n");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
-                printf("NODE 3");
-                printNode(p->opr.op[3]);
-                execute(p->opr.op[3], 0);
+                execute(p->opr.op[3], 0, 1);
+
                 strcat(Result, "RETURN ");
-                execute(p->opr.op[4], 0);
+                execute(p->opr.op[4], 0, 1);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
 
             case 4:
-                execute(p->opr.op[1], 0);
-                strcat(Result, ":");
+                execute(p->opr.op[1], 0, 1);
+                strcat(Result, ":\n");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
-                execute(p->opr.op[2], 0);
-                execute(p->opr.op[3], 0);
+                execute(p->opr.op[3], 0, 1);
                 fprintf(outputFile, Result);
 
                 break;
@@ -292,136 +345,323 @@ void execute(nodeType *p, int first)
                 break;
             }
             fprintf(outputFile, "\nEND OF FUNCTION");
+            insideScope = 0;
             break;
         case SWITCH:
             fprintf(outputFile, "\nswitch ");
-            execute(p->opr.op[0], 0);
+            execute(p->opr.op[0], 0, 0);
             break;
         case DEFAULT:
             fprintf(outputFile, "\ndefault ");
-            execute(p->opr.op[0], 0);
+            execute(p->opr.op[0], 0, 0);
             break;
         case CASE:
             fprintf(outputFile, "\ncase ");
-            execute(p->opr.op[0], 0);
+            execute(p->opr.op[0], 0, 0);
             break;
         case CALL:
-            strcat(Result, "\nCALL ");
-            execute(p->opr.op[0], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nCALL ");
+                execute(p->opr.op[0], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nCALL ");
+                execute(p->opr.op[0], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
+            break;
         case '=':
             switch (p->opr.nops)
             {
             case 2:
-                strcat(Result, "\nASSIGN ");
-                execute(p->opr.op[0], 0);
-                execute(p->opr.op[1], 0);
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
+                if (insideScope == 1)
+                {
+                    strcat(Result, "\nASSIGN ");
+                    execute(p->opr.op[1], 0, 1);
+                    execute(p->opr.op[0], 0, 1);
+                    strcat(Result, "\n");
+                }
+                else
+                {
+                    fprintf(outputFile, "\nASSIGN ");
+                    execute(p->opr.op[1], 0, 0);
+                    execute(p->opr.op[0], 0, 0);
+                    fprintf(outputFile, Result);
+                    fprintf(outputFile, "\n");
+                    memset(Result, 0, sizeof(Result));
+                }
                 break;
+
             case 3:
-                strcat(Result, "\nASSIGN ");
-                execute(p->opr.op[0], 0);
-                execute(p->opr.op[1], 0);
-                execute(p->opr.op[2], 0);
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
+                if (insideScope == 1)
+                {
+                    strcat(Result, "\nASSIGN ");
+                    execute(p->opr.op[0], 0, 1);
+                    execute(p->opr.op[2], 0, 1);
+                    execute(p->opr.op[1], 0, 1);
+
+                    strcat(Result, "\n");
+                }
+                else
+                {
+                    fprintf(outputFile, "\nASSIGN ");
+                    execute(p->opr.op[0], 0, 0);
+                    execute(p->opr.op[2], 0, 0);
+                    execute(p->opr.op[1], 0, 0);
+
+                    fprintf(outputFile, Result);
+                    fprintf(outputFile, "\n");
+                    memset(Result, 0, sizeof(Result));
+                }
                 break;
+
             default:
                 break;
             }
 
             break;
         case '+':
-            strcat(Result, "\nADD ");
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+
+            if (insideScope == 1)
+            {
+
+                strcat(Result, "\nADD ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+
+                fprintf(outputFile, "\nADD ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
+            }
             break;
+
         case '-':
-            strcat(Result, "\nSUB ");
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nSUB ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+
+                fprintf(outputFile, "\nSUB ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
+            }
             break;
         case '*':
-            strcat(Result, "\nMUL ");
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nMUL ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+
+                fprintf(outputFile, "\nMUL ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
+            }
             break;
         case '/':
-            strcat(Result, "\nDIV ");
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nDIV ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+
+                fprintf(outputFile, "\nDIV ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
+            }
             break;
         case ';':
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
+            execute(p->opr.op[0], 0, 0);
+            execute(p->opr.op[1], 0, 0);
             break;
         case ',':
             switch (p->opr.nops)
             {
             case 2:
-                execute(p->opr.op[0], 0);
-                execute(p->opr.op[1], 0);
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
                 break;
             case 3:
-                execute(p->opr.op[0], 0);
-                execute(p->opr.op[1], 0);
-                execute(p->opr.op[2], 0);
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                execute(p->opr.op[2], 0, 0);
                 break;
             default:
                 break;
             }
         case '!':
-            strcat(Result, "\nNOT ");
-            execute(p->opr.op[0], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nNOT ");
+                execute(p->opr.op[0], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nNOT ");
+                execute(p->opr.op[0], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
 
         case LT:
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, "LessTn\n");
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nLessTn ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nLessTn ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
 
         case GT:
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, "GrTn \n");
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nGrTn ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nGrTn ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
-
         case LTE:
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, "LessTnE \n");
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nLessTnE ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nLessTnE ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
-
         case GTE:
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, "GrTnE \n");
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nGrTnE ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nGrTnE ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
 
         case NEQ:
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, "IsNEQ \n");
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nIsNEQ ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nIsNEQ ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
 
         case EQ:
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, "IsEQ %s\n");
-
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nIsEQ ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nIsEQ ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
             break;
         default:
             fprintf(outputFile, "error: unknown operator '%d'\n");
