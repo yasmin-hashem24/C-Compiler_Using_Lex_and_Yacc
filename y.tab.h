@@ -98,9 +98,10 @@ extern int yydebug;
     CONTINUE = 299,                /* CONTINUE  */
     PRINT = 300,                   /* PRINT  */
     ENUM = 301,                    /* ENUM  */
-    IFX = 302,                     /* IFX  */
-    UMINUS = 303,                  /* UMINUS  */
-    NOT = 304                      /* NOT  */
+    CALL = 302,                    /* CALL  */
+    IFX = 303,                     /* IFX  */
+    UMINUS = 304,                  /* UMINUS  */
+    NOT = 305                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -153,15 +154,16 @@ extern int yydebug;
 #define CONTINUE 299
 #define PRINT 300
 #define ENUM 301
-#define IFX 302
-#define UMINUS 303
-#define NOT 304
+#define CALL 302
+#define IFX 303
+#define UMINUS 304
+#define NOT 305
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 38 "Compiler.y"
+#line 40 "Compiler.y"
 
     int iVal;
     float fVal;
@@ -170,7 +172,7 @@ union YYSTYPE
     char *sVal;
     nodeType *nPtr;
 
-#line 174 "y.tab.h"
+#line 176 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

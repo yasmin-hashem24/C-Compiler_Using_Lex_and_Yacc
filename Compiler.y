@@ -57,7 +57,7 @@
 %token LBRACE RBRACE
 %token EQ NEQ LT GT LTE GTE AND OR
 %token CONST FUNC MAIN INCLUDE DEFINE VAR
-%token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT BREAK RETURN EXIT CONTINUE PRINT ENUM
+%token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT BREAK RETURN EXIT CONTINUE PRINT ENUM CALL
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -201,10 +201,10 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                         ;
 
 
-function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
+function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);}
                         ;
 
-function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(FUNC, 1, createIdentifierNode($1), $3);}
+function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);}
                         ;
 
 arg_list                : type IDENTIFIER ',' arg_list          { 
@@ -313,7 +313,7 @@ declaration             : type IDENTIFIER
                                                                             }
 
                                                                             if(noError){
-                                                                                $$ = createOperatorNode(CONST, 3, createTypeNode($1->typ.type), createIdentifierNode($3), $5);
+                                                                                $$ = createOperatorNode(CONST, 3, createTypeNode($2->typ.type), createIdentifierNode($3), $5);
                                                                             }
 
                                                                         }

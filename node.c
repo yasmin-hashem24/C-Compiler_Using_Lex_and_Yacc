@@ -117,50 +117,6 @@ nodeType *createOperatorNode(int oper, int nops, ...)
     return p;
 }
 
-conEnum getTypeOfEnum(const nodeType *node)
-{
-    // Assuming that the identifier is stored in the node and it's a string
-    const char *identifier = NULL;
-
-    // Determine the identifier based on the node's content
-    switch (node->type)
-    {
-    case typeId:
-        identifier = node->id.id;
-        break;
-    default:
-
-        break;
-    }
-
-    // Return the type based on the identifier
-    if (identifier != NULL)
-    {
-        if (strcmp(identifier, "int") == 0)
-        {
-            return typeInt;
-        }
-        else if (strcmp(identifier, "float") == 0)
-        {
-            return typeFloat;
-        }
-        else if (strcmp(identifier, "string") == 0)
-        {
-            return typeString;
-        }
-        else if (strcmp(identifier, "char") == 0)
-        {
-            return typeChar;
-        }
-        else if (strcmp(identifier, "bool") == 0)
-        {
-            return typeBool;
-        }
-    }
-
-    // Handle unknown types
-    return typeND;
-}
 void execute(nodeType *p, int first)
 {
 

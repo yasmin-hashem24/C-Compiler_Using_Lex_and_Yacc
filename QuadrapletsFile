@@ -1,12 +1,10 @@
 
-nknown
+nt
 func 
-void
-func 
+error: unknown operator '-825757319'
 
-unknown
-func 
-ASSIGN x hello 
 
-error: unknown operator '-2060779394'
+int
+error: unknown operator '-825757319'
 
+ASSIGN x 

@@ -104,7 +104,7 @@ const char *symbolKindToString(SymbolKind kind) {
 
 void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
     fprintf(file, "Symbol Table: %s\t\t Scope: %d\n", table->name, table->scope);
-    fprintf(file, "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(file, "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fprintf(file, "%-25s%-25s%-25s%-25s%-25s%-25s%-25s%-25s%-40s%-25s%-25s%-50s\n",
             "Name", "Kind", "VarType", "Initialized", "Constant", "Used", "Value", "agrCount", "ArgumentTypes", "ReturnType", "EnumCount", "EnumTypes");
 
@@ -116,9 +116,27 @@ void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
 
         // for argtypes:
         if (table->entries[i]->argCount > 0) {
+            // Initialize a buffer to store the concatenated string
+            char concatenatedString[41]; // 40 characters + 1 for null terminator
+            int currentIndex = 0;
+
+            // Concatenate each element of the argTypes array
             for (int j = 0; j < table->entries[i]->argCount; j++) {
-                fprintf(file, "%-40s", table->entries[i]->argTypes[j]);
+                int charsCopied = snprintf(concatenatedString + currentIndex, sizeof(concatenatedString) - currentIndex, "%s, ", table->entries[i]->argTypes[j]);
+                if (charsCopied > 0) {
+                    currentIndex += charsCopied;
+                }
             }
+
+            // Pad the remaining characters with spaces if needed
+            while (currentIndex < 40) {
+                concatenatedString[currentIndex++] = ' ';
+            }
+
+            // Add null terminator to the concatenated string
+            concatenatedString[currentIndex] = '\0';
+
+            fprintf(file, "%s", concatenatedString);
         } else {
             fprintf(file, "%-40s", "-");
         }
@@ -127,16 +145,33 @@ void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
 
         // for enumtypes:
         if (table->entries[i]->enumCount > 0) {
+            // Initialize a buffer to store the concatenated string
+            char concatenatedEnumString[71]; // 70 characters + 1 for null terminator
+            int currentIndex = 0;
+        
+            // Concatenate each element of the enumTypes array
             for (int j = 0; j < table->entries[i]->enumCount; j++) {
-                fprintf(file, "%-50s", table->entries[i]->enumTypes[j]);
+                int charsCopied = snprintf(concatenatedEnumString + currentIndex, sizeof(concatenatedEnumString) - currentIndex, "%s, ", table->entries[i]->enumTypes[j]);
+                if (charsCopied > 0) {
+                    currentIndex += charsCopied;
+                }
             }
-            fprintf(file, "\n");
+        
+            // Pad the remaining characters with spaces if needed
+            while (currentIndex < 70) {
+                concatenatedEnumString[currentIndex++] = ' ';
+            }
+        
+            // Add null terminator to the concatenated string
+            concatenatedEnumString[currentIndex] = '\0';
+        
+            fprintf(file, "%s\n", concatenatedEnumString);
         } else {
-            fprintf(file, "%-50s", "-");
+            fprintf(file, "%-70s\n", "-");
         }
         fprintf(file, "\n");
     }
-    fprintf(file, "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+    fprintf(file, "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 }
 
 void writeAllSymbolTablesToFile(SymbolTable *table, FILE *file) {
