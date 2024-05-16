@@ -38,7 +38,7 @@ class MyWindow(tk.Frame):
         if not code.strip():
             messagebox.showerror("Input Error", "please enter your code")
             return
-        file_path = "../testinput.txt"
+        file_path = "../input.txt"
         with open(file_path, "w") as f:
             f.write(code)
         subprocess.call(["../bas.exe", file_path])
