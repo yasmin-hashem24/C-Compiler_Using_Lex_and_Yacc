@@ -210,25 +210,126 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                         ;
 
 
-function_call           : IDENTIFIER '(' arg_list_call ')' ';'   { 
-                                                                    // $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);
-                                                                    // // Check that the function name exists in the symbol table
-                                                                    // SymbolEntry *entry = checkIdNodeDeclaration(currTable, $1);
-                                                                    // if (entry != NULL) {
-                                                                    //     if (entry->isFunc) {
-                                                                    //         // Create 2 checks:
-                                                                    //         // Check that the number of arguments is correct
-                                                                    //         // Check that the types of the arguments are correct
-                                                                    //     } else {
-                                                                    //         throwError("Identifier is not a function", currentLineNumber, semanticErrorsFile);
-                                                                    //     }
-                                                                    // } else {
-                                                                    //     throwError("Function name not declared", currentLineNumber, semanticErrorsFile);
-                                                                    // }
+function_call           : IDENTIFIER '(' arg_list_call ')' ';'  { 
+                                                                    $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);
+                                                                    // Check that the function name exists in the symbol table
+                                                                    SymbolEntry *entry = checkIdNodeDeclaration(currTable, $1);
+                                                                    if (entry != NULL) {
+                                                                        if (getIsFunction(entry)) {
+                                                                            // Create 2 checks:
+                                                                            // Check that the number of arguments is correct
+                                                                            // Check that the types of the arguments are correct
+                                                                            int argPassedCount = 0;
+                                                                            nodeType** argPassedNodeList = NULL;
+                                                                            getArgPassList($3, &argPassedCount, &argPassedNodeList);
+                                                                            
+                                                                            // get the argument of the current func
+                                                                            if(argPassedCount == getArgCount(entry)) {
+                                                                                for(int i = 0; i < argPassedCount; i++) {
+                                                                                    if(argPassedNodeList[i]->type == typeCon){
+                                                                                        char* typeUnion;
+                                                                                        CheckTypeFunc checkFunc = getCheckFunction(argPassedNodeList[i]->con.typeConst, &typeUnion);
+                                                                                        char symbolValue[20];
+
+                                                                                        if (checkFunc(stringToConEnum(getArgTypes(entry)[i]))) {
+                                                                                            continue;
+                                                                                            
+                                                                                        } else {
+                                                                                            throwError("Function argument: type mismatch", currentLineNumber, semanticErrorsFile);
+                                                                                            return false;
+                                                                                        }
+                                                                                    }
+                                                                                    else if(argPassedNodeList[i]->type == typeId) {
+                                                                                        SymbolEntry *entryVar = checkIdNodeDeclaration(currTable, argPassedNodeList[i]->id.id);
+                                                                                        if (entry != NULL) {
+                                                                                            if (strcmp(getArgTypes(entry)[i], getType(entryVar)) == 0) {
+                                                                                                continue;
+                                                                                            } else {
+                                                                                                throwError("Function argument: type mismatch", currentLineNumber, semanticErrorsFile);
+                                                                                                return false;
+                                                                                            }
+                                                                                        } else {
+                                                                                            throwError("Function argument: variable not declared", currentLineNumber, semanticErrorsFile);
+                                                                                            return false;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            else {
+                                                                                throwError("Argument count does not match the function declaration", currentLineNumber, semanticErrorsFile);
+
+                                                                            }
+                                                                        } 
+                                                                        else {
+                                                                            throwError("Using Identifier as a function", currentLineNumber, semanticErrorsFile);
+                                                                        }
+                                                                    } 
+                                                                    else {
+                                                                        throwError("Function name not declared", currentLineNumber, semanticErrorsFile);
+                                                                    }
                                                                 }
                         ;
 
-function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);}
+function_call_expression: IDENTIFIER '(' arg_list_call ')'       { 
+                                                                    $$=createOperatorNode(CALL, 1, createIdentifierNode($1), $3);
+
+                                                                    // Check that the function name exists in the symbol table
+                                                                    SymbolEntry *entry = checkIdNodeDeclaration(currTable, $1);
+                                                                    if (entry != NULL) {
+                                                                        if (getIsFunction(entry)) {
+                                                                            // Create 2 checks:
+                                                                            // Check that the number of arguments is correct
+                                                                            // Check that the types of the arguments are correct
+                                                                            int argPassedCount = 0;
+                                                                            nodeType** argPassedNodeList = NULL;
+                                                                            getArgPassList($3, &argPassedCount, &argPassedNodeList);
+                                                                            
+                                                                            // get the argument of the current func
+                                                                            if(argPassedCount == getArgCount(entry)) {
+                                                                                for(int i = 0; i < argPassedCount; i++) {
+                                                                                    if(argPassedNodeList[i]->type == typeCon){
+                                                                                        char* typeUnion;
+                                                                                        CheckTypeFunc checkFunc = getCheckFunction(argPassedNodeList[i]->con.typeConst, &typeUnion);
+                                                                                        char symbolValue[20];
+
+                                                                                        if (checkFunc(stringToConEnum(getArgTypes(entry)[i]))) {
+                                                                                            continue;
+                                                                                            
+                                                                                        } else {
+                                                                                            throwError("Function argument: type mismatch", currentLineNumber, semanticErrorsFile);
+                                                                                            return false;
+                                                                                        }
+                                                                                    }
+                                                                                    else if(argPassedNodeList[i]->type == typeId) {
+                                                                                        SymbolEntry *entryVar = checkIdNodeDeclaration(currTable, argPassedNodeList[i]->id.id);
+                                                                                        if (entry != NULL) {
+                                                                                            if (strcmp(getArgTypes(entry)[i], getType(entryVar)) == 0) {
+                                                                                                continue;
+                                                                                            } else {
+                                                                                                throwError("Function argument: type mismatch", currentLineNumber, semanticErrorsFile);
+                                                                                                return false;
+                                                                                            }
+                                                                                        } else {
+                                                                                            throwError("Function argument: variable not declared", currentLineNumber, semanticErrorsFile);
+                                                                                            return false;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            else {
+                                                                                throwError("Argument count does not match the function declaration", currentLineNumber, semanticErrorsFile);
+
+                                                                            }
+                                                                        } 
+                                                                        else {
+                                                                            throwError("Using Identifier as a function", currentLineNumber, semanticErrorsFile);
+                                                                        }
+                                                                    } 
+                                                                    else {
+                                                                        throwError("Function name not declared", currentLineNumber, semanticErrorsFile);
+                                                                    }
+                                                                
+                                                                }
                         ;
 
 arg_list                : type IDENTIFIER ',' arg_list          { 
@@ -888,7 +989,6 @@ void getArgList(nodeType *node, int *argCount, char*** argList) {
         (*argList)[*argCount] = malloc((strlen(conEnumToString(node->typ.type)) + 1) * sizeof(char));
         // Copy the argument string into the allocated memory
         strcpy((*argList)[*argCount], conEnumToString(node->typ.type));
-        printf("string: %s\n", (*argList)[*argCount]);
         (*argCount)++;
     }
 }
@@ -905,11 +1005,63 @@ void checkArgListTpes(nodeType *node, int *argCount, char*** argList) {
         (*argList)[*argCount] = malloc((strlen(conEnumToString(node->typ.type)) + 1) * sizeof(char));
         // Copy the argument string into the allocated memory
         strcpy((*argList)[*argCount], conEnumToString(node->typ.type));
-        printf("string: %s\n", (*argList)[*argCount]);
         (*argCount)++;
     }
 }
 
+void getArgPassList(nodeType *node, int *argCount, nodeType ***argList) {
+    if (node->type == typeOpr) {
+        for (int i = 0; i < node->opr.nops; i++) {
+            getArgPassList(node->opr.op[i], argCount, argList);
+        }
+    } else if (node->type == typeId) {
+        // Get the id type from the symbol table
+        SymbolEntry *entry = checkIdNodeDeclaration(currTable, node->id.id);
+        if (entry != NULL) {
+            if (getIsInitialized(entry)) {
+                setIsUsed(entry, 1);
+                // Allocate memory for the new argument in argList
+                (*argList) = realloc((*argList), ((*argCount) + 1) * sizeof(nodeType*));
+                // Create a copy of the argument node and add it to argList
+                (*argList)[*argCount] = node;
+                (*argCount)++;
+            } else {
+                throwError("Variable passed to the function has not been initialized before", currentLineNumber, semanticErrorsFile);
+                return;
+            }
+        } else {
+            throwError("Variable passed to the function is not declared", currentLineNumber, semanticErrorsFile);
+            return;
+        }
+    } else if (node->type == typeCon) {
+        // Allocate memory for the new argument in argList
+        (*argList) = realloc((*argList), ((*argCount) + 1) * sizeof(nodeType*));
+        // Create a copy of the argument node and add it to argList
+        (*argList)[*argCount] = node;
+        (*argCount)++;
+    } else {
+        throwError("Invalid argument type", currentLineNumber, semanticErrorsFile);
+        return;
+    }
+}
+
+// Here we are assuming that only id can be in the enum list
+void getEnumDeclarationList(nodeType *node, int *argCount, char*** argList) {
+
+    if (node->type == typeOpr) {
+        for (int i = 0; i < node->opr.nops; i++) {
+            getArgPassList(node->opr.op[i], argCount, argList);
+        }
+    } else if (node->type == typeId) {
+        // Allocate memory for the new argument in argList
+        (*argList) = realloc((*argList), ((*argCount) + 1) * sizeof(char*));
+        // Allocate memory for the argument string
+        (*argList)[*argCount] = malloc((strlen(node->id.id) + 1) * sizeof(char));
+        // Copy the argument string into the allocated memory
+        strcpy((*argList)[*argCount], node->id.id);
+        (*argCount)++;
+    }
+}
 
 int main(int argc, char **argv) {
 
