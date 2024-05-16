@@ -1,7 +1,12 @@
 
 nknown
+func 
+void
+func 
 
-ASSIGN x 5.100000 
 unknown
+func 
+ASSIGN x hello 
 
-ASSIGN yasmina 1 
+error: unknown operator '-2060779394'
+

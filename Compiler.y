@@ -128,11 +128,11 @@ while_loop              : WHILE '(' expression ')' LBRACE start_scope statement_
 do_while_loop           : DO LBRACE start_scope statement_list RBRACE end_scope WHILE '(' expression ')' ';'    { $$ = createOperatorNode(DO, 2, $4, $9);}
                         ;
 
-for_loop                : FOR '(' declaration_assignment_loop ';' expression';' declaration_assignment_loop ')' LBRACE start_scope statement_list RBRACE end_scope  {$$ = createOperatorNode(FOR, 3, $3, $5, $7);}
+for_loop                : FOR start_scope '(' declaration_assignment_loop ';' expression';' declaration_assignment_loop ')' LBRACE  statement_list RBRACE end_scope  {$$ = createOperatorNode(FOR, 3, $4, $6, $8);}
                         ;
 
 // Functions rules
-function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RETURN expression ';' RBRACE end_scope     
+function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  statement_list RETURN expression ';' RBRACE end_scope     
                                                                                                                                         { 
 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
@@ -145,7 +145,7 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                                                                                                                                                     // Itirate over the arguments types to add them
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8, $10);
+                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $5, $8, $10);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -155,7 +155,7 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
                                                                                                                                             }
                                                                                                                                         }
-                        | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RBRACE end_scope                      
+                        | VOID_TYPE IDENTIFIER start_scope '(' arg_list ')' LBRACE  statement_list RBRACE end_scope                      
                                                                                                                                         { 
 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
@@ -164,13 +164,13 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                                                                                                                                                 // Itirate over the arguments types to add them
                                                                                                                                                 SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, "Void");
                                                                                                                                                 addSymbolEntry(currTable, newEntry);
-                                                                                                                                                $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $8);
+                                                                                                                                                $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $5, $8);
                                                                                                                                             }
                                                                                                                                             else{
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
                                                                                                                                             }
                                                                                                                                         }
-                        | type IDENTIFIER '(' arg_list ')' LBRACE start_scope  RETURN expression ';' RBRACE end_scope                   
+                        | type IDENTIFIER start_scope '(' arg_list ')' LBRACE   RETURN expression ';' RBRACE end_scope                   
                                                                                                                                         { 
 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
@@ -183,7 +183,7 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                                                                                                                                                     // Itirate over the arguments types to add them
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $9);
+                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $5, $9);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
