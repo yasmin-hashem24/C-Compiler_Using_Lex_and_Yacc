@@ -91,7 +91,7 @@ nodeType *createCharConstantNode(char value);
 nodeType *createStringConstantNode(char *value);
 nodeType *createIdentifierNode(char *id);
 nodeType *createOperatorNode(int oper, int nops, ...);
-void execute(nodeType *p, int first, int inscope);
+void execute(nodeType *p, int first);
 const char *conEnumToString(conEnum enumValue);
 conEnum stringToConEnum(const char *str);
 void printNode(nodeType *node);
