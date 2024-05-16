@@ -104,40 +104,39 @@ const char *symbolKindToString(SymbolKind kind) {
 
 void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
     fprintf(file, "Symbol Table: %s\t\t Scope: %d\n", table->name, table->scope);
-    fprintf(file, "-------------------------------------\n");
-    fprintf(file, "Name\t\t\t\t\t\tKind\t\t\t\t\t\tVarType\t\t\t\t\t\tInitialized\t\t\t\t\t\tConstant\t\t\t\t\t\tUsed\t\t\t\t\t\tValue\t\t\t\t\t\tagrCount\t\t\t\t\t\tArgumentTypes\t\t\t\t\t\tReturnType\t\t\t\t\t\tEnumCount\t\t\t\t\t\tEnumTypes\n");
-    for (size_t i = 0; i < table->size; i++) {
-        fprintf(file, "%s\t\t\t\t\t\t%s\t\t\t\t\t\t%s\t\t\t\t\t\t%d\t\t\t\t\t\t%d\t\t\t\t\t\t%d\t\t\t\t\t\t%s\t\t\t\t\t\t%d\t\t\t\t\t\t",
-                table->entries[i]->name, symbolKindToString(table->entries[i]->kind),
-                table->entries[i]->type, table->entries[i]->isInitialized, table->entries[i]->isConstant, table->entries[i]->isUsed, table->entries[i]->value,
-                table->entries[i]->argCount);
+    fprintf(file, "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(file, "%-25s%-25s%-25s%-25s%-25s%-25s%-25s%-25s%-40s%-25s%-25s%-50s\n",
+            "Name", "Kind", "VarType", "Initialized", "Constant", "Used", "Value", "agrCount", "ArgumentTypes", "ReturnType", "EnumCount", "EnumTypes");
 
+    for (size_t i = 0; i < table->size; i++) {
+        fprintf(file, "%-25s%-25s%-25s%-25d%-25d%-25d%-25s%-25d",
+                table->entries[i]->name, symbolKindToString(table->entries[i]->kind),
+                table->entries[i]->type, table->entries[i]->isInitialized, table->entries[i]->isConstant,
+                table->entries[i]->isUsed, table->entries[i]->value, table->entries[i]->argCount);
 
         // for argtypes:
         if (table->entries[i]->argCount > 0) {
             for (int j = 0; j < table->entries[i]->argCount; j++) {
-                fprintf(file, "%s\t\t\t\t\t\t", table->entries[i]->argTypes[j]);
+                fprintf(file, "%-40s", table->entries[i]->argTypes[j]);
             }
         } else {
-            fprintf(file, "-\t\t\t\t\t\t");
+            fprintf(file, "%-40s", "-");
         }
 
-        fprintf(file, "%s\t\t\t\t\t\t%d\t\t\t\t\t\t",
-                table->entries[i]->returnType,
-                table->entries[i]->enumCount);
+        fprintf(file, "%-25s%-25d", table->entries[i]->returnType, table->entries[i]->enumCount);
 
         // for enumtypes:
         if (table->entries[i]->enumCount > 0) {
             for (int j = 0; j < table->entries[i]->enumCount; j++) {
-                fprintf(file, "%s\t\t\t\t\t\t", table->entries[i]->enumTypes[j]);
+                fprintf(file, "%-50s", table->entries[i]->enumTypes[j]);
             }
             fprintf(file, "\n");
         } else {
-            fprintf(file, "-\t\t\t\t\t\t");
+            fprintf(file, "%-50s", "-");
         }
         fprintf(file, "\n");
     }
-    fprintf(file, "-------------------------------------\n\n");
+    fprintf(file, "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 }
 
 void writeAllSymbolTablesToFile(SymbolTable *table, FILE *file) {
