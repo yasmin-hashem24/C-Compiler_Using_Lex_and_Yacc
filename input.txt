@@ -80,9 +80,10 @@ int hello(int x, float y, int y) {
   x = 1;
   return 1;
 }
-//void fg(){
-//  char x = '1';
-//}
+
+void fg(string x, string y, char x){
+  char x = '1';
+}
 hello();
 int x = hello();
 

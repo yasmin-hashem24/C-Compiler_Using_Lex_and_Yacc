@@ -173,7 +173,10 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                                                                     
                                                                                                                                             if(entry == NULL){
                                                                                                                                                 // Itirate over the arguments types to add them
-                                                                                                                                                SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, "Void");
+                                                                                                                                                int argCount = 0;
+                                                                                                                                                char** argList = NULL;
+                                                                                                                                                getArgList($5, &argCount, &argList);
+                                                                                                                                                SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, argCount, argList, "Void");
                                                                                                                                                 addSymbolEntry(currTable, newEntry);
                                                                                                                                                 $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $5, $8);
                                                                                                                                             }
@@ -192,7 +195,10 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
 
                                                                                                                                                 if (noError) {
                                                                                                                                                     // Itirate over the arguments types to add them
-                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
+                                                                                                                                                    int argCount = 0;
+                                                                                                                                                    char** argList = NULL;
+                                                                                                                                                    getArgList($5, &argCount, &argList);
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, argCount, argList, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
                                                                                                                                                     $$=createOperatorNode(FUNC, 3, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $9);
                                                                                                                                                 }
