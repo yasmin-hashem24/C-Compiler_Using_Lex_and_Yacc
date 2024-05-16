@@ -1,10 +1,9 @@
 
-nt
-func 
-error: unknown operator '-825757319'
+nknown
 
+ASSIGN x 5 
 
-int
-error: unknown operator '-825757319'
+GrTn x 3 
 
-ASSIGN x 
+CALL printf 
+
