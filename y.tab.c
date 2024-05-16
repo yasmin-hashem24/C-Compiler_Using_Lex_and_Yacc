@@ -85,6 +85,7 @@
     bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst);
     bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10);
     bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10);
+    bool doesStringExist(char *str, char **array, int size);
 
     int yylex();
     extern FILE *yyin;
@@ -103,7 +104,7 @@
     const char *conEnumToString(conEnum enumValue);
 
 
-#line 107 "y.tab.c"
+#line 108 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -254,7 +255,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 38 "Compiler.y"
+#line 39 "Compiler.y"
 
     int iVal;
     float fVal;
@@ -263,7 +264,7 @@ union YYSTYPE
     char *sVal;
     nodeType *nPtr;
 
-#line 267 "y.tab.c"
+#line 268 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -765,15 +766,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    82,    82,    87,    88,    93,    94,    95,    96,    97,
-      98,    99,   100,   101,   102,   103,   107,   110,   111,   113,
-     116,   117,   120,   125,   128,   131,   135,   158,   173,   199,
-     202,   205,   206,   207,   210,   211,   212,   219,   220,   223,
-     224,   228,   242,   274,   305,   309,   374,   378,   379,   380,
-     381,   386,   387,   389,   390,   391,   392,   393,   394,   395,
-     396,   397,   398,   399,   400,   401,   402,   403,   404,   405,
-     407,   408,   412,   413,   414,   415,   416,   419,   420,   421,
-     422,   423,   424,   425,   428,   446
+       0,    83,    83,    88,    89,    94,    95,    96,    97,    98,
+      99,   100,   101,   102,   103,   104,   108,   111,   112,   114,
+     117,   118,   121,   126,   129,   132,   136,   159,   174,   200,
+     203,   206,   207,   208,   211,   212,   213,   220,   221,   224,
+     225,   229,   243,   275,   307,   367,   432,   592,   593,   594,
+     595,   600,   601,   603,   604,   605,   606,   607,   608,   609,
+     610,   611,   612,   613,   614,   615,   616,   617,   618,   619,
+     621,   622,   626,   627,   628,   629,   630,   633,   634,   635,
+     636,   637,   638,   639,   642,   660
 };
 #endif
 
@@ -1662,151 +1663,151 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: start_scope statement_list  */
-#line 82 "Compiler.y"
+#line 83 "Compiler.y"
                                                          {execute((yyvsp[0].nPtr),1);freeNode((yyvsp[0].nPtr));}
-#line 1668 "y.tab.c"
+#line 1669 "y.tab.c"
     break;
 
   case 3: /* statement_list: statement  */
-#line 87 "Compiler.y"
+#line 88 "Compiler.y"
                                                              {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1674 "y.tab.c"
+#line 1675 "y.tab.c"
     break;
 
   case 4: /* statement_list: statement_list statement  */
-#line 88 "Compiler.y"
+#line 89 "Compiler.y"
                                                              {(yyval.nPtr)=createOperatorNode(';', 2, (yyvsp[-1].nPtr), (yyvsp[0].nPtr));}
-#line 1680 "y.tab.c"
+#line 1681 "y.tab.c"
     break;
 
   case 5: /* statement: declaration_assignment  */
-#line 93 "Compiler.y"
+#line 94 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1686 "y.tab.c"
+#line 1687 "y.tab.c"
     break;
 
   case 6: /* statement: enum_declaration  */
-#line 94 "Compiler.y"
+#line 95 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1692 "y.tab.c"
+#line 1693 "y.tab.c"
     break;
 
   case 7: /* statement: function_call  */
-#line 95 "Compiler.y"
+#line 96 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1698 "y.tab.c"
+#line 1699 "y.tab.c"
     break;
 
   case 8: /* statement: print_statement  */
-#line 96 "Compiler.y"
+#line 97 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1704 "y.tab.c"
+#line 1705 "y.tab.c"
     break;
 
   case 9: /* statement: if_condition_statement  */
-#line 97 "Compiler.y"
+#line 98 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1710 "y.tab.c"
+#line 1711 "y.tab.c"
     break;
 
   case 10: /* statement: switch_statement  */
-#line 98 "Compiler.y"
+#line 99 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1716 "y.tab.c"
+#line 1717 "y.tab.c"
     break;
 
   case 11: /* statement: while_loop  */
-#line 99 "Compiler.y"
+#line 100 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1722 "y.tab.c"
+#line 1723 "y.tab.c"
     break;
 
   case 12: /* statement: do_while_loop  */
-#line 100 "Compiler.y"
+#line 101 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1728 "y.tab.c"
+#line 1729 "y.tab.c"
     break;
 
   case 13: /* statement: for_loop  */
-#line 101 "Compiler.y"
+#line 102 "Compiler.y"
                                                             {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1734 "y.tab.c"
+#line 1735 "y.tab.c"
     break;
 
   case 14: /* statement: function_declaration  */
-#line 102 "Compiler.y"
+#line 103 "Compiler.y"
                                                              {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1740 "y.tab.c"
+#line 1741 "y.tab.c"
     break;
 
   case 15: /* statement: expression  */
-#line 103 "Compiler.y"
+#line 104 "Compiler.y"
                                                              {(yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1746 "y.tab.c"
+#line 1747 "y.tab.c"
     break;
 
   case 16: /* print_statement: PRINT '(' expression ')' ';'  */
-#line 107 "Compiler.y"
+#line 108 "Compiler.y"
                                                           {(yyval.nPtr)= createOperatorNode(PRINT, 1, (yyvsp[-2].nPtr));}
-#line 1752 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 17: /* if_condition_statement: IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope  */
-#line 110 "Compiler.y"
+#line 111 "Compiler.y"
                                                                                                                                                                 {(yyval.nPtr) = createOperatorNode(IF,2,(yyvsp[-6].nPtr),(yyvsp[-2].nPtr));}
-#line 1758 "y.tab.c"
+#line 1759 "y.tab.c"
     break;
 
   case 18: /* if_condition_statement: IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope  */
-#line 111 "Compiler.y"
+#line 112 "Compiler.y"
                                                                                                                                                                 {(yyval.nPtr) = createOperatorNode(IF, 2, (yyvsp[-12].nPtr), (yyvsp[-8].nPtr), (yyvsp[-2].nPtr));}
-#line 1764 "y.tab.c"
+#line 1765 "y.tab.c"
     break;
 
   case 19: /* switch_statement: SWITCH '(' expression ')' LBRACE case_list case_default RBRACE  */
-#line 113 "Compiler.y"
+#line 114 "Compiler.y"
                                                                                             {(yyval.nPtr) = createOperatorNode(SWITCH, 2, (yyvsp[-5].nPtr), (yyvsp[-2].nPtr));}
-#line 1770 "y.tab.c"
+#line 1771 "y.tab.c"
     break;
 
   case 20: /* case_list: case_list CASE expression ':' statement_list BREAK ';'  */
-#line 116 "Compiler.y"
+#line 117 "Compiler.y"
                                                                                {(yyval.nPtr) = createOperatorNode(CASE,3,(yyvsp[-6].nPtr),(yyvsp[-4].nPtr),(yyvsp[-2].nPtr));}
-#line 1776 "y.tab.c"
+#line 1777 "y.tab.c"
     break;
 
   case 21: /* case_list: CASE expression ':' statement_list BREAK ';'  */
-#line 117 "Compiler.y"
+#line 118 "Compiler.y"
                                                                                {(yyval.nPtr) = createOperatorNode(CASE, 2, (yyvsp[-4].nPtr), (yyvsp[-2].nPtr));}
-#line 1782 "y.tab.c"
+#line 1783 "y.tab.c"
     break;
 
   case 22: /* case_default: DEFAULT ':' statement_list BREAK ';'  */
-#line 120 "Compiler.y"
+#line 121 "Compiler.y"
                                                                                 {(yyval.nPtr) = createOperatorNode(DEFAULT, 1, (yyvsp[-2].nPtr));}
-#line 1788 "y.tab.c"
+#line 1789 "y.tab.c"
     break;
 
   case 23: /* while_loop: WHILE '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope  */
-#line 125 "Compiler.y"
+#line 126 "Compiler.y"
                                                                                                                 {(yyval.nPtr) = createOperatorNode(WHILE, 2, (yyvsp[-6].nPtr), (yyvsp[-2].nPtr));}
-#line 1794 "y.tab.c"
+#line 1795 "y.tab.c"
     break;
 
   case 24: /* do_while_loop: DO LBRACE start_scope statement_list RBRACE end_scope WHILE '(' expression ')' ';'  */
-#line 128 "Compiler.y"
+#line 129 "Compiler.y"
                                                                                                                 { (yyval.nPtr) = createOperatorNode(DO, 2, (yyvsp[-7].nPtr), (yyvsp[-2].nPtr));}
-#line 1800 "y.tab.c"
+#line 1801 "y.tab.c"
     break;
 
   case 25: /* for_loop: FOR start_scope '(' declaration_assignment_loop ';' expression ';' declaration_assignment_loop ')' LBRACE statement_list RBRACE end_scope  */
-#line 131 "Compiler.y"
+#line 132 "Compiler.y"
                                                                                                                                                                      {(yyval.nPtr) = createOperatorNode(FOR, 3, (yyvsp[-9].nPtr), (yyvsp[-7].nPtr), (yyvsp[-5].nPtr));}
-#line 1806 "y.tab.c"
+#line 1807 "y.tab.c"
     break;
 
   case 26: /* function_declaration: type IDENTIFIER start_scope '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE end_scope  */
-#line 136 "Compiler.y"
+#line 137 "Compiler.y"
                                                                                                                                         { 
 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, (yyvsp[-11].sVal));
@@ -1829,11 +1830,11 @@ yyreduce:
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
                                                                                                                                             }
                                                                                                                                         }
-#line 1833 "y.tab.c"
+#line 1834 "y.tab.c"
     break;
 
   case 27: /* function_declaration: VOID_TYPE IDENTIFIER start_scope '(' arg_list ')' LBRACE statement_list RBRACE end_scope  */
-#line 159 "Compiler.y"
+#line 160 "Compiler.y"
                                                                                                                                         { 
 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, (yyvsp[-8].sVal));
@@ -1848,11 +1849,11 @@ yyreduce:
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
                                                                                                                                             }
                                                                                                                                         }
-#line 1852 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 28: /* function_declaration: type IDENTIFIER start_scope '(' arg_list ')' LBRACE RETURN expression ';' RBRACE end_scope  */
-#line 174 "Compiler.y"
+#line 175 "Compiler.y"
                                                                                                                                         { 
 
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, (yyvsp[-10].sVal));
@@ -1875,83 +1876,83 @@ yyreduce:
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
                                                                                                                                             }
                                                                                                                                         }
-#line 1879 "y.tab.c"
+#line 1880 "y.tab.c"
     break;
 
   case 29: /* function_call: IDENTIFIER '(' arg_list_call ')' ';'  */
-#line 199 "Compiler.y"
+#line 200 "Compiler.y"
                                                                 { (yyval.nPtr)=createOperatorNode(FUNC, 1, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr));}
-#line 1885 "y.tab.c"
+#line 1886 "y.tab.c"
     break;
 
   case 30: /* function_call_expression: IDENTIFIER '(' arg_list_call ')'  */
-#line 202 "Compiler.y"
+#line 203 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(FUNC, 1, createIdentifierNode((yyvsp[-3].sVal)), (yyvsp[-1].nPtr));}
-#line 1891 "y.tab.c"
+#line 1892 "y.tab.c"
     break;
 
   case 31: /* arg_list: type IDENTIFIER ',' arg_list  */
-#line 205 "Compiler.y"
+#line 206 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)));}
-#line 1897 "y.tab.c"
+#line 1898 "y.tab.c"
     break;
 
   case 32: /* arg_list: type IDENTIFIER  */
-#line 206 "Compiler.y"
+#line 207 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum((yyvsp[-1].nPtr))), createIdentifierNode((yyvsp[0].sVal)));}
-#line 1903 "y.tab.c"
+#line 1904 "y.tab.c"
     break;
 
   case 33: /* arg_list: %empty  */
-#line 207 "Compiler.y"
+#line 208 "Compiler.y"
                                                                  { (yyval.nPtr)=NULL;}
-#line 1909 "y.tab.c"
+#line 1910 "y.tab.c"
     break;
 
   case 34: /* arg_list_call: arg_list_call ',' expression  */
-#line 210 "Compiler.y"
+#line 211 "Compiler.y"
                                                                  { (yyval.nPtr)=createOperatorNode(',', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr));}
-#line 1915 "y.tab.c"
+#line 1916 "y.tab.c"
     break;
 
   case 35: /* arg_list_call: expression  */
-#line 211 "Compiler.y"
+#line 212 "Compiler.y"
                                                                  { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 1921 "y.tab.c"
+#line 1922 "y.tab.c"
     break;
 
   case 36: /* arg_list_call: %empty  */
-#line 212 "Compiler.y"
+#line 213 "Compiler.y"
                                                                  { (yyval.nPtr)=NULL;}
-#line 1927 "y.tab.c"
+#line 1928 "y.tab.c"
     break;
 
   case 37: /* declaration_assignment: declaration ';'  */
-#line 219 "Compiler.y"
+#line 220 "Compiler.y"
                                           { (yyval.nPtr) = (yyvsp[-1].nPtr);}
-#line 1933 "y.tab.c"
+#line 1934 "y.tab.c"
     break;
 
   case 38: /* declaration_assignment: assignment ';'  */
-#line 220 "Compiler.y"
+#line 221 "Compiler.y"
                                          { (yyval.nPtr) = (yyvsp[-1].nPtr);}
-#line 1939 "y.tab.c"
+#line 1940 "y.tab.c"
     break;
 
   case 39: /* declaration_assignment_loop: declaration  */
-#line 223 "Compiler.y"
+#line 224 "Compiler.y"
                                                 { (yyval.nPtr) = (yyvsp[0].nPtr);}
-#line 1945 "y.tab.c"
+#line 1946 "y.tab.c"
     break;
 
   case 40: /* declaration_assignment_loop: assignment  */
-#line 224 "Compiler.y"
+#line 225 "Compiler.y"
                                                 { (yyval.nPtr) = (yyvsp[0].nPtr);}
-#line 1951 "y.tab.c"
+#line 1952 "y.tab.c"
     break;
 
   case 41: /* declaration: type IDENTIFIER  */
-#line 229 "Compiler.y"
+#line 230 "Compiler.y"
                                                                     { 
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[0].sVal));
 
@@ -1965,11 +1966,11 @@ yyreduce:
                                                                         }
 
                                                                     }
-#line 1969 "y.tab.c"
+#line 1970 "y.tab.c"
     break;
 
   case 42: /* declaration: type IDENTIFIER '=' expression  */
-#line 243 "Compiler.y"
+#line 244 "Compiler.y"
                                                                     {  
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
                                                                         if(entry == NULL){
@@ -2000,11 +2001,11 @@ yyreduce:
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 2004 "y.tab.c"
+#line 2005 "y.tab.c"
     break;
 
   case 43: /* declaration: CONST type IDENTIFIER '=' expression  */
-#line 275 "Compiler.y"
+#line 276 "Compiler.y"
                                                                     {  
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
                                                                         if(entry == NULL){
@@ -2035,17 +2036,71 @@ yyreduce:
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 2039 "y.tab.c"
+#line 2040 "y.tab.c"
     break;
 
   case 44: /* declaration: ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  */
-#line 305 "Compiler.y"
-                                                                    {  (yyval.nPtr) = createOperatorNode(ENUM, 3, createIdentifierNode((yyvsp[-3].sVal)),createIdentifierNode((yyvsp[-2].sVal)) ,createIdentifierNode((yyvsp[0].sVal)));}
-#line 2045 "y.tab.c"
+#line 309 "Compiler.y"
+                                                                    {
+                                                                        // a variable type of enum
+                                                                        //errors to check: 1st id exists in enums
+                                                                        // get the enum types
+                                                                        //2nd id check that its not existing before under vars
+                                                                        //3rd id check that its in the enum types
+                                                                        //if no errors make new var with type enum
+
+                                                                        bool noError=true;
+                                                                        
+                                                                        SymbolEntry *varEntry=getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
+                                                                        if(varEntry==NULL){
+                                                                            SymbolEntry *enumEntry=getSymbolEntryFromParentScope(currTable, (yyvsp[-3].sVal));
+                                                                            if(enumEntry!=NULL){
+                                                                               int enumTypesCount= getEnumCount(enumEntry);
+                                                                               char **enumTypes= getEnumTypesString(enumEntry);
+                                                                               bool enumTypeExists=false;
+                                                                               int strIndex=-1;
+                                                                               for(int i=0; i<enumTypesCount; i++){
+                                                                                    if (strcmp(enumTypes[i], (yyvsp[0].sVal)) == 0) {
+                                                                                        enumTypeExists=true;
+                                                                                        strIndex=i;
+                                                                                        break;
+                                                                                    }
+                                                                               }
+                                                                               if(enumTypeExists){
+                                                                                    char strValueIndex[20]; 
+                                                                                    sprintf(strValueIndex, "%d", strIndex);
+                                                                                    SymbolEntry *newEntry = create_variable_SymbolEntry((yyvsp[-2].sVal), (yyvsp[-3].sVal), 1, 0, 0, strValueIndex, currentLineNumber);
+                                                                                    addSymbolEntry(currTable, newEntry);
+                                                                               }
+                                                                               else{
+                                                                                    noError=false;
+                                                                                    throwError("There is no such enumerator existing in the Enum", currentLineNumber, semanticErrorsFile);
+                                                                               }
+
+
+                                                                            }
+                                                                            else{
+                                                                                noError=false;
+                                                                                throwError("No such enum exists. Enum has not been declared before", currentLineNumber, semanticErrorsFile);
+                                                                            }
+                                                                        }
+                                                                        else{
+                                                                            noError=false;
+                                                                            throwError("Variable has been declared before in same scope", currentLineNumber, semanticErrorsFile);
+                                                                        }
+
+                                                                        if(noError)
+                                                                        {
+                                                                            (yyval.nPtr) = createOperatorNode(ENUM, 3, createIdentifierNode((yyvsp[-3].sVal)),createIdentifierNode((yyvsp[-2].sVal)) ,createIdentifierNode((yyvsp[0].sVal)));
+                                                                        }
+
+                                                                        
+                                                                    }
+#line 2100 "y.tab.c"
     break;
 
   case 45: /* assignment: IDENTIFIER '=' expression  */
-#line 310 "Compiler.y"
+#line 368 "Compiler.y"
                                                                     { 
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
                                                                         if(entry != NULL){
@@ -2107,239 +2162,395 @@ yyreduce:
                                                                             throwError("Use of undeclared variable", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 2111 "y.tab.c"
+#line 2166 "y.tab.c"
     break;
 
   case 46: /* enum_declaration: ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  */
-#line 374 "Compiler.y"
-                                                                        {(yyval.nPtr)=createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr));}
-#line 2117 "y.tab.c"
+#line 432 "Compiler.y"
+                                                                        {
+                                                                            //elana fhmah en enum_list hena is operator node either having 1 arg or 2 arg
+                                                                            //1 yb2a id bs
+                                                                            //2 yb2a id=expression
+
+                                                                            //what about all the list b2a in enum list idk??---------
+                                                                            //i will just for now take the case eno we have b2a enumerator wa7da goa el enum_list
+
+
+                                                                            //enum errors check:
+                                                                            //1.check that its not declared before:
+                                                                            printf('hereeeeeeeeeeeeeee');
+                                                                            SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-4].sVal));
+                                                                            bool noError=false;
+                                                                    
+                                                                            if(entry == NULL){
+                                                                                printf('entry not null!!!!!');
+                                                                                //enum_list can be id,id,id
+                                                                                //or id= expression, id, id
+                                                                                // or id= expression , id=expression, id=expression
+                                                                                //each enum_list is considered an operator
+                                                                                
+                                                                                //Errors:
+                                                                                //check that enum list doesnt have duplicate identifiers
+                                                                                //check if some are initialized that their type is int
+                                                                                // check that multiple id's dont have same value if initialized
+                                                                                //check that enums have id's onlyyy
+
+
+                                                                                
+                                                                                //get nops
+                                                                                int enumListCount= 1;     //idk where to get that yet so its 1 for now
+
+                                                                                //save types (strings and ints)
+                                                                                char **typesStrings=malloc(enumListCount * sizeof(char *));
+                                                                                int *typesInt=malloc(enumListCount * sizeof(int));
+                                                                                int counter=0;
+                                                                                
+                                                                               
+                                                                                
+
+                                                                                for(int i=0; i<enumListCount; i++){
+                                                                                    //check the nops
+                                                                                    int nops=(yyvsp[-2].nPtr)->opr.nops;   //for only 1 =>enum_list[i]
+                                                                                    printf('lets see nops:%d', nops);
+
+                                                                                    //if 1 then its iD
+                                                                                    //if 2 then its an (id=expression)
+
+                                                                                    if(nops==1){
+                                                                                        if((yyvsp[-2].nPtr)->opr.op[i]->type == typeId){
+                                                                                            
+                                                                                            //check that ID is not defined in same scope elsehwere (if we have int x we cannot use x inside enum)
+                                                                                            SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].nPtr)->opr.op[0]->id.id);
+                                                                                            if(entry ==NULL){
+                                                                                                //check that ID is not existing before in the Enum itself
+                                                                                                if(!doesStringExist((yyvsp[-2].nPtr)->opr.op[0]->id.id, typesStrings, enumListCount)){
+                                                                                                    //add it
+                                                                                                    typesStrings[i] = strdup((yyvsp[-2].nPtr)->opr.op[0]->id.id);
+                                                                                                    typesInt[i]= counter;
+                                                                                                    counter++;
+                                                                                                }else{
+                                                                                                   //error
+                                                                                                    noError=false;
+                                                                                                    throwError("redeclaration of enumerator inside ENUM", currentLineNumber, semanticErrorsFile);
+                                                                                                    break;
+                                                                                                }
+                                                                                            }
+                                                                                            else{
+                                                                                                //Error of redecleration
+                                                                                                noError=false;
+                                                                                                throwError("redeclaration of identifer in the same scope", currentLineNumber, semanticErrorsFile);
+                                                                                                break;
+                                                                                            }
+                                                                                        }
+                                                                                        else{
+                                                                                            //unexpected error
+                                                                                            throwError("Expected an Identifier", currentLineNumber, semanticErrorsFile);
+                                                                                            noError=false;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                    else if(nops==2){ 
+                                                                                        // id= expression [conenum, id, oper] 
+
+                                                                                        //Errors on ID :  same as above
+                                                                                        //Errors for expression:    
+
+                                                                                        //EXPRESSION PART:
+                                                                                        //---------------
+                                                                                        if((yyvsp[-2].nPtr)->opr.op[1]->type == typeCon){
+
+                                                                                           //must be an integer only else Error message: enumerator value is Not an integer constant
+                                                                                           //must be iValue
+                                                                                         //not sure of condition
+                                                                                        
+                                                                                           if(conEnumToString((yyvsp[-2].nPtr)->opr.op[1]->typ.type)=='Integer'){
+                                                                                                typesInt[i]=(yyvsp[-2].nPtr)->opr.op[1]->con.iValue;
+                                                                                                //increment the counter to after it
+                                                                                                counter= ((yyvsp[-2].nPtr)->opr.op[1]->con.iValue) +1;
+                                                                                           }
+                                                                                        }
+                                                                                        else if((yyvsp[-2].nPtr)->opr.op[1]->type == typeId){
+                                                                                            //first check if we have id declared and initialized before else error
+                                                                                            //check that the type is int else error
+                                                                                            //
+                                                                                            //increment the counter to after it if no errors
+
+                                                                                            SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, (yyvsp[-2].nPtr)->opr.op[1]->id.id);
+                                                                                            if(entry!=NULL){
+                                                                                                if(getType(entry)=='Integer'){
+                                                                                                   char *charValue= getValue(entry);
+                                                                                                   int intValue = atoi(charValue);
+                                                                                                   typesInt[i]= intValue;
+                                                                                                   counter= intValue +1;
+                                                                                                }
+                                                                                                else{
+                                                                                                    throwError("Variable is not an integer constant", currentLineNumber, semanticErrorsFile);
+                                                                                                    noError=false;
+                                                                                                    break;
+                                                                                                }
+
+                                                                                            }
+                                                                                            else{
+                                                                                                throwError("Variable not declared before", currentLineNumber, semanticErrorsFile);
+                                                                                                noError=false;
+                                                                                                break;
+                                                                                            }
+                                                                                          
+
+                                                                                        }
+                                                                                        else if((yyvsp[-2].nPtr)->opr.op[1]->type == typeOpr){
+                                                                                            //missing
+                                                                                            //also need execute 3shan nt2kd en value Int w 
+                                                                                            //increment counter= value+1
+                                                                                        }
+
+
+                                                                                    }
+                                                                                }
+                                                                                
+                                                                                if(noError){
+                                                                                    
+                                                                                    SymbolEntry *newEntryEnum =create_enum_SymbolEntry((yyvsp[-4].sVal), 0, 0, currentLineNumber, enumListCount, typesStrings,typesInt);
+                                                                                    addSymbolEntry(currTable, newEntryEnum);
+                                                                                    //msh mot2kda de mknha eh:
+                                                                                    (yyval.nPtr)=createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr));
+                                                                                }
+                                                                            }
+                                                                            else{
+                                                                                throwError("redeclaration of ENUM", currentLineNumber, semanticErrorsFile);
+                                                                                
+                                                                            }
+
+                                                                            
+
+                                                                        }
+#line 2328 "y.tab.c"
     break;
 
   case 47: /* enum_list: enum_list ',' IDENTIFIER  */
-#line 378 "Compiler.y"
+#line 592 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 1, createIdentifierNode((yyvsp[0].sVal))); }
-#line 2123 "y.tab.c"
+#line 2334 "y.tab.c"
     break;
 
   case 48: /* enum_list: enum_list ',' IDENTIFIER '=' expression  */
-#line 379 "Compiler.y"
+#line 593 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 2129 "y.tab.c"
+#line 2340 "y.tab.c"
     break;
 
   case 49: /* enum_list: IDENTIFIER  */
-#line 380 "Compiler.y"
+#line 594 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 1, createIdentifierNode((yyvsp[0].sVal))); }
-#line 2135 "y.tab.c"
+#line 2346 "y.tab.c"
     break;
 
   case 50: /* enum_list: IDENTIFIER '=' expression  */
-#line 381 "Compiler.y"
+#line 595 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 2141 "y.tab.c"
+#line 2352 "y.tab.c"
     break;
 
   case 51: /* expression: binary_expression  */
-#line 386 "Compiler.y"
+#line 600 "Compiler.y"
                                              { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2147 "y.tab.c"
+#line 2358 "y.tab.c"
     break;
 
   case 52: /* expression: unary_expression  */
-#line 387 "Compiler.y"
+#line 601 "Compiler.y"
                                              { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2153 "y.tab.c"
+#line 2364 "y.tab.c"
     break;
 
   case 53: /* binary_expression: expression '+' expression  */
-#line 389 "Compiler.y"
+#line 603 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('+', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2159 "y.tab.c"
+#line 2370 "y.tab.c"
     break;
 
   case 54: /* binary_expression: expression '-' expression  */
-#line 390 "Compiler.y"
+#line 604 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('-', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2165 "y.tab.c"
+#line 2376 "y.tab.c"
     break;
 
   case 55: /* binary_expression: expression '*' expression  */
-#line 391 "Compiler.y"
+#line 605 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('*', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2171 "y.tab.c"
+#line 2382 "y.tab.c"
     break;
 
   case 56: /* binary_expression: expression '/' expression  */
-#line 392 "Compiler.y"
+#line 606 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('/', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2177 "y.tab.c"
+#line 2388 "y.tab.c"
     break;
 
   case 57: /* binary_expression: expression '%' expression  */
-#line 393 "Compiler.y"
+#line 607 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('%', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2183 "y.tab.c"
+#line 2394 "y.tab.c"
     break;
 
   case 58: /* binary_expression: expression EQ expression  */
-#line 394 "Compiler.y"
+#line 608 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(EQ, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2189 "y.tab.c"
+#line 2400 "y.tab.c"
     break;
 
   case 59: /* binary_expression: expression NEQ expression  */
-#line 395 "Compiler.y"
+#line 609 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(NEQ, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2195 "y.tab.c"
+#line 2406 "y.tab.c"
     break;
 
   case 60: /* binary_expression: expression LT expression  */
-#line 396 "Compiler.y"
+#line 610 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(LT, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2201 "y.tab.c"
+#line 2412 "y.tab.c"
     break;
 
   case 61: /* binary_expression: expression GT expression  */
-#line 397 "Compiler.y"
+#line 611 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(GT, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2207 "y.tab.c"
+#line 2418 "y.tab.c"
     break;
 
   case 62: /* binary_expression: expression LTE expression  */
-#line 398 "Compiler.y"
+#line 612 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(LTE, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2213 "y.tab.c"
+#line 2424 "y.tab.c"
     break;
 
   case 63: /* binary_expression: expression GTE expression  */
-#line 399 "Compiler.y"
+#line 613 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(GTE, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2219 "y.tab.c"
+#line 2430 "y.tab.c"
     break;
 
   case 64: /* binary_expression: expression AND expression  */
-#line 400 "Compiler.y"
+#line 614 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(AND, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2225 "y.tab.c"
+#line 2436 "y.tab.c"
     break;
 
   case 65: /* binary_expression: expression OR expression  */
-#line 401 "Compiler.y"
+#line 615 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(OR, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2231 "y.tab.c"
+#line 2442 "y.tab.c"
     break;
 
   case 66: /* binary_expression: '(' expression ')'  */
-#line 402 "Compiler.y"
+#line 616 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[-1].nPtr); }
-#line 2237 "y.tab.c"
+#line 2448 "y.tab.c"
     break;
 
   case 67: /* binary_expression: value  */
-#line 403 "Compiler.y"
+#line 617 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[0].nPtr); }
-#line 2243 "y.tab.c"
+#line 2454 "y.tab.c"
     break;
 
   case 68: /* binary_expression: IDENTIFIER  */
-#line 404 "Compiler.y"
+#line 618 "Compiler.y"
                                                      { (yyval.nPtr)=createIdentifierNode((yyvsp[0].sVal)); }
-#line 2249 "y.tab.c"
+#line 2460 "y.tab.c"
     break;
 
   case 69: /* binary_expression: function_call_expression  */
-#line 405 "Compiler.y"
+#line 619 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2255 "y.tab.c"
+#line 2466 "y.tab.c"
     break;
 
   case 70: /* unary_expression: '-' expression  */
-#line 407 "Compiler.y"
+#line 621 "Compiler.y"
                                                       { (yyval.nPtr) = createOperatorNode('-', 1, (yyvsp[0].nPtr)); }
-#line 2261 "y.tab.c"
+#line 2472 "y.tab.c"
     break;
 
   case 71: /* unary_expression: '!' expression  */
-#line 408 "Compiler.y"
+#line 622 "Compiler.y"
                                                       { (yyval.nPtr) = createOperatorNode('!', 1, (yyvsp[0].nPtr)); }
-#line 2267 "y.tab.c"
+#line 2478 "y.tab.c"
     break;
 
   case 72: /* type: INT_TYPE  */
-#line 412 "Compiler.y"
+#line 626 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeInt); }
-#line 2273 "y.tab.c"
+#line 2484 "y.tab.c"
     break;
 
   case 73: /* type: FLOAT_TYPE  */
-#line 413 "Compiler.y"
+#line 627 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeFloat); }
-#line 2279 "y.tab.c"
+#line 2490 "y.tab.c"
     break;
 
   case 74: /* type: BOOL_TYPE  */
-#line 414 "Compiler.y"
+#line 628 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeBool); }
-#line 2285 "y.tab.c"
+#line 2496 "y.tab.c"
     break;
 
   case 75: /* type: CHAR_TYPE  */
-#line 415 "Compiler.y"
+#line 629 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeChar); }
-#line 2291 "y.tab.c"
+#line 2502 "y.tab.c"
     break;
 
   case 76: /* type: STRING_TYPE  */
-#line 416 "Compiler.y"
+#line 630 "Compiler.y"
                                       { (yyval.nPtr) = createTypeNode(typeString); }
-#line 2297 "y.tab.c"
+#line 2508 "y.tab.c"
     break;
 
   case 77: /* value: INTEGER  */
-#line 419 "Compiler.y"
+#line 633 "Compiler.y"
                                   { (yyval.nPtr) = createIntConstantNode((yyvsp[0].iVal)); }
-#line 2303 "y.tab.c"
+#line 2514 "y.tab.c"
     break;
 
   case 78: /* value: FLOAT  */
-#line 420 "Compiler.y"
+#line 634 "Compiler.y"
                                   { (yyval.nPtr) = createFloatConstantNode((yyvsp[0].fVal)); }
-#line 2309 "y.tab.c"
+#line 2520 "y.tab.c"
     break;
 
   case 79: /* value: BOOL  */
-#line 421 "Compiler.y"
+#line 635 "Compiler.y"
                                   { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2315 "y.tab.c"
+#line 2526 "y.tab.c"
     break;
 
   case 80: /* value: CHAR  */
-#line 422 "Compiler.y"
+#line 636 "Compiler.y"
                                   { (yyval.nPtr) = createCharConstantNode((yyvsp[0].cVal)); }
-#line 2321 "y.tab.c"
+#line 2532 "y.tab.c"
     break;
 
   case 81: /* value: STRING  */
-#line 423 "Compiler.y"
+#line 637 "Compiler.y"
                                   { (yyval.nPtr) = createStringConstantNode((yyvsp[0].sVal)); }
-#line 2327 "y.tab.c"
+#line 2538 "y.tab.c"
     break;
 
   case 82: /* value: BOOL_TRUE  */
-#line 424 "Compiler.y"
+#line 638 "Compiler.y"
                                      { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2333 "y.tab.c"
+#line 2544 "y.tab.c"
     break;
 
   case 83: /* value: BOOL_FALSE  */
-#line 425 "Compiler.y"
+#line 639 "Compiler.y"
                                      { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2339 "y.tab.c"
+#line 2550 "y.tab.c"
     break;
 
   case 84: /* start_scope: %empty  */
-#line 428 "Compiler.y"
+#line 642 "Compiler.y"
                             {
                                 printf("start of scope\n");
                                 //we want to increment scope and add new ST (child to current scope)
@@ -2356,22 +2567,22 @@ yyreduce:
                                 }
                                 
                             }
-#line 2360 "y.tab.c"
+#line 2571 "y.tab.c"
     break;
 
   case 85: /* end_scope: %empty  */
-#line 446 "Compiler.y"
+#line 660 "Compiler.y"
                             {
                                 printf("end of scope\n");
                                 currentScope--;
                                 prevTable = currTable;
                                 currTable = currTable->parent;
                             }
-#line 2371 "y.tab.c"
+#line 2582 "y.tab.c"
     break;
 
 
-#line 2375 "y.tab.c"
+#line 2586 "y.tab.c"
 
       default: break;
     }
@@ -2564,11 +2775,22 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 454 "Compiler.y"
+#line 668 "Compiler.y"
 
 
 void yyerror(const char *s) {
     fprintf(syntaxErrorsFile, "Syntax error at line %d: %s\n", currentLineNumber, s);
+}
+
+
+
+bool doesStringExist(char *str, char **array, int size) {
+    for (int i = 0; i < size; i++) {
+        if (strcmp(str, array[i]) == 0) {
+            return true; 
+        }
+    }
+    return false; 
 }
 
 bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst) {

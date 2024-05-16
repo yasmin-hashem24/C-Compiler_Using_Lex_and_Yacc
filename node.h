@@ -25,6 +25,7 @@ typedef enum
     typeND,
     typeVoid,
     typeVar,
+    // typeEnum,
 } conEnum;
 
 /* Constants */

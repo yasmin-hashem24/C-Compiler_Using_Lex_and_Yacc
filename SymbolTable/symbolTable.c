@@ -128,7 +128,7 @@ void writeSymbolTableToFile(SymbolTable *table, FILE *file) {
         // for enumtypes:
         if (table->entries[i]->enumCount > 0) {
             for (int j = 0; j < table->entries[i]->enumCount; j++) {
-                fprintf(file, "%-50s", table->entries[i]->enumTypes[j]);
+                fprintf(file, "%-50s", table->entries[i]->enumTypesString[j]);
             }
             fprintf(file, "\n");
         } else {

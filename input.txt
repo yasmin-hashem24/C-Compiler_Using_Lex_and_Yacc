@@ -76,17 +76,17 @@
 
 
 //functions
-int hello() {
-  int x = 1;
-  return x+1+x;
-}
-void fg(){
-  char x = '1';
-}
-
-int x = hello();
-
-for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
+//int hello() {
+//  int x = 1;
+//  return x+1+x;
+//}
+//void fg(){
+//  char x = '1';
+//}
+//
+//int x = hello();
+//
+//for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
 
 
 
@@ -120,3 +120,8 @@ for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1;
 //    default:
 //    print("this is case 1 missing default");
 //}
+
+
+
+//Enums:
+enum hello{ A };

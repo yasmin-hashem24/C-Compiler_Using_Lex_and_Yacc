@@ -51,7 +51,8 @@ typedef struct {
 
     int isEnum;
     int enumCount;
-    char **enumTypes;
+    char **enumTypesString;
+    int *enumTypesInt;
          
     int lineNo;  
 } SymbolEntry;
@@ -59,7 +60,7 @@ typedef struct {
 
 SymbolEntry *create_variable_SymbolEntry(const char *name, const char *type, int isInitialized, int isConstant, int isUsed, char* value, int lineNo);
 SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int argCount, char **argTypes, char *returnType);
-SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypes);
+SymbolEntry *create_enum_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int enumCount, char **enumTypesString, int *enumTypesInt);   //changed this
 char *getName(SymbolEntry *entry);
 SymbolKind getKind(SymbolEntry *entry);
 char *getType(SymbolEntry *entry);
@@ -70,7 +71,8 @@ int getIsVariable(SymbolEntry *entry);
 char *getValue(SymbolEntry *entry);
 int getIsEnum(SymbolEntry *entry);
 int getEnumCount(SymbolEntry *entry);
-char **getEnumTypes(SymbolEntry *entry);
+char **getEnumTypesString(SymbolEntry *entry);
+int *getEnumTypesInt(SymbolEntry *entry);
 int getIsFunction(SymbolEntry *entry);
 int getArgCount(SymbolEntry *entry);
 char **getArgTypes(SymbolEntry *entry);
@@ -85,7 +87,7 @@ void setIsVariable(SymbolEntry *entry, int isVariable);
 void setValue(SymbolEntry *entry, const char *value);
 void setIsEnum(SymbolEntry *entry, int isEnum);
 void setEnumCount(SymbolEntry *entry, int enumCount);
-void setEnumTypes(SymbolEntry *entry, char **enumTypes);
+void setEnumTypes(SymbolEntry *entry, char **enumTypesString, int *enumTypesInt);
 void setIsFunction(SymbolEntry *entry, int isFunction);
 void setArgCount(SymbolEntry *entry, int argCount);
 void setArgTypes(SymbolEntry *entry, char **argTypes);
