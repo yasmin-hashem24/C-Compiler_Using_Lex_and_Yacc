@@ -122,7 +122,7 @@ conEnum getTypeOfEnum(const nodeType *node)
 {
     // Assuming that the identifier is stored in the node and it's a string
     const char *identifier = NULL;
-
+    printf("GET%s: ", node->type);
     // Determine the identifier based on the node's content
     switch (node->type)
     {
@@ -211,7 +211,6 @@ void execute(nodeType *p, int first)
             fprintf(outputFile, "const");
             break;
         case typeND:
-            fprintf(outputFile, "unknown");
             break;
         case typeVoid:
             fprintf(outputFile, "void");
@@ -263,18 +262,21 @@ void execute(nodeType *p, int first)
         switch (p->opr.oper)
         {
         case WHILE:
-            fprintf(outputFile, "L%d ", LoopsNames);
-            fprintf(outputFile, ":/n");                  // Quadruple description: Jmp L
-            LoopsNames++;                                // Increment loop counter
-            execute(p->opr.op[0], 0);                    // Execute the condition part of the while loop
-            fprintf(outputFile, Result);                 // Print the result of the condition check (e.g., JE, JNE)
-            memset(Result, 0, sizeof(Result));           // Clear Result for further use
-            execute(p->opr.op[1], 0);                    // Execute the body of the while loop
-            fprintf(outputFile, Result);                 // Print the result of the loop body
-            memset(Result, 0, sizeof(Result));           // Clear Result for further use
-            fprintf(outputFile, "JNZ L%d ", LoopsNames); // Quadruple description: JNZ LABEL
-            fprintf(outputFile, "L%d ", LoopsNames);     // Quadruple description: END LABEL
-            LoopsNames++;                                // Increment loop counter
+            sprintf(Result, "L%s%d :\n", Result, LoopsNames);
+            execute(p->opr.op[0], 0);
+            printf("Result: %s\n", Result);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            fprintf(outputFile, "\tjz\tL%d\n", LoopsNames);
+
+            LoopsNames++;
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            fprintf(outputFile, "\tjmp\tL%d\n", LoopsNames);
+            fprintf(outputFile, "L%d:\n", LoopsNames);
+
+            LoopsNames += 1;
             break;
 
         case IF:
@@ -462,37 +464,37 @@ void execute(nodeType *p, int first)
         case LT:
             execute(p->opr.op[0], 0);
             execute(p->opr.op[1], 0);
-            fprintf(outputFile, "LessTn %s\n", Result);
+            fprintf(outputFile, "LessTn\n");
             break;
 
         case GT:
             execute(p->opr.op[0], 0);
             execute(p->opr.op[1], 0);
-            fprintf(outputFile, "GrTn %s\n", Result);
+            fprintf(outputFile, "GrTn \n");
             break;
 
         case LTE:
             execute(p->opr.op[0], 0);
             execute(p->opr.op[1], 0);
-            fprintf(outputFile, "LessTnE %s\n", Result);
+            fprintf(outputFile, "LessTnE \n");
             break;
 
         case GTE:
             execute(p->opr.op[0], 0);
             execute(p->opr.op[1], 0);
-            fprintf(outputFile, "GrTnE %s\n", Result);
+            fprintf(outputFile, "GrTnE \n");
             break;
 
         case NEQ:
             execute(p->opr.op[0], 0);
             execute(p->opr.op[1], 0);
-            fprintf(outputFile, "IsNEQ %s\n", Result);
+            fprintf(outputFile, "IsNEQ \n");
             break;
 
         case EQ:
             execute(p->opr.op[0], 0);
             execute(p->opr.op[1], 0);
-            fprintf(outputFile, "IsEQ %s\n", Result);
+            fprintf(outputFile, "IsEQ %s\n");
 
             break;
         default:
