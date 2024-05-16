@@ -175,7 +175,8 @@ declaration             : type IDENTIFIER
 
                                                                     }
                         | type IDENTIFIER '=' expression            
-                                                                    {  
+                                                                    {  $$ = createOperatorNode('=', 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); 
+                                                                      
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
                                                                         if(entry == NULL){
 
@@ -191,7 +192,7 @@ declaration             : type IDENTIFIER
                                                                                 printf("Inside type conEnum\n");
                                                                                 
                                                                                 
-                                                                                if(checkFunc($4->con.type)){
+                                                                                if(checkFunc($4->con.typeConst)){
                                                                                     char symbolValue[20];
 
                                                                                      printf("Inside Check Func\n");
@@ -273,8 +274,8 @@ declaration             : type IDENTIFIER
                                                                         $$ = createOperatorNode('=', 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); 
                                                                       
                                                                     }
-            | CONST type IDENTIFIER '=' expression { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); printf("declaration: CONST type IDENTIFIER '=' expression (type: %d, identifier: %s, expression: %s)\n", getTypeOfEnum($2), $3, $5); }
-            | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $5);  }
+            | CONST type IDENTIFIER '=' expression { $$ = createOperatorNode(CONST, 3, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5);  }
+            | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER { $$ = createOperatorNode(ENUM, 3, createIdentifierNode($2),createIdentifierNode($3) ,createIdentifierNode($5));  }
             | VAR IDENTIFIER { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2));}
             ;
 

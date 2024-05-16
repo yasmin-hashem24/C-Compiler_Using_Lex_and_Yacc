@@ -30,7 +30,7 @@ typedef enum
 /* Constants */
 struct conNodeType
 {
-    conEnum type; // Type of the constant value
+    conEnum typeConst; // Type of the constant value
 
     // Constant values
     union

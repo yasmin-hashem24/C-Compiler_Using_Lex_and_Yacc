@@ -15,6 +15,7 @@ nodeType *createTypeNode(conEnum type)
         return NULL;
     }
     p->type = typeDef; // Change to typeDef for a type node
+    p->typ.type = type;
     return p;
 }
 
@@ -33,11 +34,14 @@ nodeType *createConstantNode()
 
 nodeType *createIntConstantNode(int value)
 {
-    nodeType *p = createConstantNode();
+    nodeType *p;
+    if ((p = malloc(sizeof(nodeType))) == NULL)
+        yyerror("Memory allocation failed");
 
     p->type = typeCon;
-    p->con.type = typeInt; // Set the constant type
+    p->con.typeConst = typeInt; // Set the constant type
     p->con.iValue = value;
+
     return p;
 }
 
@@ -46,7 +50,7 @@ nodeType *createFloatConstantNode(float value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeFloat; // Set the constant type
+    p->con.typeConst = typeFloat; // Set the constant type
     p->con.fValue = value;
     return p;
 }
@@ -56,7 +60,7 @@ nodeType *createBoolConstantNode(bool value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeBool; // Set the constant type
+    p->con.typeConst = typeBool; // Set the constant type
     p->con.iValue = value;
     return p;
 }
@@ -66,7 +70,7 @@ nodeType *createCharConstantNode(char value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeChar; // Set the constant type
+    p->con.typeConst = typeChar; // Set the constant type
     p->con.cValue = value;
     return p;
 }
@@ -76,7 +80,7 @@ nodeType *createStringConstantNode(char *value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeString;      // Set the constant type
+    p->con.typeConst = typeString; // Set the constant type
     p->con.sValue = strdup(value); // Duplicate the string
     return p;
 }
@@ -95,8 +99,7 @@ nodeType *createIdentifierNode(char *id)
 
 nodeType *createOperatorNode(int oper, int nops, ...)
 {
-    printf("createOperatorNode where oper = %d\n", oper);
-    printf("nops = %d\n", nops);
+
     va_list ap;
     nodeType *p;
     int i;
@@ -185,8 +188,9 @@ void execute(nodeType *p, int first)
     switch (p->type)
     {
     case typeDef:
-        switch (p->type)
+        switch (p->typ.type)
         {
+
         case typeInt:
             fprintf(outputFile, "int");
             break;
@@ -197,7 +201,7 @@ void execute(nodeType *p, int first)
             fprintf(outputFile, "string");
             break;
         case typeChar:
-            fprintf(outputFile, "char");
+            fprintf(outputFile, "TYPEDEFchar");
             break;
         case typeBool:
             fprintf(outputFile, "bool");
@@ -221,10 +225,13 @@ void execute(nodeType *p, int first)
         fprintf(outputFile, "\n");
         break;
     case typeCon:
-        switch (p->con.type)
+
+        switch (p->con.typeConst)
         {
         case typeInt:
+
             sprintf(Result, "%s%d ", Result, p->con.iValue);
+
             break;
         case typeFloat:
             sprintf(Result, "%s%f ", Result, p->con.fValue);
@@ -248,11 +255,10 @@ void execute(nodeType *p, int first)
         fprintf(outputFile, "\n");
         break;
     case typeId:
-        fprintf(outputFile, "%s", p->id.id);
-        sprintf(Result, "%s%s", Result, p->id.id);
-        fprintf(outputFile, "\n");
+        sprintf(Result, "%s%s ", Result, p->id.id);
         break;
     case typeOpr:
+
         switch (p->opr.oper)
         {
         case WHILE:
@@ -278,19 +284,45 @@ void execute(nodeType *p, int first)
             fprintf(outputFile, "\n");
             break;
         case ENUM:
-
-            strcat(Result, "EnumDef ");
-            execute(p->opr.op[0], 0);
+            switch (p->opr.nops)
+            {
+            case 1:
+                strcat(Result, "EnumDef ");
+                execute(p->opr.op[0], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result)); // Clear Result after printing
+                break;
+            case 2:
+                strcat(Result, "EnumDef ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            case 3:
+                strcat(Result, "EnumDef ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            default:
+                break;
+            }
+            break;
+        case VAR:
+            fprintf(outputFile, "INIT  ");
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
-        case VAR:
-            fprintf(outputFile, "var ");
-            execute(p->opr.op[0], 0);
-            break;
         case CONST:
-            fprintf(outputFile, "const ");
-            execute(p->opr.op[0], 0);
+            fprintf(outputFile, "CONST ");
+            execute(p->opr.op[1], 0);
+            execute(p->opr.op[2], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
             break;
         case FUNC:
             fprintf(outputFile, "func ");
@@ -309,11 +341,26 @@ void execute(nodeType *p, int first)
             execute(p->opr.op[0], 0);
             break;
         case '=':
-            strcat(Result, "ASSIGN ");
-            execute(p->opr.op[0], 0);
-            execute(p->opr.op[1], 0);
-            fprintf(outputFile, Result);
-            memset(Result, 0, sizeof(Result));
+            switch (p->opr.nops)
+            {
+            case 2:
+                strcat(Result, "ASSIGN ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            case 3:
+                strcat(Result, "ASSIGN ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            default:
+                break;
+            }
 
             break;
         case '+':
@@ -408,7 +455,7 @@ void freeNode(nodeType *p)
     }
     else if (p->type == typeCon)
     {
-        if (p->con.type == typeString)
+        if (p->con.typeConst == typeString)
         {
             free(p->con.sValue);
         }
