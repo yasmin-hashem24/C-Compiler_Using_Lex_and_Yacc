@@ -76,15 +76,8 @@
 
 
 //functions
-char hello() {
-  char x = 'k';
-  return x+'y'+'i';
-}
-void fg(){
-  char x = '1';
-}
-
-char x = hello();
+float x = 5.1;
+int yasmina = 1;
 
 
 

@@ -50,7 +50,7 @@ bool checkTypeBool(conEnum typeEnum) {
 
 bool checkTypeMismatchConNode(nodeType* node, char* symbolValue, char* typeUnion, CheckTypeFunc checkFunc) {
                                                                           
-    if(checkFunc(node->con.type)){
+    if(checkFunc(node->con.typeConst)){
         if(strcmp(typeUnion, "Integer") == 0){
             int integerValue = node->con.iValue;
             sprintf(symbolValue, "%d", integerValue);

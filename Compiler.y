@@ -79,7 +79,7 @@
             start_scope end_scope
 %%
 
-program                 : start_scope statement_list     {execute($2);freeNode($2);} 
+program                 : start_scope statement_list     {execute($2,1);freeNode($2);} 
                       
                         ;
 
@@ -143,9 +143,9 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
 
                                                                                                                                                 if (noError) {
                                                                                                                                                     // Itirate over the arguments types to add them
-                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->type));
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    //add yasmine's part here
+                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8, $10);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -164,7 +164,7 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
                                                                                                                                                 // Itirate over the arguments types to add them
                                                                                                                                                 SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, "Void");
                                                                                                                                                 addSymbolEntry(currTable, newEntry);
-                                                                                                                                                //add yasmine's part here
+                                                                                                                                                $$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $8);
                                                                                                                                             }
                                                                                                                                             else{
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
@@ -181,9 +181,9 @@ function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope st
 
                                                                                                                                                 if (noError) {
                                                                                                                                                     // Itirate over the arguments types to add them
-                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->type));
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    //add yasmine's part here
+                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $9);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -216,12 +216,12 @@ arg_list_call           : arg_list_call ',' expression           { $$=createOper
 
 // Assignments and declarations rules
 
-declaration_assignment  : declaration ';' { $$ = $1; printf("declaration_assignment: declaration\n"); }
-                        | assignment ';' { $$ = $1; printf("declaration_assignment: assignment\n"); }
+declaration_assignment  : declaration ';' { $$ = $1;}
+                        | assignment ';' { $$ = $1;}
                         ;
 
-declaration_assignment_loop     : declaration { $$ = $1; printf("declaration_assignment_loop: declaration\n"); }
-                                | assignment { $$ = $1; printf("declaration_assignment_loop: assignment\n"); }
+declaration_assignment_loop     : declaration   { $$ = $1;}
+                                | assignment    { $$ = $1;}
                                 ;
 
 
@@ -230,8 +230,9 @@ declaration             : type IDENTIFIER
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
 
                                                                         if(entry == NULL){
-                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->type), 0, 0, 0, NULL, currentLineNumber);
+                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry($2, conEnumToString($1->typ.type), 0, 0, 0, NULL, currentLineNumber);
                                                                             addSymbolEntry(currTable, newEntry);
+                                                                            $$ = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));  
                                                                         }
                                                                         else{
                                                                             throwError("Variable already declared in this scope", currentLineNumber, semanticErrorsFile);
@@ -244,7 +245,7 @@ declaration             : type IDENTIFIER
                                                                         if(entry == NULL){
                                                                             
                                                                             char* typeUnion;
-                                                                            CheckTypeFunc checkFunc = getCheckFunction($1->type, &typeUnion);
+                                                                            CheckTypeFunc checkFunc = getCheckFunction($1->typ.type, &typeUnion);
                                                                             bool noError = true;
                                                                             //expression can be => con, ID or op
                                                                             if($4->type == typeCon){
@@ -261,7 +262,7 @@ declaration             : type IDENTIFIER
                                                                             }
 
                                                                             if(noError){
-                                                                                //add yasmine's part here
+                                                                                $$ = createOperatorNode('=', 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); 
                                                                             }
 
                                                                         }
@@ -276,7 +277,7 @@ declaration             : type IDENTIFIER
                                                                         if(entry == NULL){
                                                                             
                                                                             char* typeUnion;
-                                                                            CheckTypeFunc checkFunc = getCheckFunction($2->type, &typeUnion);
+                                                                            CheckTypeFunc checkFunc = getCheckFunction($2->typ.type, &typeUnion);
                                                                             bool noError = true;
                                                                             //expression can be => con, ID or op
                                                                             if($5->type == typeCon){
@@ -293,7 +294,7 @@ declaration             : type IDENTIFIER
                                                                             }
 
                                                                             if(noError){
-                                                                                //add yasmine's part here
+                                                                                $$ = createOperatorNode(CONST, 3, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5);
                                                                             }
 
                                                                         }
@@ -301,7 +302,7 @@ declaration             : type IDENTIFIER
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-            | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER             { }
+            | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER             {  $$ = createOperatorNode(ENUM, 3, createIdentifierNode($2),createIdentifierNode($3) ,createIdentifierNode($5));}
 
             ;
 
@@ -359,7 +360,7 @@ assignment              : IDENTIFIER '=' expression
                                                                                 }
 
                                                                                 if(noError){
-                                                                                    //add yasmine's part here
+                                                                                    $$=createOperatorNode('=', 2, createIdentifierNode($1), $3);
                                                                                 }
                                                                             }
                                                                         }
@@ -483,7 +484,7 @@ bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType
     }
     // create the symbol entry and add it to the symbol table
     if(mainCall) {
-        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->type), 1, isConst, 1, NULL, currentLineNumber);
+        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, NULL, currentLineNumber);
         addSymbolEntry(currTable, newEntry);
     }
     return true;
@@ -493,14 +494,14 @@ bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType
 bool handleConNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst){
 
     char* typeUnion;
-    CheckTypeFunc checkFunc = getCheckFunction(node1->type, &typeUnion);
+    CheckTypeFunc checkFunc = getCheckFunction(node1->typ.type, &typeUnion);
     char symbolValue[20];
 
     if (checkTypeMismatchConNode(node4, symbolValue, typeUnion, checkFunc)) {
         if(!mainCall) {
             return true;
         }
-        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->type), 1, isConst, 1, symbolValue, currentLineNumber);
+        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, symbolValue, currentLineNumber);
         addSymbolEntry(currTable, newEntry);
         return true;
     } else {
@@ -513,7 +514,7 @@ bool handleConNodeExpressionInDeclaration(const nodeType *node1, const nodeType 
 bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst){
 
     char* typeUnion;
-    CheckTypeFunc checkFunc = getCheckFunction(node1->type, &typeUnion);
+    CheckTypeFunc checkFunc = getCheckFunction(node1->typ.type, &typeUnion);
 
     SymbolEntry *idEntry = checkIdNodeDeclaration(currTable, node4->id.id);
     if (idEntry != NULL) {
@@ -526,7 +527,7 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
                 if(!mainCall) {
                     return true;
                 }
-                SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->type), 1, isConst, 1, idEntryValue, currentLineNumber);
+                SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, idEntryValue, currentLineNumber);
                 addSymbolEntry(currTable, newEntry);
                 return true;
             } else {
@@ -545,7 +546,7 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
 bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10) {
 
     if (node10->type == typeCon) {
-        if (!(node1->type == node10->con.type)) {
+        if (!(node1->typ.type == node10->con.typeConst)) {
             return false;
         }
     } else if (node10->type == typeId) {
@@ -555,7 +556,7 @@ bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10) {
             if (isInitialized) {
                 setIsUsed(idEntry, 1);
                 char *idEntryType = getType(idEntry);
-                if (strcmp(conEnumToString(node1->type), idEntryType) != 0) {
+                if (strcmp(conEnumToString(node1->typ.type), idEntryType) != 0) {
                     return false;
                 }
             } else {
@@ -578,7 +579,7 @@ bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10
     for (int i = 0; i < node10->opr.nops; i++) {
         if (node10->opr.op[i]->type == typeCon) {
             // Handle constant node
-            if (!(node1->type == node10->opr.op[i]->con.type)) {
+            if (!(node1->typ.type == node10->opr.op[i]->con.typeConst)) {
                 return false;  // Return false if type mismatch
             }
         } else if (node10->opr.op[i]->type == typeId) {
@@ -589,7 +590,7 @@ bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10
                 if (isInitialized) {
                     setIsUsed(idEntry, 1);
                     char *idEntryType = getType(idEntry);
-                    if (strcmp(conEnumToString(node1->type), idEntryType) != 0) {
+                    if (strcmp(conEnumToString(node1->typ.type), idEntryType) != 0) {
                         return false;  // Return false if type mismatch
                     }
                 } else {

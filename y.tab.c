@@ -769,11 +769,11 @@ static const yytype_int16 yyrline[] =
       98,    99,   100,   101,   102,   103,   107,   110,   111,   113,
      116,   117,   120,   125,   128,   131,   135,   158,   173,   199,
      202,   205,   206,   207,   210,   211,   212,   219,   220,   223,
-     224,   228,   241,   273,   304,   308,   373,   377,   378,   379,
-     380,   385,   386,   388,   389,   390,   391,   392,   393,   394,
-     395,   396,   397,   398,   399,   400,   401,   402,   403,   404,
-     406,   407,   411,   412,   413,   414,   415,   418,   419,   420,
-     421,   422,   423,   424,   427,   445
+     224,   228,   242,   274,   305,   309,   374,   378,   379,   380,
+     381,   386,   387,   389,   390,   391,   392,   393,   394,   395,
+     396,   397,   398,   399,   400,   401,   402,   403,   404,   405,
+     407,   408,   412,   413,   414,   415,   416,   419,   420,   421,
+     422,   423,   424,   425,   428,   446
 };
 #endif
 
@@ -1655,7 +1655,7 @@ yyreduce:
     {
   case 2: /* program: start_scope statement_list  */
 #line 82 "Compiler.y"
-                                                         {execute((yyvsp[0].nPtr));freeNode((yyvsp[0].nPtr));}
+                                                         {execute((yyvsp[0].nPtr),1);freeNode((yyvsp[0].nPtr));}
 #line 1660 "y.tab.c"
     break;
 
@@ -1809,9 +1809,9 @@ yyreduce:
 
                                                                                                                                                 if (noError) {
                                                                                                                                                     // Itirate over the arguments types to add them
-                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry((yyvsp[-11].sVal), 0, 1, currentLineNumber, 0, NULL, conEnumToString((yyvsp[-12].nPtr)->type));
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry((yyvsp[-11].sVal), 0, 1, currentLineNumber, 0, NULL, conEnumToString((yyvsp[-12].nPtr)->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    //add yasmine's part here
+                                                                                                                                                    (yyval.nPtr)=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum((yyvsp[-12].nPtr))), createIdentifierNode((yyvsp[-11].sVal)), (yyvsp[-9].nPtr), (yyvsp[-5].nPtr), (yyvsp[-3].nPtr));
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -1834,7 +1834,7 @@ yyreduce:
                                                                                                                                                 // Itirate over the arguments types to add them
                                                                                                                                                 SymbolEntry *newEntry = create_function_SymbolEntry((yyvsp[-8].sVal), 0, 1, currentLineNumber, 0, NULL, "Void");
                                                                                                                                                 addSymbolEntry(currTable, newEntry);
-                                                                                                                                                //add yasmine's part here
+                                                                                                                                                (yyval.nPtr)=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode((yyvsp[-8].sVal)), (yyvsp[-6].nPtr), (yyvsp[-2].nPtr));
                                                                                                                                             }
                                                                                                                                             else{
                                                                                                                                                 throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
@@ -1855,9 +1855,9 @@ yyreduce:
 
                                                                                                                                                 if (noError) {
                                                                                                                                                     // Itirate over the arguments types to add them
-                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry((yyvsp[-10].sVal), 0, 1, currentLineNumber, 0, NULL, conEnumToString((yyvsp[-11].nPtr)->type));
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry((yyvsp[-10].sVal), 0, 1, currentLineNumber, 0, NULL, conEnumToString((yyvsp[-11].nPtr)->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    //add yasmine's part here
+                                                                                                                                                    (yyval.nPtr)=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum((yyvsp[-11].nPtr))), createIdentifierNode((yyvsp[-10].sVal)), (yyvsp[-8].nPtr), (yyvsp[-3].nPtr));
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -1920,25 +1920,25 @@ yyreduce:
 
   case 37: /* declaration_assignment: declaration ';'  */
 #line 219 "Compiler.y"
-                                          { (yyval.nPtr) = (yyvsp[-1].nPtr); printf("declaration_assignment: declaration\n"); }
+                                          { (yyval.nPtr) = (yyvsp[-1].nPtr);}
 #line 1925 "y.tab.c"
     break;
 
   case 38: /* declaration_assignment: assignment ';'  */
 #line 220 "Compiler.y"
-                                         { (yyval.nPtr) = (yyvsp[-1].nPtr); printf("declaration_assignment: assignment\n"); }
+                                         { (yyval.nPtr) = (yyvsp[-1].nPtr);}
 #line 1931 "y.tab.c"
     break;
 
   case 39: /* declaration_assignment_loop: declaration  */
 #line 223 "Compiler.y"
-                                              { (yyval.nPtr) = (yyvsp[0].nPtr); printf("declaration_assignment_loop: declaration\n"); }
+                                                { (yyval.nPtr) = (yyvsp[0].nPtr);}
 #line 1937 "y.tab.c"
     break;
 
   case 40: /* declaration_assignment_loop: assignment  */
 #line 224 "Compiler.y"
-                                             { (yyval.nPtr) = (yyvsp[0].nPtr); printf("declaration_assignment_loop: assignment\n"); }
+                                                { (yyval.nPtr) = (yyvsp[0].nPtr);}
 #line 1943 "y.tab.c"
     break;
 
@@ -1948,25 +1948,26 @@ yyreduce:
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[0].sVal));
 
                                                                         if(entry == NULL){
-                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry((yyvsp[0].sVal), conEnumToString((yyvsp[-1].nPtr)->type), 0, 0, 0, NULL, currentLineNumber);
+                                                                            SymbolEntry *newEntry = create_variable_SymbolEntry((yyvsp[0].sVal), conEnumToString((yyvsp[-1].nPtr)->typ.type), 0, 0, 0, NULL, currentLineNumber);
                                                                             addSymbolEntry(currTable, newEntry);
+                                                                            (yyval.nPtr) = createOperatorNode(VAR, 2, createTypeNode(getTypeOfEnum((yyvsp[-1].nPtr))), createIdentifierNode((yyvsp[0].sVal)));  
                                                                         }
                                                                         else{
                                                                             throwError("Variable already declared in this scope", currentLineNumber, semanticErrorsFile);
                                                                         }
 
                                                                     }
-#line 1960 "y.tab.c"
+#line 1961 "y.tab.c"
     break;
 
   case 42: /* declaration: type IDENTIFIER '=' expression  */
-#line 242 "Compiler.y"
+#line 243 "Compiler.y"
                                                                     {  
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
                                                                         if(entry == NULL){
                                                                             
                                                                             char* typeUnion;
-                                                                            CheckTypeFunc checkFunc = getCheckFunction((yyvsp[-3].nPtr)->type, &typeUnion);
+                                                                            CheckTypeFunc checkFunc = getCheckFunction((yyvsp[-3].nPtr)->typ.type, &typeUnion);
                                                                             bool noError = true;
                                                                             //expression can be => con, ID or op
                                                                             if((yyvsp[0].nPtr)->type == typeCon){
@@ -1983,7 +1984,7 @@ yyreduce:
                                                                             }
 
                                                                             if(noError){
-                                                                                //add yasmine's part here
+                                                                                (yyval.nPtr) = createOperatorNode('=', 3, createTypeNode(getTypeOfEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); 
                                                                             }
 
                                                                         }
@@ -1991,17 +1992,17 @@ yyreduce:
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 1995 "y.tab.c"
+#line 1996 "y.tab.c"
     break;
 
   case 43: /* declaration: CONST type IDENTIFIER '=' expression  */
-#line 274 "Compiler.y"
+#line 275 "Compiler.y"
                                                                     {  
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
                                                                         if(entry == NULL){
                                                                             
                                                                             char* typeUnion;
-                                                                            CheckTypeFunc checkFunc = getCheckFunction((yyvsp[-3].nPtr)->type, &typeUnion);
+                                                                            CheckTypeFunc checkFunc = getCheckFunction((yyvsp[-3].nPtr)->typ.type, &typeUnion);
                                                                             bool noError = true;
                                                                             //expression can be => con, ID or op
                                                                             if((yyvsp[0].nPtr)->type == typeCon){
@@ -2018,7 +2019,7 @@ yyreduce:
                                                                             }
 
                                                                             if(noError){
-                                                                                //add yasmine's part here
+                                                                                (yyval.nPtr) = createOperatorNode(CONST, 3, createTypeNode(getTypeOfEnum((yyvsp[-3].nPtr))), createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr));
                                                                             }
 
                                                                         }
@@ -2026,17 +2027,17 @@ yyreduce:
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 2030 "y.tab.c"
+#line 2031 "y.tab.c"
     break;
 
   case 44: /* declaration: ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER  */
-#line 304 "Compiler.y"
-                                                                    { }
-#line 2036 "y.tab.c"
+#line 305 "Compiler.y"
+                                                                    {  (yyval.nPtr) = createOperatorNode(ENUM, 3, createIdentifierNode((yyvsp[-3].sVal)),createIdentifierNode((yyvsp[-2].sVal)) ,createIdentifierNode((yyvsp[0].sVal)));}
+#line 2037 "y.tab.c"
     break;
 
   case 45: /* assignment: IDENTIFIER '=' expression  */
-#line 309 "Compiler.y"
+#line 310 "Compiler.y"
                                                                     { 
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, (yyvsp[-2].sVal));
                                                                         if(entry != NULL){
@@ -2090,7 +2091,7 @@ yyreduce:
                                                                                 }
 
                                                                                 if(noError){
-                                                                                    //add yasmine's part here
+                                                                                    (yyval.nPtr)=createOperatorNode('=', 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr));
                                                                                 }
                                                                             }
                                                                         }
@@ -2098,239 +2099,239 @@ yyreduce:
                                                                             throwError("Use of undeclared variable", 1, semanticErrorsFile);
                                                                         }
                                                                     }
-#line 2102 "y.tab.c"
+#line 2103 "y.tab.c"
     break;
 
   case 46: /* enum_declaration: ENUM IDENTIFIER LBRACE enum_list RBRACE ';'  */
-#line 373 "Compiler.y"
+#line 374 "Compiler.y"
                                                                         {(yyval.nPtr)=createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-4].sVal)), (yyvsp[-2].nPtr));}
-#line 2108 "y.tab.c"
+#line 2109 "y.tab.c"
     break;
 
   case 47: /* enum_list: enum_list ',' IDENTIFIER  */
-#line 377 "Compiler.y"
+#line 378 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 1, createIdentifierNode((yyvsp[0].sVal))); }
-#line 2114 "y.tab.c"
+#line 2115 "y.tab.c"
     break;
 
   case 48: /* enum_list: enum_list ',' IDENTIFIER '=' expression  */
-#line 378 "Compiler.y"
+#line 379 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 2120 "y.tab.c"
+#line 2121 "y.tab.c"
     break;
 
   case 49: /* enum_list: IDENTIFIER  */
-#line 379 "Compiler.y"
+#line 380 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 1, createIdentifierNode((yyvsp[0].sVal))); }
-#line 2126 "y.tab.c"
+#line 2127 "y.tab.c"
     break;
 
   case 50: /* enum_list: IDENTIFIER '=' expression  */
-#line 380 "Compiler.y"
+#line 381 "Compiler.y"
                                                                         { (yyval.nPtr) = createOperatorNode(ENUM, 2, createIdentifierNode((yyvsp[-2].sVal)), (yyvsp[0].nPtr)); }
-#line 2132 "y.tab.c"
+#line 2133 "y.tab.c"
     break;
 
   case 51: /* expression: binary_expression  */
-#line 385 "Compiler.y"
+#line 386 "Compiler.y"
                                              { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2138 "y.tab.c"
+#line 2139 "y.tab.c"
     break;
 
   case 52: /* expression: unary_expression  */
-#line 386 "Compiler.y"
+#line 387 "Compiler.y"
                                              { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2144 "y.tab.c"
+#line 2145 "y.tab.c"
     break;
 
   case 53: /* binary_expression: expression '+' expression  */
-#line 388 "Compiler.y"
+#line 389 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('+', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2150 "y.tab.c"
+#line 2151 "y.tab.c"
     break;
 
   case 54: /* binary_expression: expression '-' expression  */
-#line 389 "Compiler.y"
+#line 390 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('-', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2156 "y.tab.c"
+#line 2157 "y.tab.c"
     break;
 
   case 55: /* binary_expression: expression '*' expression  */
-#line 390 "Compiler.y"
+#line 391 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('*', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2162 "y.tab.c"
+#line 2163 "y.tab.c"
     break;
 
   case 56: /* binary_expression: expression '/' expression  */
-#line 391 "Compiler.y"
+#line 392 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('/', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2168 "y.tab.c"
+#line 2169 "y.tab.c"
     break;
 
   case 57: /* binary_expression: expression '%' expression  */
-#line 392 "Compiler.y"
+#line 393 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode('%', 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2174 "y.tab.c"
+#line 2175 "y.tab.c"
     break;
 
   case 58: /* binary_expression: expression EQ expression  */
-#line 393 "Compiler.y"
+#line 394 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(EQ, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2180 "y.tab.c"
+#line 2181 "y.tab.c"
     break;
 
   case 59: /* binary_expression: expression NEQ expression  */
-#line 394 "Compiler.y"
+#line 395 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(NEQ, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2186 "y.tab.c"
+#line 2187 "y.tab.c"
     break;
 
   case 60: /* binary_expression: expression LT expression  */
-#line 395 "Compiler.y"
+#line 396 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(LT, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2192 "y.tab.c"
+#line 2193 "y.tab.c"
     break;
 
   case 61: /* binary_expression: expression GT expression  */
-#line 396 "Compiler.y"
+#line 397 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(GT, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2198 "y.tab.c"
+#line 2199 "y.tab.c"
     break;
 
   case 62: /* binary_expression: expression LTE expression  */
-#line 397 "Compiler.y"
+#line 398 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(LTE, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2204 "y.tab.c"
+#line 2205 "y.tab.c"
     break;
 
   case 63: /* binary_expression: expression GTE expression  */
-#line 398 "Compiler.y"
+#line 399 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(GTE, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2210 "y.tab.c"
+#line 2211 "y.tab.c"
     break;
 
   case 64: /* binary_expression: expression AND expression  */
-#line 399 "Compiler.y"
+#line 400 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(AND, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2216 "y.tab.c"
+#line 2217 "y.tab.c"
     break;
 
   case 65: /* binary_expression: expression OR expression  */
-#line 400 "Compiler.y"
+#line 401 "Compiler.y"
                                                      { (yyval.nPtr)=createOperatorNode(OR, 2, (yyvsp[-2].nPtr), (yyvsp[0].nPtr)); }
-#line 2222 "y.tab.c"
+#line 2223 "y.tab.c"
     break;
 
   case 66: /* binary_expression: '(' expression ')'  */
-#line 401 "Compiler.y"
+#line 402 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[-1].nPtr); }
-#line 2228 "y.tab.c"
+#line 2229 "y.tab.c"
     break;
 
   case 67: /* binary_expression: value  */
-#line 402 "Compiler.y"
+#line 403 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[0].nPtr); }
-#line 2234 "y.tab.c"
+#line 2235 "y.tab.c"
     break;
 
   case 68: /* binary_expression: IDENTIFIER  */
-#line 403 "Compiler.y"
+#line 404 "Compiler.y"
                                                      { (yyval.nPtr)=createIdentifierNode((yyvsp[0].sVal)); }
-#line 2240 "y.tab.c"
+#line 2241 "y.tab.c"
     break;
 
   case 69: /* binary_expression: function_call_expression  */
-#line 404 "Compiler.y"
+#line 405 "Compiler.y"
                                                      { (yyval.nPtr)=(yyvsp[0].nPtr);}
-#line 2246 "y.tab.c"
+#line 2247 "y.tab.c"
     break;
 
   case 70: /* unary_expression: '-' expression  */
-#line 406 "Compiler.y"
+#line 407 "Compiler.y"
                                                       { (yyval.nPtr) = createOperatorNode('-', 1, (yyvsp[0].nPtr)); }
-#line 2252 "y.tab.c"
+#line 2253 "y.tab.c"
     break;
 
   case 71: /* unary_expression: '!' expression  */
-#line 407 "Compiler.y"
+#line 408 "Compiler.y"
                                                       { (yyval.nPtr) = createOperatorNode('!', 1, (yyvsp[0].nPtr)); }
-#line 2258 "y.tab.c"
+#line 2259 "y.tab.c"
     break;
 
   case 72: /* type: INT_TYPE  */
-#line 411 "Compiler.y"
+#line 412 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeInt); }
-#line 2264 "y.tab.c"
+#line 2265 "y.tab.c"
     break;
 
   case 73: /* type: FLOAT_TYPE  */
-#line 412 "Compiler.y"
+#line 413 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeFloat); }
-#line 2270 "y.tab.c"
+#line 2271 "y.tab.c"
     break;
 
   case 74: /* type: BOOL_TYPE  */
-#line 413 "Compiler.y"
+#line 414 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeBool); }
-#line 2276 "y.tab.c"
+#line 2277 "y.tab.c"
     break;
 
   case 75: /* type: CHAR_TYPE  */
-#line 414 "Compiler.y"
+#line 415 "Compiler.y"
                                      { (yyval.nPtr) = createTypeNode(typeChar); }
-#line 2282 "y.tab.c"
+#line 2283 "y.tab.c"
     break;
 
   case 76: /* type: STRING_TYPE  */
-#line 415 "Compiler.y"
+#line 416 "Compiler.y"
                                       { (yyval.nPtr) = createTypeNode(typeString); }
-#line 2288 "y.tab.c"
+#line 2289 "y.tab.c"
     break;
 
   case 77: /* value: INTEGER  */
-#line 418 "Compiler.y"
+#line 419 "Compiler.y"
                                   { (yyval.nPtr) = createIntConstantNode((yyvsp[0].iVal)); }
-#line 2294 "y.tab.c"
+#line 2295 "y.tab.c"
     break;
 
   case 78: /* value: FLOAT  */
-#line 419 "Compiler.y"
+#line 420 "Compiler.y"
                                   { (yyval.nPtr) = createFloatConstantNode((yyvsp[0].fVal)); }
-#line 2300 "y.tab.c"
+#line 2301 "y.tab.c"
     break;
 
   case 79: /* value: BOOL  */
-#line 420 "Compiler.y"
+#line 421 "Compiler.y"
                                   { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2306 "y.tab.c"
+#line 2307 "y.tab.c"
     break;
 
   case 80: /* value: CHAR  */
-#line 421 "Compiler.y"
+#line 422 "Compiler.y"
                                   { (yyval.nPtr) = createCharConstantNode((yyvsp[0].cVal)); }
-#line 2312 "y.tab.c"
+#line 2313 "y.tab.c"
     break;
 
   case 81: /* value: STRING  */
-#line 422 "Compiler.y"
+#line 423 "Compiler.y"
                                   { (yyval.nPtr) = createStringConstantNode((yyvsp[0].sVal)); }
-#line 2318 "y.tab.c"
+#line 2319 "y.tab.c"
     break;
 
   case 82: /* value: BOOL_TRUE  */
-#line 423 "Compiler.y"
+#line 424 "Compiler.y"
                                      { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2324 "y.tab.c"
+#line 2325 "y.tab.c"
     break;
 
   case 83: /* value: BOOL_FALSE  */
-#line 424 "Compiler.y"
+#line 425 "Compiler.y"
                                      { (yyval.nPtr) = createBoolConstantNode((yyvsp[0].bVal)); }
-#line 2330 "y.tab.c"
+#line 2331 "y.tab.c"
     break;
 
   case 84: /* start_scope: %empty  */
-#line 427 "Compiler.y"
+#line 428 "Compiler.y"
                             {
                                 printf("start of scope\n");
                                 //we want to increment scope and add new ST (child to current scope)
@@ -2347,22 +2348,22 @@ yyreduce:
                                 }
                                 
                             }
-#line 2351 "y.tab.c"
+#line 2352 "y.tab.c"
     break;
 
   case 85: /* end_scope: %empty  */
-#line 445 "Compiler.y"
+#line 446 "Compiler.y"
                             {
                                 printf("end of scope\n");
                                 currentScope--;
                                 prevTable = currTable;
                                 currTable = currTable->parent;
                             }
-#line 2362 "y.tab.c"
+#line 2363 "y.tab.c"
     break;
 
 
-#line 2366 "y.tab.c"
+#line 2367 "y.tab.c"
 
       default: break;
     }
@@ -2555,7 +2556,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 453 "Compiler.y"
+#line 454 "Compiler.y"
 
 
 void yyerror(const char *s) {
@@ -2589,7 +2590,7 @@ bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType
     }
     // create the symbol entry and add it to the symbol table
     if(mainCall) {
-        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->type), 1, isConst, 1, NULL, currentLineNumber);
+        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, NULL, currentLineNumber);
         addSymbolEntry(currTable, newEntry);
     }
     return true;
@@ -2599,14 +2600,14 @@ bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType
 bool handleConNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst){
 
     char* typeUnion;
-    CheckTypeFunc checkFunc = getCheckFunction(node1->type, &typeUnion);
+    CheckTypeFunc checkFunc = getCheckFunction(node1->typ.type, &typeUnion);
     char symbolValue[20];
 
     if (checkTypeMismatchConNode(node4, symbolValue, typeUnion, checkFunc)) {
         if(!mainCall) {
             return true;
         }
-        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->type), 1, isConst, 1, symbolValue, currentLineNumber);
+        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, symbolValue, currentLineNumber);
         addSymbolEntry(currTable, newEntry);
         return true;
     } else {
@@ -2619,7 +2620,7 @@ bool handleConNodeExpressionInDeclaration(const nodeType *node1, const nodeType 
 bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst){
 
     char* typeUnion;
-    CheckTypeFunc checkFunc = getCheckFunction(node1->type, &typeUnion);
+    CheckTypeFunc checkFunc = getCheckFunction(node1->typ.type, &typeUnion);
 
     SymbolEntry *idEntry = checkIdNodeDeclaration(currTable, node4->id.id);
     if (idEntry != NULL) {
@@ -2632,7 +2633,7 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
                 if(!mainCall) {
                     return true;
                 }
-                SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->type), 1, isConst, 1, idEntryValue, currentLineNumber);
+                SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, idEntryValue, currentLineNumber);
                 addSymbolEntry(currTable, newEntry);
                 return true;
             } else {
@@ -2651,7 +2652,7 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
 bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10) {
 
     if (node10->type == typeCon) {
-        if (!(node1->type == node10->con.type)) {
+        if (!(node1->typ.type == node10->con.typeConst)) {
             return false;
         }
     } else if (node10->type == typeId) {
@@ -2661,7 +2662,7 @@ bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10) {
             if (isInitialized) {
                 setIsUsed(idEntry, 1);
                 char *idEntryType = getType(idEntry);
-                if (strcmp(conEnumToString(node1->type), idEntryType) != 0) {
+                if (strcmp(conEnumToString(node1->typ.type), idEntryType) != 0) {
                     return false;
                 }
             } else {
@@ -2684,7 +2685,7 @@ bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10
     for (int i = 0; i < node10->opr.nops; i++) {
         if (node10->opr.op[i]->type == typeCon) {
             // Handle constant node
-            if (!(node1->type == node10->opr.op[i]->con.type)) {
+            if (!(node1->typ.type == node10->opr.op[i]->con.typeConst)) {
                 return false;  // Return false if type mismatch
             }
         } else if (node10->opr.op[i]->type == typeId) {
@@ -2695,7 +2696,7 @@ bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10
                 if (isInitialized) {
                     setIsUsed(idEntry, 1);
                     char *idEntryType = getType(idEntry);
-                    if (strcmp(conEnumToString(node1->type), idEntryType) != 0) {
+                    if (strcmp(conEnumToString(node1->typ.type), idEntryType) != 0) {
                         return false;  // Return false if type mismatch
                     }
                 } else {

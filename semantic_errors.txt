@@ -1,0 +1,5 @@
+At line 22, Error: Variable has not been initialized before
+At line 1, Error: Use of undeclared variable
+At line 1, Error: Use of undeclared variable
+At line 1, Error: Use of undeclared variable
+At line 35, Error: Function name already declared

@@ -5,6 +5,7 @@
 #include "node.h"
 
 void yyerror(const char *s);
+char Result[1000000];
 nodeType *createTypeNode(conEnum type)
 {
     nodeType *p = malloc(sizeof(nodeType));
@@ -14,6 +15,7 @@ nodeType *createTypeNode(conEnum type)
         return NULL;
     }
     p->type = typeDef; // Change to typeDef for a type node
+    p->typ.type = type;
     return p;
 }
 
@@ -32,11 +34,14 @@ nodeType *createConstantNode()
 
 nodeType *createIntConstantNode(int value)
 {
-    nodeType *p = createConstantNode();
+    nodeType *p;
+    if ((p = malloc(sizeof(nodeType))) == NULL)
+        yyerror("Memory allocation failed");
 
     p->type = typeCon;
-    p->con.type = typeInt; // Set the constant type
+    p->con.typeConst = typeInt; // Set the constant type
     p->con.iValue = value;
+
     return p;
 }
 
@@ -45,7 +50,7 @@ nodeType *createFloatConstantNode(float value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeFloat; // Set the constant type
+    p->con.typeConst = typeFloat; // Set the constant type
     p->con.fValue = value;
     return p;
 }
@@ -55,7 +60,7 @@ nodeType *createBoolConstantNode(bool value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeBool; // Set the constant type
+    p->con.typeConst = typeBool; // Set the constant type
     p->con.iValue = value;
     return p;
 }
@@ -65,7 +70,7 @@ nodeType *createCharConstantNode(char value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeChar; // Set the constant type
+    p->con.typeConst = typeChar; // Set the constant type
     p->con.cValue = value;
     return p;
 }
@@ -75,7 +80,7 @@ nodeType *createStringConstantNode(char *value)
     nodeType *p = createConstantNode();
 
     p->type = typeCon;
-    p->con.type = typeString;      // Set the constant type
+    p->con.typeConst = typeString; // Set the constant type
     p->con.sValue = strdup(value); // Duplicate the string
     return p;
 }
@@ -94,8 +99,7 @@ nodeType *createIdentifierNode(char *id)
 
 nodeType *createOperatorNode(int oper, int nops, ...)
 {
-    printf("createOperatorNode where oper = %d\n", oper);
-    printf("nops = %d\n", nops);
+
     va_list ap;
     nodeType *p;
     int i;
@@ -157,15 +161,25 @@ conEnum getTypeOfEnum(const nodeType *node)
     // Handle unknown types
     return typeND;
 }
-
-void execute(nodeType *p)
+void execute(nodeType *p, int first)
 {
-    FILE *outputFile = fopen("QuadrapletsFile", "w");
+
+    FILE *outputFile;
+    if (first == 1)
+    {
+        outputFile = fopen("QuadrapletsFile", "w");
+    }
+    else
+    {
+        outputFile = fopen("QuadrapletsFile", "a+");
+    }
+
     if (!outputFile)
     {
         perror("Error opening output file");
         return;
     }
+
     if (p == NULL)
     {
         fprintf(outputFile, "error: null node\n");
@@ -174,8 +188,9 @@ void execute(nodeType *p)
     switch (p->type)
     {
     case typeDef:
-        switch (p->type)
+        switch (p->typ.type)
         {
+
         case typeInt:
             fprintf(outputFile, "int");
             break;
@@ -186,7 +201,7 @@ void execute(nodeType *p)
             fprintf(outputFile, "string");
             break;
         case typeChar:
-            fprintf(outputFile, "char");
+            fprintf(outputFile, "TYPEDEFchar");
             break;
         case typeBool:
             fprintf(outputFile, "bool");
@@ -207,129 +222,226 @@ void execute(nodeType *p)
             fprintf(outputFile, "error: unknown type\n");
             break;
         }
+        fprintf(outputFile, "\n");
         break;
     case typeCon:
-        switch (p->con.type)
+
+        switch (p->con.typeConst)
         {
         case typeInt:
-            fprintf(outputFile, "%d", p->con.iValue);
+
+            sprintf(Result, "%s%d ", Result, p->con.iValue);
+
             break;
         case typeFloat:
-            fprintf(outputFile, "%f", p->con.fValue);
+            sprintf(Result, "%s%f ", Result, p->con.fValue);
             break;
         case typeString:
-            fprintf(outputFile, "%s", p->con.sValue);
+
+            sprintf(Result, "%s%s ", Result, p->con.sValue);
             break;
         case typeChar:
-            fprintf(outputFile, "%c", p->con.cValue);
+            sprintf(Result, "%s%c ", Result, p->con.cValue);
             break;
         case typeBool:
-            fprintf(outputFile, "%s", p->con.iValue ? "true" : "false");
+
+            sprintf(Result, "%s%s ", Result, p->con.iValue ? "true" : "false");
             break;
+
         default:
             fprintf(outputFile, "error: unknown constant type\n");
             break;
         }
+        fprintf(outputFile, "\n");
         break;
     case typeId:
-        fprintf(outputFile, "%s", p->id.id);
+        sprintf(Result, "%s%s ", Result, p->id.id);
         break;
     case typeOpr:
+
         switch (p->opr.oper)
         {
         case WHILE:
             fprintf(outputFile, "while(");
-            execute(p->opr.op[0]);
+            execute(p->opr.op[0], 0);
             fprintf(outputFile, ") ");
-            execute(p->opr.op[1]);
+            execute(p->opr.op[1], 0);
             break;
         case IF:
             fprintf(outputFile, "if(");
-            execute(p->opr.op[0]);
+            execute(p->opr.op[0], 0);
             fprintf(outputFile, ") ");
-            execute(p->opr.op[1]);
+            execute(p->opr.op[1], 0);
             if (p->opr.nops > 2)
             {
                 fprintf(outputFile, " else ");
-                execute(p->opr.op[2]);
+                execute(p->opr.op[2], 0);
             }
             break;
         case PRINT:
             fprintf(outputFile, "print ");
-            execute(p->opr.op[0]);
+            execute(p->opr.op[0], 0);
+            fprintf(outputFile, "\n");
             break;
         case ENUM:
-            fprintf(outputFile, "enum ");
-            execute(p->opr.op[0]);
-            break;
-        case '=':
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " = ");
-            execute(p->opr.op[1]);
-            break;
-        case '+':
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " + ");
-            execute(p->opr.op[1]);
-            break;
-        case '-':
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " - ");
-            execute(p->opr.op[1]);
-            break;
-        case '*':
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " * ");
-            execute(p->opr.op[1]);
-            break;
-        case '/':
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " / ");
-            execute(p->opr.op[1]);
-            break;
-        case LT:
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " < ");
-            execute(p->opr.op[1]);
-            break;
-        case GT:
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " > ");
-            execute(p->opr.op[1]);
-            break;
-        case GTE:
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " >= ");
-            execute(p->opr.op[1]);
-            break;
-        case LTE:
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " <= ");
-            execute(p->opr.op[1]);
-            break;
-        case NEQ:
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " != ");
-            execute(p->opr.op[1]);
-            break;
-        case EQ:
-            execute(p->opr.op[0]);
-            fprintf(outputFile, " == ");
-            execute(p->opr.op[1]);
+            switch (p->opr.nops)
+            {
+            case 1:
+                strcat(Result, "EnumDef ");
+                execute(p->opr.op[0], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result)); // Clear Result after printing
+                break;
+            case 2:
+                strcat(Result, "EnumDef ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            case 3:
+                strcat(Result, "EnumDef ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            default:
+                break;
+            }
             break;
         case VAR:
-            fprintf(outputFile, "var ");
-            execute(p->opr.op[0]);
+            fprintf(outputFile, "INIT  ");
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            break;
+        case CONST:
+            fprintf(outputFile, "CONST ");
+            execute(p->opr.op[1], 0);
+            execute(p->opr.op[2], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            break;
+        case FUNC:
+            fprintf(outputFile, "func ");
+            execute(p->opr.op[0], 0);
+            break;
+        case SWITCH:
+            fprintf(outputFile, "switch ");
+            execute(p->opr.op[0], 0);
+            break;
+        case DEFAULT:
+            fprintf(outputFile, "default ");
+            execute(p->opr.op[0], 0);
+            break;
+        case CASE:
+            fprintf(outputFile, "case ");
+            execute(p->opr.op[0], 0);
+            break;
+        case '=':
+            switch (p->opr.nops)
+            {
+            case 2:
+                strcat(Result, "ASSIGN ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            case 3:
+                strcat(Result, "ASSIGN ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                break;
+            default:
+                break;
+            }
+
+            break;
+        case '+':
+            strcat(Result, "ADD ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            break;
+        case '-':
+            strcat(Result, "SUB ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            break;
+        case '*':
+            strcat(Result, "MUL ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            break;
+        case '/':
+            strcat(Result, "DIV ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            break;
+        case ';':
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            break;
+
+        case LT:
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "LessTn %s\n", Result);
+            break;
+
+        case GT:
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "GrTn %s\n", Result);
+            break;
+
+        case LTE:
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "LessTnE %s\n", Result);
+            break;
+
+        case GTE:
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "GrTnE %s\n", Result);
+            break;
+
+        case NEQ:
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "IsNEQ %s\n", Result);
+            break;
+
+        case EQ:
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
+            fprintf(outputFile, "IsEQ %s\n", Result);
+
             break;
         default:
             fprintf(outputFile, "error: unknown operator '%d'\n");
-  
             break;
         }
+        fprintf(outputFile, "\n");
         break;
     }
     fclose(outputFile);
 }
+
 void freeNode(nodeType *p)
 {
     if (!p)
@@ -343,7 +455,7 @@ void freeNode(nodeType *p)
     }
     else if (p->type == typeCon)
     {
-        if (p->con.type == typeString)
+        if (p->con.typeConst == typeString)
         {
             free(p->con.sValue);
         }
