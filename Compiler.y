@@ -81,7 +81,7 @@
             start_scope end_scope
 %%
 
-program                 : start_scope statement_list     {execute($2,1,0);freeNode($2);} 
+program                 : start_scope statement_list     {execute($2,1);freeNode($2);} 
                       
                         ;
 
