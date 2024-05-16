@@ -270,12 +270,12 @@ declaration             : type IDENTIFIER
                                                                         else{
                                                                             throwError("Variable already declared in this scope", 1, semanticErrorsFile);
                                                                         }
-                                                                        $$ = createOperatorNode(VAR, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); printf("declaration: type IDENTIFIER '=' expression (type: %d, identifier: %s, expression: %s)\n", getTypeOfEnum($1), $2, $4);
+                                                                        $$ = createOperatorNode('=', 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4); 
                                                                       
                                                                     }
             | CONST type IDENTIFIER '=' expression { $$ = createOperatorNode(CONST, 2, createTypeNode(getTypeOfEnum($2)), createIdentifierNode($3), $5); printf("declaration: CONST type IDENTIFIER '=' expression (type: %d, identifier: %s, expression: %s)\n", getTypeOfEnum($2), $3, $5); }
-            | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $5); printf("declaration: ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER (identifier1: %s, identifier2: %s, identifier3: %s)\n", $2, $3, $5); }
-            | VAR IDENTIFIER { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2)); printf("declaration: VAR IDENTIFIER (identifier: %s)\n", $2); }
+            | ENUM IDENTIFIER IDENTIFIER '=' IDENTIFIER { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($2), $5);  }
+            | VAR IDENTIFIER { $$ = createOperatorNode(VAR, 2, createTypeNode(typeVar), createIdentifierNode($2));}
             ;
 
 assignment              : IDENTIFIER '=' expression              { $$=createOperatorNode('=', 2, createIdentifierNode($1), $3);}
