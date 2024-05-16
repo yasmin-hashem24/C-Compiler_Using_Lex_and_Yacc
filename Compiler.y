@@ -81,7 +81,7 @@
             start_scope end_scope
 %%
 
-program                 : start_scope statement_list     {execute($2,1);freeNode($2);} 
+program                 : start_scope statement_list     {execute($2,1,0);freeNode($2);} 
                       
                         ;
 
@@ -124,8 +124,14 @@ case_default            : DEFAULT ':' statement_list BREAK ';'                  
 
 
 // Statements rules: Loop statements
-while_loop              : WHILE '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope           {$$ = createOperatorNode(WHILE, 2, $3, $7);}
-                        ;
+while_loop              : WHILE '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope           {
+                                                                                                                                printf("Content of expression node: ");
+                                                                                                                                            printNode($3);
+                                                                                                                                            printf("Content of statement list node: ");
+                                                                                                                                            printNode($7);
+                                                                                                                                $$ = createOperatorNode(WHILE, 2, $3, $7);
+                                                                                                                                }
+                                                                                                                                                    ;
 
 do_while_loop           : DO LBRACE start_scope statement_list RBRACE end_scope WHILE '(' expression ')' ';'    { $$ = createOperatorNode(DO, 2, $4, $9);}
                         ;
@@ -150,7 +156,7 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                                                                                                                                                     getArgList($5, &argCount, &argList);
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, argCount, argList, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    $$=createOperatorNode(FUNC, 3, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
+                                                                                                                                                    $$=createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -260,6 +266,7 @@ declaration             : type IDENTIFIER
                                                                     }
                         | type IDENTIFIER '=' expression            
                                                                     {  
+                                                                        
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
                                                                         if(entry == NULL){
                                                                             
@@ -326,7 +333,7 @@ declaration             : type IDENTIFIER
             ;
 
 assignment              : IDENTIFIER '=' expression              
-                                                                    { 
+                                                                    {     $$=createOperatorNode('=', 2, createIdentifierNode($1), $3);
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $1);
                                                                         if(entry != NULL){
                                                                             //check that it's not constant
