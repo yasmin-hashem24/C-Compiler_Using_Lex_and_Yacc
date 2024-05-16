@@ -1,15 +1,30 @@
 
-ASSIGN x 5 
 
-GrTn 
+ASSIGN x 1 
 
-LL0 :
-x 3 CALL printf 
+hello :
+RETURN 1 
+END OF FUNCTION
+x 
+NOT 
+y 
+NOT 
+x 
+NOT 
 
-ASSIGN x ADD x 1 
+NOT y 
+NOT 
 
 
-	jz	L0
-	jmp	L1
-L1:
+NOT x 
+NOT 
+
+fg :
+END OF FUNCTION
+
+
+
+ASSIGN x 
+CALL hello 
+
 

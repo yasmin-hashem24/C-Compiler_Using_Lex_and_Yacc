@@ -314,6 +314,10 @@ void execute(nodeType *p, int first, int insideScope)
             switch (p->opr.nops)
             {
             case 5:
+                /*
+                    type IDENTIFIER start_scope '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE end_scope
+                        $$ = createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
+                    0->type 1->identifier 2->arg_list 3->statement_list 4->expression*/
 
                 execute(p->opr.op[1], 0, 1);
                 strcat(Result, ":\n");

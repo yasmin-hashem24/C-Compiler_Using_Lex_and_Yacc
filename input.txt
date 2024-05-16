@@ -76,19 +76,22 @@
 
 
 //functions
-int hello() {
-  int x = 1;
-  return x+1+x;
+int hello(int x, float y, int y) {
+  x = 1;
+  return 1;
 }
-void fg(){
+
+void fg(string x, string y, char x){
   char x = '1';
 }
-
+hello();
 int x = hello();
 
-for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
+//for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
 
-
+enum hello{ 
+A 
+};
 
 //if(x<0){
 //    x=1;
