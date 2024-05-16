@@ -1,7 +1,20 @@
 Symbol Table: global		 Scope: 0
 -------------------------------------
 Name						Kind						VarType						Initialized						Constant						Used						Value						agrCount						ArgumentTypes						ReturnType						EnumCount						EnumTypes
-ch						Variable						Char						1						1						1						@						-1						-						(null)						-1						-						
-x						Variable						Char						1						1						1						°						-1						-						(null)						-1						-						
+hello						Function						Char						1						-1						1						(null)						0						-						Char						-1						-						
+fg						Function						Void						1						-1						0						(null)						0						-						Void						-1						-						
+x						Variable						Char						1						0						1						(null)						-1						-						(null)						-1						-						
+-------------------------------------
+
+Symbol Table: local		 Scope: 1
+-------------------------------------
+Name						Kind						VarType						Initialized						Constant						Used						Value						agrCount						ArgumentTypes						ReturnType						EnumCount						EnumTypes
+x						Variable						Char						1						0						1												-1						-						(null)						-1						-						
+-------------------------------------
+
+Symbol Table: local		 Scope: 1
+-------------------------------------
+Name						Kind						VarType						Initialized						Constant						Used						Value						agrCount						ArgumentTypes						ReturnType						EnumCount						EnumTypes
+x						Variable						Char						1						0						1						 						-1						-						(null)						-1						-						
 -------------------------------------
 

@@ -78,6 +78,7 @@ bool checkTypeMismatchConNode(nodeType* node, char* symbolValue, char* typeUnion
 SymbolEntry* checkIdNodeDeclaration(SymbolTable *currTable, const char *id) {
     SymbolEntry *idEntry = getSymbolEntryFomCurrentScope(currTable,id);
     if(idEntry==NULL){
+        printf("Error: Identifier %s not declared\n",id);
        idEntry = getSymbolEntryFromParentScope(currTable,id);
     }
     return idEntry;

@@ -66,16 +66,25 @@
 
 
 //testcase1:
-const char ch= 'a';
-const char x = 'a';
-x = ch;
+//const char ch= 'a';
+//const char x = 'a';
+//x = ch;
 //testcase2:
 //char c1='b';
 //char c2= c1 + c1 + c;
 
 
 
+//functions
+char hello() {
+  char x = 'k';
+  return x+'y'+'i';
+}
+void fg(){
+  char x = '1';
+}
 
+char x = hello();
 
 
 

@@ -31,6 +31,7 @@ SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isIni
 
     entry->name = strdup(name);
     entry->kind = FUNCTION_E;
+    entry->type = strdup(returnType);
     entry->isUsed = isUsed;
     entry->isInitialized = isInitialized;
     entry->isConstant = -1;   // Not applicable

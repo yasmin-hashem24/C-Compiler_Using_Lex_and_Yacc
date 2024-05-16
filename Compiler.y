@@ -14,7 +14,9 @@
     bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst);
     bool handleConNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst);
     bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *node2, const nodeType *node4, bool mainCall, int isConst);
-  
+    bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10);
+    bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10);
+
     int yylex();
     extern FILE *yyin;
     FILE *syntaxErrorsFile;
@@ -27,6 +29,7 @@
     int currentScope = -1;
     SymbolTable *globalTable;
     SymbolTable *currTable;
+    SymbolTable *prevTable;
 
     const char *conEnumToString(conEnum enumValue);
 
@@ -96,8 +99,8 @@ statement               : declaration_assignment            {$$=$1;}
                         | while_loop                        {$$=$1;}
                         | do_while_loop                     {$$=$1;}
                         | for_loop                          {$$=$1;}
-                        |function_declaration               {$$=$1;}
-                        |expression                         {$$=$1;}
+                        | function_declaration               {$$=$1;}
+                        | expression                         {$$=$1;}
                         ;
 
 // Print statement rules
@@ -129,9 +132,67 @@ for_loop                : FOR '(' declaration_assignment_loop ';' expression';' 
                         ;
 
 // Functions rules
-function_declaration   : type IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RETURN statement_list';' RBRACE end_scope  {$$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $8, $10);}
-                        | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RBRACE end_scope                     {$$=createOperatorNode(FUNC, 4, createTypeNode(typeVoid), createIdentifierNode($2), $4, $8);}
-                        |type IDENTIFIER '(' arg_list ')' LBRACE start_scope  RETURN statement_list RBRACE end_scope                   {$$=createOperatorNode(FUNC, 3, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2), $4, $9);}
+function_declaration    : type IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RETURN expression ';' RBRACE end_scope     
+                                                                                                                                        { 
+
+                                                                                                                                            SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
+                                                                    
+                                                                                                                                            if(entry == NULL){
+                                                                                                                                                bool noError = handleReturnTypeCheck($1, $10);
+                                                                                                                                                
+
+                                                                                                                                                if (noError) {
+                                                                                                                                                    // Itirate over the arguments types to add them
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->type));
+                                                                                                                                                    addSymbolEntry(currTable, newEntry);
+                                                                                                                                                    //add yasmine's part here
+                                                                                                                                                }
+                                                                                                                                                else{
+                                                                                                                                                    throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                            else{
+                                                                                                                                                throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
+                                                                                                                                            }
+                                                                                                                                        }
+                        | VOID_TYPE IDENTIFIER '(' arg_list ')' LBRACE start_scope statement_list RBRACE end_scope                      
+                                                                                                                                        { 
+
+                                                                                                                                            SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
+                                                                    
+                                                                                                                                            if(entry == NULL){
+                                                                                                                                                // Itirate over the arguments types to add them
+                                                                                                                                                SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, "Void");
+                                                                                                                                                addSymbolEntry(currTable, newEntry);
+                                                                                                                                                //add yasmine's part here
+                                                                                                                                            }
+                                                                                                                                            else{
+                                                                                                                                                throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
+                                                                                                                                            }
+                                                                                                                                        }
+                        | type IDENTIFIER '(' arg_list ')' LBRACE start_scope  RETURN expression ';' RBRACE end_scope                   
+                                                                                                                                        { 
+
+                                                                                                                                            SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
+                                                                    
+                                                                                                                                            if(entry == NULL){
+                                                                                                                                                bool noError = handleReturnTypeCheck($1, $9);
+                                                                                                                                                
+
+                                                                                                                                                if (noError) {
+                                                                                                                                                    // Itirate over the arguments types to add them
+                                                                                                                                                    SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, 0, NULL, conEnumToString($1->type));
+                                                                                                                                                    addSymbolEntry(currTable, newEntry);
+                                                                                                                                                    //add yasmine's part here
+                                                                                                                                                }
+                                                                                                                                                else{
+                                                                                                                                                    throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                            else{
+                                                                                                                                                throwError("Function name already declared", currentLineNumber, semanticErrorsFile);
+                                                                                                                                            }
+                                                                                                                                        }
                         ;
 
 
@@ -143,6 +204,8 @@ function_call_expression: IDENTIFIER '(' arg_list_call ')'       { $$=createOper
 
 arg_list                : type IDENTIFIER ',' arg_list           { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
                         | type IDENTIFIER                        { $$=createOperatorNode(',', 2, createTypeNode(getTypeOfEnum($1)), createIdentifierNode($2));}
+                        |                                        { $$=NULL;}
+                        ;
 
 arg_list_call           : arg_list_call ',' expression           { $$=createOperatorNode(',', 2, $1, $3);}
                         | expression                             { $$=$1;}
@@ -153,11 +216,11 @@ arg_list_call           : arg_list_call ',' expression           { $$=createOper
 
 // Assignments and declarations rules
 
-declaration_assignment : declaration ';' { $$ = $1; printf("declaration_assignment: declaration\n"); }
+declaration_assignment  : declaration ';' { $$ = $1; printf("declaration_assignment: declaration\n"); }
                         | assignment ';' { $$ = $1; printf("declaration_assignment: assignment\n"); }
                         ;
 
-declaration_assignment_loop : declaration { $$ = $1; printf("declaration_assignment_loop: declaration\n"); }
+declaration_assignment_loop     : declaration { $$ = $1; printf("declaration_assignment_loop: declaration\n"); }
                                 | assignment { $$ = $1; printf("declaration_assignment_loop: assignment\n"); }
                                 ;
 
@@ -312,9 +375,9 @@ enum_declaration        : ENUM IDENTIFIER LBRACE enum_list RBRACE ';'   {$$=crea
 
 
 enum_list               : enum_list ',' IDENTIFIER                      { $$ = createOperatorNode(ENUM, 1, createIdentifierNode($3)); }
-                        | enum_list ',' IDENTIFIER '=' expression      { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($3), $5); }
+                        | enum_list ',' IDENTIFIER '=' expression       { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($3), $5); }
                         | IDENTIFIER                                    { $$ = createOperatorNode(ENUM, 1, createIdentifierNode($1)); }
-                        | IDENTIFIER '=' expression                    { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($1), $3); }
+                        | IDENTIFIER '=' expression                     { $$ = createOperatorNode(ENUM, 2, createIdentifierNode($1), $3); }
                         ;
 
 // Expressions rules
@@ -370,6 +433,7 @@ start_scope             :   {
                                     currTable = globalTable;
                                 }
                                 else{
+                                    prevTable = currTable;
                                     SymbolTable *childTable = createSymbolTable("local", currTable);
                                     addChildrenToSymbolTable(currTable,childTable );
                                     currTable = childTable;
@@ -381,6 +445,7 @@ start_scope             :   {
 end_scope               :   {
                                 printf("end of scope\n");
                                 currentScope--;
+                                prevTable = currTable;
                                 currTable = currTable->parent;
                             }
                         ;
@@ -471,9 +536,77 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
             throwError("Variable has not been initialized before", currentLineNumber, semanticErrorsFile);
         }
     } else {
-        throwError("There is no such variable existing, Variable in expression is not declared", currentLineNumber, semanticErrorsFile);
+        throwError("There is no such variable/function existing, Variable in expression is not variable/function", currentLineNumber, semanticErrorsFile);
     }
     return false;
+}
+
+// Function to handle the type check for return statements in functions
+bool handleReturnTypeCheck(const nodeType *node1, const nodeType *node10) {
+
+    if (node10->type == typeCon) {
+        if (!(node1->type == node10->con.type)) {
+            return false;
+        }
+    } else if (node10->type == typeId) {
+        SymbolEntry *idEntry = checkIdNodeDeclaration(prevTable, node10->id.id);
+        if (idEntry != NULL) {
+            bool isInitialized = getIsInitialized(idEntry);
+            if (isInitialized) {
+                setIsUsed(idEntry, 1);
+                char *idEntryType = getType(idEntry);
+                if (strcmp(conEnumToString(node1->type), idEntryType) != 0) {
+                    return false;
+                }
+            } else {
+                throwError("Variable has not been initialized before, can't return it", currentLineNumber, semanticErrorsFile);
+                return false;
+            }
+        } else {
+            throwError("There is no such variable existing, Variable in return is not declared", currentLineNumber, semanticErrorsFile);
+            return false;
+        }
+    } else if (node10->type == typeOpr) {
+        return handleOperNodeReturnTypeCheck(node1, node10);
+    }
+
+    return true;
+}
+
+// Function to handle type checks for operator nodes in return statements
+bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10) {
+    for (int i = 0; i < node10->opr.nops; i++) {
+        if (node10->opr.op[i]->type == typeCon) {
+            // Handle constant node
+            if (!(node1->type == node10->opr.op[i]->con.type)) {
+                return false;  // Return false if type mismatch
+            }
+        } else if (node10->opr.op[i]->type == typeId) {
+            // Handle identifier node
+            SymbolEntry *idEntry = checkIdNodeDeclaration(prevTable, node10->opr.op[i]->id.id);
+            if (idEntry != NULL) {
+                bool isInitialized = getIsInitialized(idEntry);
+                if (isInitialized) {
+                    setIsUsed(idEntry, 1);
+                    char *idEntryType = getType(idEntry);
+                    if (strcmp(conEnumToString(node1->type), idEntryType) != 0) {
+                        return false;  // Return false if type mismatch
+                    }
+                } else {
+                    throwError("Variable has not been initialized before, can't return it", currentLineNumber, semanticErrorsFile);
+                    return false;
+                }
+            } else {
+                throwError("There is no such variable existing, Variable in return is not declared", currentLineNumber, semanticErrorsFile);
+                return false;
+            }
+        } else if (node10->opr.op[i]->type == typeOpr) {
+            if (!handleOperNodeReturnTypeCheck(node1, node10->opr.op[i])) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 int main(int argc, char **argv) {
