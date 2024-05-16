@@ -117,7 +117,7 @@ nodeType *createOperatorNode(int oper, int nops, ...)
     return p;
 }
 
-void execute(nodeType *p, int first, int inscope)
+void execute(nodeType *p, int first)
 {
 
     FILE *outputFile;
@@ -182,18 +182,17 @@ void execute(nodeType *p, int first, int inscope)
         {
         case WHILE:
             sprintf(Result, "L%s%d :\n", Result, LoopsNames);
-            execute(p->opr.op[0], 0, 1);
-            execute(p->opr.op[1], 0, 1);
-            fprintf(outputFile, Result);
+            execute(p->opr.op[0], 0);
+            fprintf(outputFile, "\n");
+            execute(p->opr.op[1], 0);
 
-            printf("Result: %s\n", Result);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
-            fprintf(outputFile, "\tjz\tL%d\n", LoopsNames);
+            fprintf(outputFile, "jz\tL%d\n", LoopsNames);
 
             LoopsNames++;
 
-            fprintf(outputFile, "\tjmp\tL%d\n", LoopsNames);
+            fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
             fprintf(outputFile, "L%d:\n", LoopsNames);
 
             LoopsNames += 1;
@@ -201,18 +200,18 @@ void execute(nodeType *p, int first, int inscope)
 
         case IF:
             fprintf(outputFile, "if(");
-            execute(p->opr.op[0], 0, 1);
+            execute(p->opr.op[0], 0);
             fprintf(outputFile, ") ");
-            execute(p->opr.op[1], 0, 1);
+            execute(p->opr.op[1], 0);
             if (p->opr.nops > 2)
             {
                 fprintf(outputFile, " else ");
-                execute(p->opr.op[2], 0, 1);
+                execute(p->opr.op[2], 0);
             }
             break;
         case PRINT:
             fprintf(outputFile, "print ");
-            execute(p->opr.op[0], 0, 0);
+            execute(p->opr.op[0], 0);
             fprintf(outputFile, "\n");
             break;
         case ENUM:
@@ -220,22 +219,22 @@ void execute(nodeType *p, int first, int inscope)
             {
             case 1:
                 strcat(Result, "EnumDef ");
-                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[0], 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result)); // Clear Result after printing
                 break;
             case 2:
                 strcat(Result, "EnumDef ");
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
             case 3:
                 strcat(Result, "EnumDef ");
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
-                execute(p->opr.op[2], 0, 0);
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
@@ -245,14 +244,14 @@ void execute(nodeType *p, int first, int inscope)
             break;
         case VAR:
             fprintf(outputFile, "INIT  ");
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
         case CONST:
             fprintf(outputFile, "CONST ");
-            execute(p->opr.op[1], 0, 0);
-            execute(p->opr.op[2], 0, 0);
+            execute(p->opr.op[1], 0);
+            execute(p->opr.op[2], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
@@ -260,24 +259,31 @@ void execute(nodeType *p, int first, int inscope)
             switch (p->opr.nops)
             {
             case 5:
+                /*
+                    type IDENTIFIER start_scope '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE end_scope
+                        $$ = createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
+                    0->type 1->identifier 2->arg_list 3->statement_list 4->expression*/
 
-                execute(p->opr.op[1], 0, 1);
-                strcat(Result, ":");
+                execute(p->opr.op[1], 0);
+                strcat(Result, ":\n");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
-
-                execute(p->opr.op[3], 0, 1);
+                printf("NODE 3");
+                printNode(p->opr.op[3]);
+                execute(p->opr.op[3], 0);
+                strcat(Result, "RETURN ");
+                execute(p->opr.op[4], 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
-
                 break;
+
             case 4:
-                execute(p->opr.op[1], 0, 1);
+                execute(p->opr.op[1], 0);
                 strcat(Result, ":");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
-                execute(p->opr.op[2], 0, 1);
-                execute(p->opr.op[3], 0, 1);
+                execute(p->opr.op[2], 0);
+                execute(p->opr.op[3], 0);
                 fprintf(outputFile, Result);
 
                 break;
@@ -285,40 +291,40 @@ void execute(nodeType *p, int first, int inscope)
             default:
                 break;
             }
-            fprintf(outputFile, "END OF FUNCTION");
+            fprintf(outputFile, "\nEND OF FUNCTION");
             break;
         case SWITCH:
-            fprintf(outputFile, "switch ");
-            execute(p->opr.op[0], 0, 0);
+            fprintf(outputFile, "\nswitch ");
+            execute(p->opr.op[0], 0);
             break;
         case DEFAULT:
-            fprintf(outputFile, "default ");
-            execute(p->opr.op[0], 0, 0);
+            fprintf(outputFile, "\ndefault ");
+            execute(p->opr.op[0], 0);
             break;
         case CASE:
-            fprintf(outputFile, "case ");
-            execute(p->opr.op[0], 0, 0);
+            fprintf(outputFile, "\ncase ");
+            execute(p->opr.op[0], 0);
             break;
         case CALL:
-            strcat(Result, "CALL ");
-            execute(p->opr.op[0], 0, 0);
+            strcat(Result, "\nCALL ");
+            execute(p->opr.op[0], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
         case '=':
             switch (p->opr.nops)
             {
             case 2:
-                strcat(Result, "ASSIGN ");
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "\nASSIGN ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
             case 3:
-                strcat(Result, "ASSIGN ");
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
-                execute(p->opr.op[2], 0, 0);
+                strcat(Result, "\nASSIGN ");
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
                 break;
@@ -328,92 +334,92 @@ void execute(nodeType *p, int first, int inscope)
 
             break;
         case '+':
-            strcat(Result, "ADD ");
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            strcat(Result, "\nADD ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
         case '-':
-            strcat(Result, "SUB ");
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            strcat(Result, "\nSUB ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
         case '*':
-            strcat(Result, "MUL ");
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            strcat(Result, "\nMUL ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
         case '/':
-            strcat(Result, "DIV ");
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            strcat(Result, "\nDIV ");
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
         case ';':
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             break;
         case ',':
             switch (p->opr.nops)
             {
             case 2:
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
                 break;
             case 3:
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
-                execute(p->opr.op[2], 0, 0);
+                execute(p->opr.op[0], 0);
+                execute(p->opr.op[1], 0);
+                execute(p->opr.op[2], 0);
                 break;
             default:
                 break;
             }
         case '!':
-            strcat(Result, "NOT ");
-            execute(p->opr.op[0], 0, 0);
+            strcat(Result, "\nNOT ");
+            execute(p->opr.op[0], 0);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             break;
 
         case LT:
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, "LessTn\n");
             break;
 
         case GT:
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, "GrTn \n");
             break;
 
         case LTE:
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, "LessTnE \n");
             break;
 
         case GTE:
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, "GrTnE \n");
             break;
 
         case NEQ:
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, "IsNEQ \n");
             break;
 
         case EQ:
-            execute(p->opr.op[0], 0, 0);
-            execute(p->opr.op[1], 0, 0);
+            execute(p->opr.op[0], 0);
+            execute(p->opr.op[1], 0);
             fprintf(outputFile, "IsEQ %s\n");
 
             break;
