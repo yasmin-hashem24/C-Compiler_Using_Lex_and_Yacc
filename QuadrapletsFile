@@ -2,20 +2,43 @@
 
 ASSIGN 1 x 
 
-
-
-ASSIGN 1000 z 
+INIT y 
 
 
 
 
-ADD x 1 TEMP 
+f :
 
-ADD TEMP  z TEMP 
+ASSIGN 1 z 
+RETURN 1 
+END OF FUNCTION
 
-ASSIGN TEMP  y 
+
+fg :
+
+ASSIGN 0 x 
+
+END OF FUNCTION
 
 
-Convertion from int to float
-Convertion from int to float
-Convertion from int to float
+
+ASSIGN 
+ASSIGN 0 x 
+1 x 
+
+
+
+
+ASSIGN 2.000000 t 
+
+
+
+
+ASSIGN 3 y 
+
+
+
+CALL hello 
+
+ASSIGN u 
+

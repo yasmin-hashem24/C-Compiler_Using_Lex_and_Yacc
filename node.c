@@ -100,7 +100,7 @@ nodeType *createIdentifierNode(char *id)
 
 nodeType *createOperatorNode(int oper, int nops, ...)
 {
-    printf("createOper");
+
     va_list ap;
     nodeType *p;
     int i;
@@ -192,12 +192,12 @@ void execute(nodeType *p, int first, int insideScope)
                 strcat(Result, "\n");
 
                 execute(p->opr.op[1], 0, 1);
-
+                LoopsNames++;
                 sprintf(Result, "%s jz\tL%d\n", Result, LoopsNames);
 
-                LoopsNames++;
+                LoopsNames--;
                 sprintf(Result, "%sjmp\tL%d\n", Result, LoopsNames);
-
+                LoopsNames++;
                 fprintf(outputFile, "\nL%d:\n", LoopsNames);
 
                 LoopsNames += 1;
@@ -212,11 +212,13 @@ void execute(nodeType *p, int first, int insideScope)
 
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                LoopsNames++;
                 fprintf(outputFile, "jz\tL%d\n", LoopsNames);
 
-                LoopsNames++;
+                LoopsNames--;
 
                 fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
+                LoopsNames += 1;
                 fprintf(outputFile, "\nL%d:\n", LoopsNames);
 
                 LoopsNames += 1;
@@ -255,10 +257,8 @@ void execute(nodeType *p, int first, int insideScope)
             if (insideScope == 1)
             {
                 strcat(Result, "PRINT ");
-                printf("Result in Print 1 %s\n", Result);
                 execute(p->opr.op[0], 0, 1);
                 strcat(Result, "\n ");
-                printf("Result in Print 2 %s\n", Result);
             }
             else
             {
@@ -333,7 +333,7 @@ void execute(nodeType *p, int first, int insideScope)
             switch (p->opr.nops)
             {
             case 5:
-
+                printf("FUNCTION DELECRATION SEEN\n");
                 execute(p->opr.op[1], 0, 1);
                 strcat(Result, ":\n");
                 fprintf(outputFile, Result);
@@ -359,28 +359,27 @@ void execute(nodeType *p, int first, int insideScope)
             default:
                 break;
             }
-            fprintf(outputFile, "\nEND OF FUNCTION");
+            fprintf(outputFile, "\nFUNC_END");
             insideScope = 0;
             break;
         case SWITCH:
             switchLabel++;
-            sprintf(Result, "L%d:\n", switchLabel);
-
             strcat(Result, "SWITCHScope:\n");
             strcat(Result, "Check\t");
             execute(p->opr.op[0], 0, 1);
             strcat(Result, "\n");
             execute(p->opr.op[1], 0, 1);
             fprintf(outputFile, Result);
+            execute(p->opr.op[2], 0, 1);
+            fprintf(outputFile, Result);
             break;
 
         case DEFAULT:
-            printf("\nINSIDE DEEEEFFF\n");
-            strcat(Result, "DEFAULT ");
 
+            strcat(Result, "DEFAULT: \n");
             execute(p->opr.op[0], 0, 1);
-            sprintf(Result, "jmp L%d\n", switchLabel + 1);
-            printf("Result after default: %s", Result);
+            strcat(Result, "\njmp SWITCH\n");
+
             break;
         case CASE:
 
@@ -389,30 +388,25 @@ void execute(nodeType *p, int first, int insideScope)
             case 2:
                 strcat(Result, "CASE ");
                 execute(p->opr.op[0], 0, 1);
-
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
-                sprintf(Result, "jmp L%d\n", switchLabel + 1);
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
-
+                strcat(Result, ": \n");
                 execute(p->opr.op[1], 0, 1);
-                printf("Result after case: %s", Result);
+                strcat(Result, "\njmp Case\n");
+                fprintf(outputFile, Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 break;
             case 3:
-                strcat(Result, "CASE ");
+
                 execute(p->opr.op[0], 0, 1);
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
-                sprintf(Result, "jmp L%d\n", switchLabel + 1);
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
+                strcat(Result, "CASE ");
                 execute(p->opr.op[1], 0, 1);
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
+                strcat(Result, ": \n");
                 execute(p->opr.op[2], 0, 1);
+                strcat(Result, "\njmp Case\n");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+
                 break;
             }
 
@@ -674,10 +668,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nLessTn ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
 
@@ -691,10 +694,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nGrTn ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         case LTE:
@@ -707,10 +719,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nLessTnE ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         case GTE:
@@ -723,10 +744,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nGrTnE ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
 
@@ -740,10 +770,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nIsNEQ ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
 
@@ -757,10 +796,69 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nIsEQ ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
+            }
+            break;
+        case AND:
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nAND ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nAND ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
+            }
+            break;
+        case OR:
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nOR ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nOR ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         default:
