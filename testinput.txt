@@ -21,7 +21,7 @@ const int val = 4;
  
     while (x > 0)
     {
-        y = x + 1;
+        x= x - 1;
       
     }
 
@@ -32,7 +32,7 @@ const int val = 4;
     return fooz;
 }
     int sum = add(a,b);
-    bool comparison = a > b;
+   
     switch (z) 
    {
     case 0:
@@ -50,5 +50,7 @@ const int val = 4;
  
   print(temp);
    
-
+string se = "String value";
+bool b1 = true;
+bool b2 = false;
 

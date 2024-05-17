@@ -755,6 +755,38 @@ void execute(nodeType *p, int first, int insideScope)
                 memset(Result, 0, sizeof(Result));
             }
             break;
+        case AND:
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nAND ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nAND ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
+            break;
+        case OR:
+            if (insideScope == 1)
+            {
+                strcat(Result, "\nOR ");
+                execute(p->opr.op[0], 0, 1);
+                execute(p->opr.op[1], 0, 1);
+            }
+            else
+            {
+                fprintf(outputFile, "\nOR ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+            }
+            break;
         default:
             fprintf(outputFile, "error: unknown operator '%d'\n");
             break;
