@@ -1,10 +1,3 @@
-# Contributors
-
-- Yasmin Hashem Niazy
-- Rofayda Bassem
-- Mahinour Alaaeldin Elsarky
-- Salma Ahmed Mahfouz
-
 ## Usage Example
 
 ```c
@@ -475,4 +468,11 @@ Symbol Table: local		 Scope: 3
 Name                     Kind                     VarType                  Initialized              Constant                 Used                     Value                    agrCount                 ArgumentTypes                           ReturnType               EnumCount                EnumTypes                                         
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ````
+
+### Contributors
+
+- Yasmin Hashem Niazy
+- Rofayda Bassem
+- Mahinour Alaaeldin Elsarky
+- Salma Ahmed Mahfouz
 
