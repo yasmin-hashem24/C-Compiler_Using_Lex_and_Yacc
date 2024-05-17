@@ -19,16 +19,18 @@
 - For Variables
 
 ```c
-int x;
-char y;
-int z = x + y;  // At line 3, Error: Type mismatch.
+int x = 1;
+char y= 'c';
+int z = x + y;
+ // At line 3, Error: Type mismatch.
 ```
 - For Function Return
 ```c
 char HelloChar(int x, string y, char c) {
 
-    x = x + 1
-    return x    // At line 3, Error: Type mismatch. Return type does not match function declaration
+    x = x + 1;
+    return x;
+// At line 3, Error: Type mismatch. Return type does not match function declaration
 }
 ```
 - For Function Assignment
@@ -37,7 +39,8 @@ char HelloChar(int x, string y, char c) {
     return c;
 }
 
-int x = HelloChar(1, "hello", 'c'); // At line 5, Error: Type mismatch
+int x = HelloChar(1, "hello", 'c');
+// At line 5, Error: Type mismatch
 ``` 
 - For Function Argument Count
 ```c
@@ -300,6 +303,23 @@ switch(x){
     print("this is case 1 missing default");
     break;
 }
+```
+
+## Warnings example for variables, enum and function declared but never used
+```c
+int x =1;
+
+float y;
+
+int f(){
+  int z = 1;
+  return 1;
+}
+
+//Warning: x at line 1 is declared but never used
+//Warning: y at line 3 is declared but never used
+//Warning: f at line 8 is declared but never used
+//Warning: z at line 6 is declared but never used
 ```
 
 ## Symbol Table Example

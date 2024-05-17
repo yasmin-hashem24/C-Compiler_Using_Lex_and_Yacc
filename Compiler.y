@@ -141,7 +141,7 @@ for_loop                : FOR start_scope '(' declaration_assignment_loop ';' ex
 // Functions rules
 function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  statement_list RETURN expression ';' RBRACE end_scope     
                                                                                                                                         { 
- 
+                                                                                                                                            printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
                                                                     
                                                                                                                                             if(entry == NULL){
@@ -152,10 +152,14 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                                                                                                                                                     // Itirate over the arguments types to add them
                                                                                                                                                     int argCount = 0;
                                                                                                                                                     char** argList = NULL;
+                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                     getArgList($5, &argCount, &argList);
+                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, argCount, argList, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
+                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                     $$=createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
+                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -935,7 +939,7 @@ bool handleOperandsExpressionInDeclaration(const nodeType *node1, const nodeType
     }
     // create the symbol entry and add it to the symbol table
     if(mainCall) {
-        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, NULL, currentLineNumber);
+        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 0, NULL, currentLineNumber);
         addSymbolEntry(currTable, newEntry);
     }
     return true;
@@ -952,7 +956,7 @@ bool handleConNodeExpressionInDeclaration(const nodeType *node1, const nodeType 
         if(!mainCall) {
             return true;
         }
-        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, symbolValue, currentLineNumber);
+        SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 0, symbolValue, currentLineNumber);
         addSymbolEntry(currTable, newEntry);
         return true;
     } else {
@@ -978,7 +982,7 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
                 if(!mainCall) {
                     return true;
                 }
-                SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 1, idEntryValue, currentLineNumber);
+                SymbolEntry *newEntry = create_variable_SymbolEntry(node2, conEnumToString(node1->typ.type), 1, isConst, 0, idEntryValue, currentLineNumber);
                 addSymbolEntry(currTable, newEntry);
                 return true;
             } else {
@@ -1062,6 +1066,9 @@ bool handleOperNodeReturnTypeCheck(const nodeType *node1, const nodeType *node10
 }
 
 void getArgList(nodeType *node, int *argCount, char*** argList) {
+    if(node==NULL){
+        return;
+    }
     if (node->type == typeOpr) {
         for (int i = 0; i < node->opr.nops; i++) {
             getArgList(node->opr.op[i], argCount, argList);
@@ -1201,6 +1208,7 @@ int main(int argc, char **argv) {
     if(!yyparse()) {
         printf("Parsing successful\n");
         writeAllSymbolTablesToFile(globalTable, symbolTableFile);
+        displayWarningAllTables(globalTable, warningFile);
 
 
         fclose(fp);

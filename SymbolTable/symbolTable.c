@@ -181,3 +181,19 @@ void writeAllSymbolTablesToFile(SymbolTable *table, FILE *file) {
     }
 }
 
+
+void diplayWarningTable(SymbolTable *table, FILE *file) {
+    // Loop through all entries in the table and check if entry is used or not
+    for (size_t i = 0; i < table->size; i++) {
+        if (table->entries[i]->isUsed == 0) {
+            fprintf(file, "Warning: %s at line %d is declared but never used\n", table->entries[i]->name, table->entries[i]->lineNo);
+        }
+    }
+
+}
+void displayWarningAllTables(SymbolTable *table, FILE *file) {
+    diplayWarningTable(table, file);
+    for (size_t i = 0; i < table->childCount; i++) {
+        displayWarningAllTables(table->children[i], file);
+    }
+}
