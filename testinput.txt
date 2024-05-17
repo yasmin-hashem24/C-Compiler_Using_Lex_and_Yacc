@@ -27,8 +27,9 @@ const int val = 4;
 
     int a = 5;
     int b = 3;
-    int add(int a, int b) {
-    return a + b;
+    int add(int a,int b) {
+        int fooz=a+b;
+    return fooz;
 }
     int sum = add(a,b);
     bool comparison = a > b;

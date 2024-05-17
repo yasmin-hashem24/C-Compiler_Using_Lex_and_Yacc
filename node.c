@@ -331,7 +331,7 @@ void execute(nodeType *p, int first, int insideScope)
             switch (p->opr.nops)
             {
             case 5:
-
+                printf("FUNCTION DELECRATION SEEN\n");
                 execute(p->opr.op[1], 0, 1);
                 strcat(Result, ":\n");
                 fprintf(outputFile, Result);
@@ -357,7 +357,7 @@ void execute(nodeType *p, int first, int insideScope)
             default:
                 break;
             }
-            fprintf(outputFile, "\nEND OF FUNCTION");
+            fprintf(outputFile, "\nFUNC_END");
             insideScope = 0;
             break;
         case SWITCH:
@@ -373,12 +373,11 @@ void execute(nodeType *p, int first, int insideScope)
             break;
 
         case DEFAULT:
-            printf("\nINSIDE DEEEEFFF\n");
-            strcat(Result, "DEFAULT: \n");
 
+            strcat(Result, "DEFAULT: \n");
             execute(p->opr.op[0], 0, 1);
             strcat(Result, "\njmp SWITCH\n");
-            printf("Result after default: %s", Result);
+
             break;
         case CASE:
 
