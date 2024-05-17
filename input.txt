@@ -1,125 +1,53 @@
-// wrong assignements and declarations
-//int x
-//in x;
-//int x=;
-//int 1hj;
-//string x = "ajs;
-//enum days {m, t w}
-//enum days {}
-//days today = m; //enum assig should have enum at the start
+int x = 1;
+int y;
+int z=10;
+string s = "hello";
+const int val = 4;
 
 
-// wrong function calls and definitions
-//x = sum(x,);
-//x = sum(sum(x,7);
-//sum(y,1)
+    x = x + 1;
+    y = x;
+    print("y assigned value of x");
+    bool indicator = true;
+    int result = z - val;
+    if (y == result)
+    {
+        indicator = false;
+    }
+    else
+    {
+       z=z*3;
+    }
+ 
+    while (x > 0)
+    {
+        y = x + 1;
+      
+    }
 
-//void noReturn() {
- //   print("no return");
- //   retun z
-//}
+    int a = 5;
+    int b = 3;
+    int sum = add(a,b);
+    bool comparison = a > b;
+    switch (z) 
+   {
+    case 0:
+        print( "Zero");
+        break;
+    case 1:
+        print("One");
+        break;
+    default:
+        print("Other");
+        break;
+   }
 
-//void wrongArguments(x){
-  //  print("missing type in arg");
-//}
-
-//int noReturn() {
-//    print("missing return");
-//}
-
-// wrong loops
-//for (int x = 0 x < 10; x = x +1){
-//    c=1;
-//}
-
-//for int x = 0 x < 10; x = x +1){
-//    c=1;
-//}
-
-//while(z) 
-//    print("missing brackets");
-//}
-
-//while(int z) {
-//    print("wrong expression");
-//}
-
-//do {
-//    print("missing semicolumns next the while");
-//} while(z<10)
-
-// wrong conditions
-//if(x<0){
-//    x=1;
-//}
-//else {
-
-//this is the right else if
-
-//int x;
-//int y = 1000;
-//if(x<0){
-//    int y;
-//} else {
-//    int y;
-//}
+   int temp = 22; // Outer scope
+ 
+  print(temp);
+   
 
 
-//testcase1:
-//const char ch= 'a';
-//const char x = 'a';
-//x = ch;
-//testcase2:
-//char c1='b';
-//char c2= c1 + c1 + c;
-
-
-
-//functions
-int hello(int x, float y, int y) {
-  x = 1;
-  return 1;
+int add(int a, int b) {
+    return a + b;
 }
-
-void fg(string x, string y, char x){
-   x = '1';
-}
-
-int x =1;
-float t=2.0;
-int y=3;
-
-int u = hello(6, t, y);
-
-//for(int i=0;i<3; i =i+1){  int x=1; int y=1; for(int i=0;i<3; i =i+1){  int x=1; int y=1;}}
-
-//if(x<0){
-//    x=1;
-//} else if (x==1) {
-//    print("wrong else if")
-//}
-
-//switch(x=1){
-//    case 1: 
-//    print("this is case 1 wrong expression in the switch");
-//    break;
-//    default:
-//    print("this is default");
-//    break;
-//}
-
-//switch(x){
-//    case 1: 
-//    print("this is case 1 missng break");
-//    default:
-//    print("this is default");
-//    break;
-//}
-
-//switch(x){
-//    case 1: 
-//    print("this is case 1 missing default");
-//    break;
-//    default:
-//    print("this is case 1 missing default");
-//}

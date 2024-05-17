@@ -511,8 +511,8 @@ declaration             : type IDENTIFIER
             ;
 
 assignment              : IDENTIFIER '=' expression              
-                                                                    {     $$=createOperatorNode('=', 2, createIdentifierNode($1), $3);
-                                                                        SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $1);
+                                                                    {   
+                                                                        SymbolEntry *entry = checkIdNodeDeclaration(currTable, $1);
                                                                         if(entry != NULL){
                                                                             //check that it's not constant
                                                                             if(getIsConstant(entry)){

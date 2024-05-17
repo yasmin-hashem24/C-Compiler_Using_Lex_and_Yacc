@@ -1,9 +1,11 @@
 
 
 ASSIGN 1 x 
+RETURN 1 
+END OF FUNCTION
 
-INIT y 
 
+fg :
 
 
 ASSIGN 10 z 
@@ -124,3 +126,26 @@ PRINT temp
 
 
 END OF FUNCTION
+
+
+
+ASSIGN 
+ASSIGN 0 x 
+1 x 
+
+
+
+
+ASSIGN 2.000000 t 
+
+
+
+
+ASSIGN 3 y 
+
+
+
+CALL hello 
+
+ASSIGN u 
+

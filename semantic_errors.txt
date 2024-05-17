@@ -1,0 +1,3 @@
+At line 30, Error: Function name not declared
+At line 30, Error: There is no such variable/function existing, Variable in expression is not variable/function
+At line 31, Error: Type mismatch
