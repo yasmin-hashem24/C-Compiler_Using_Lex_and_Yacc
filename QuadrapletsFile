@@ -1,11 +1,9 @@
 
 
 ASSIGN 1 x 
-RETURN 1 
-END OF FUNCTION
 
+INIT y 
 
-fg :
 
 
 ASSIGN 10 z 
@@ -89,6 +87,9 @@ ASSIGN 3 b
 
 
 
+END OF FUNCTION
+
+
 CALL add 
 
 ASSIGN sum 
@@ -103,49 +104,37 @@ ASSIGN comparison
 
 
 
-L1:
 SWITCHScope:
 Check	z 
-CASE CASE 0 jmp L2
-
-
-
-
+CASE 0 : 
 PRINT "Zero" 
- jmp L2
-1 PRINT "One" 
  
+jmp Case
 
 
 
 
-ASSIGN 22 temp 
+CASE 1 : 
+PRINT "One" 
+ 
+jmp Case
+
+
+
+
+DEFAULT: 
+PRINT "Other" 
+ 
+jmp SWITCH
+
+
+
+
+ASSIGN DEFAULT: 
+PRINT "Other" 
+ 
+jmp SWITCH
+22 temp 
 
 
 PRINT temp 
-
-
-END OF FUNCTION
-
-
-
-ASSIGN 
-ASSIGN 0 x 
-1 x 
-
-
-
-
-ASSIGN 2.000000 t 
-
-
-
-
-ASSIGN 3 y 
-
-
-
-CALL hello 
-
-ASSIGN u 
-
