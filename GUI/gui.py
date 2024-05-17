@@ -42,10 +42,12 @@ class MyWindow(tk.Frame):
         with open(file_path, "w") as f:
             f.write(code)
         subprocess.call(["../bas.exe", file_path])
-        syntax_error_file = "../syntax_errors.txt"  
-        semantic_error_file = "../semantic_errors.txt" 
+        syntax_error_file = "syntax_errors.txt"  
+        semantic_error_file = "semantic_errors.txt"
+        warning_file = "warnings.txt"
         syntax_errors = None
         semantic_errors = None
+        warnings=None
         if os.path.exists(syntax_error_file):
             with open(syntax_error_file, "r") as f:
                 syntax_errors = f.read().strip()
@@ -53,9 +55,15 @@ class MyWindow(tk.Frame):
         if os.path.exists(semantic_error_file):
             with open(semantic_error_file, "r") as f:
                 semantic_errors = f.read().strip()
-
+        if os.path.exists(warning_file):
+            with open(warning_file, "r") as f:
+                warnings = f.read().strip()
+        if warnings:
+            error_message = "Warnings:\n{}\n".format(warnings)
+        else:
+            error_message = "Warnings:\nNo warnings found \n"
         if syntax_errors :
-            error_message = "Syntax Errors:\n{}\n".format(syntax_errors)
+            error_message += "Syntax Errors:\n{}\n".format(syntax_errors)
             if semantic_errors:
                 error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
@@ -67,10 +75,21 @@ class MyWindow(tk.Frame):
                 error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
             else:
-                error_message = "\nSemantic Errors:\n{}\n".format(semantic_errors)
+                error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
         if not syntax_errors and not semantic_errors:
-            print("Successful")
+            quadruples_file = "QuadrapletsFile"
+            if os.path.exists(quadruples_file):
+                with open(quadruples_file, "r") as f:
+                    quadruples_content = f.read().strip()
+                new_window = tk.Toplevel(self.master)
+                new_window.title("Quadruples")
+                new_window.geometry("500x300+480+100")
+                quadruples_text = scrolledtext.ScrolledText(new_window, wrap=tk.WORD, bg="black", fg="yellow", font=("Consolas", 12), width=40, height=5,insertbackground='white')
+                quadruples_text.insert(tk.END, quadruples_content)
+                quadruples_text.pack(expand=True, fill="both")
+            else:
+                print("Quadruples file not found.")
 
         
     def upload(self):
