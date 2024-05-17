@@ -1,35 +1,14 @@
 
 
 ASSIGN 1 x 
+
+INIT y 
+
+
+
+
+f :
+
+ASSIGN 1 z 
 RETURN 1 
 END OF FUNCTION
-
-
-fg :
-
-ASSIGN 0 x 
-
-END OF FUNCTION
-
-
-
-ASSIGN 
-ASSIGN 0 x 
-1 x 
-
-
-
-
-ASSIGN 2.000000 t 
-
-
-
-
-ASSIGN 3 y 
-
-
-
-CALL hello 
-
-ASSIGN u 
-

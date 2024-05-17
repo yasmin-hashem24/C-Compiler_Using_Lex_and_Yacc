@@ -302,6 +302,23 @@ switch(x){
 }
 ```
 
+## Warnings example for variables, enum and function declared but never used
+```c
+int x =1;
+
+float y;
+
+int f(){
+  int z = 1;
+  return 1;
+}
+
+//Warning: x at line 1 is declared but never used
+//Warning: y at line 3 is declared but never used
+//Warning: f at line 8 is declared but never used
+//Warning: z at line 6 is declared but never used
+```
+
 ## Symbol Table Example
 ````markdown
 

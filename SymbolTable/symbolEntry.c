@@ -28,7 +28,10 @@ SymbolEntry *create_variable_SymbolEntry(const char *name, const char *type, int
 }
 
 SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isInitialized, int lineNo, int argCount, char **argTypes, char *returnType) {
+    printf("argCountaaaaaaaaaaaaaaaaa: %d\n", argCount);
+    
     SymbolEntry *entry = malloc(sizeof(SymbolEntry));
+    printf("argCountaaaaaaaaaaaaaaaaa: %d\n", argCount);
 
     entry->name = strdup(name);
     entry->kind = FUNCTION_E;
@@ -38,6 +41,7 @@ SymbolEntry *create_function_SymbolEntry(const char *name, int isUsed, int isIni
     entry->isConstant = -1;   // Not applicable
     entry->value = NULL;      // Not applicable
     entry->isFunction = 1;    // Is a function
+    printf("argCountaaaaaaaaaaaaaaaaa: %d\n", argCount);
     entry->argCount = argCount;
     entry->argTypes = malloc(argCount * sizeof(char *));
     for (int i = 0; i < argCount; i++) {

@@ -38,5 +38,7 @@ void addChildrenToSymbolTable(SymbolTable * table, SymbolTable *child );
 void modifySymbolEntry(SymbolTable *table, const char *name, SymbolEntry *entry);
 void writeSymbolTableToFile(SymbolTable *table, FILE *file);
 void writeAllSymbolTablesToFile(SymbolTable *table, FILE *file);
+void diplayWarningTable(SymbolTable *table, FILE *file);
+void displayWarningAllTables(SymbolTable *table, FILE *file);
 
 #endif /* SYMBOLTABLE_H */
