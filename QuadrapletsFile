@@ -1,38 +1,112 @@
 
 
-
-hello :
-
 ASSIGN 1 x 
-RETURN 1 
-END OF FUNCTION
+
+INIT y 
 
 
-fg :
 
-ASSIGN 0 x 
-
-END OF FUNCTION
+ASSIGN 10 z 
 
 
+
+
+ASSIGN "hello" s 
+
+
+
+CONST val 4 
+
+
+
+ADD x 1 TEMP 
+
+ASSIGN TEMP  x 
+
+
+ASSIGN x y 
+
+
+PRINT "y assigned value of x" 
+
+
+
+ASSIGN true indicator 
+
+
+
+SUB z val TEMP 
+
+ASSIGN TEMP  result 
+
+
+
+
+
+
+
+
+
+IFScope:
+
+IsEQ y result 
+ASSIGN false indicator 
+ELSEScope
 
 ASSIGN 
-ASSIGN 0 x 
-1 x 
+MUL z 3 z 
+ENDIF
 
 
 
 
-ASSIGN 2.000000 t 
 
 
 
 
-ASSIGN 3 y 
+
+L0 :
+
+GrTn x 0 
+ASSIGN 
+ADD x 1 y 
+jz	L0
+jmp	L1
+
+L1:
 
 
 
-CALL hello 
 
-ASSIGN u 
+ASSIGN 5 a 
 
+
+
+
+ASSIGN 3 b 
+
+
+
+CALL add 
+
+ASSIGN sum 
+
+
+
+GrTn a b 
+
+ASSIGN comparison 
+
+
+SWITCHScope:
+ 
+
+
+
+ASSIGN z 22 temp 
+
+
+PRINT temp 
+
+
+END OF FUNCTION

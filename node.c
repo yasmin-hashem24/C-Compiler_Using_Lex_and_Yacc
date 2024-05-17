@@ -160,6 +160,7 @@ void execute(nodeType *p, int first, int insideScope)
         case typeString:
 
             sprintf(Result, "%s%s ", Result, p->con.sValue);
+
             break;
         case typeChar:
             sprintf(Result, "%s%c ", Result, p->con.cValue);
@@ -202,7 +203,7 @@ void execute(nodeType *p, int first, int insideScope)
             }
             else
             {
-                
+
                 sprintf(Result, "\nL%d :\n", LoopsNames);
                 execute(p->opr.op[0], 0, 1);
                 fprintf(outputFile, "\n");
@@ -223,15 +224,27 @@ void execute(nodeType *p, int first, int insideScope)
             break;
 
         case IF:
+
             fprintf(outputFile, "\nIFScope:\n");
             execute(p->opr.op[0], 0, 1);
 
             execute(p->opr.op[1], 0, 1);
-            if (p->opr.nops > 2)
-            {
-                fprintf(outputFile, " else ");
-                execute(p->opr.op[2], 0, 1);
-            }
+
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            fprintf(outputFile, "ENDIF\n");
+            insideScope = 0;
+            break;
+
+        case ELSE:
+            fprintf(outputFile, "\nIFScope:\n");
+            execute(p->opr.op[0], 0, 1);
+
+            execute(p->opr.op[1], 0, 1);
+            fprintf(outputFile, Result);
+            memset(Result, 0, sizeof(Result));
+            fprintf(outputFile, "ELSEScope\n");
+            execute(p->opr.op[2], 0, 1);
             fprintf(outputFile, Result);
             memset(Result, 0, sizeof(Result));
             fprintf(outputFile, "ENDIF\n");
@@ -240,16 +253,19 @@ void execute(nodeType *p, int first, int insideScope)
         case PRINT:
             if (insideScope == 1)
             {
-                strcat(Result, "print ");
+                strcat(Result, "PRINT ");
 
                 execute(p->opr.op[0], 0, 1);
                 strcat(Result, "\n ");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
             }
             else
             {
-                fprintf(outputFile, "print ");
+                fprintf(outputFile, "PRINT ");
                 execute(p->opr.op[0], 0, 0);
-                fprintf(outputFile, "\n");
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
             }
 
             break;
@@ -284,13 +300,13 @@ void execute(nodeType *p, int first, int insideScope)
         case VAR:
             if (insideScope == 1)
             {
-                strcat(Result, "VAR ");
-                execute(p->opr.op[0], 0, 1);
+                strcat(Result, "INIT ");
+                execute(p->opr.op[1], 0, 1);
             }
             else
             {
-                fprintf(outputFile, "VAR ");
-                execute(p->opr.op[0], 0, 0);
+                fprintf(outputFile, "INIT ");
+                execute(p->opr.op[1], 0, 0);
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
             }
@@ -351,16 +367,28 @@ void execute(nodeType *p, int first, int insideScope)
             insideScope = 0;
             break;
         case SWITCH:
-            fprintf(outputFile, "\nswitch ");
-            execute(p->opr.op[0], 0, 0);
+             fprintf(outputFile, "SWITCHScope:\n ");
+    execute(p->opr.op[0], 0, 0); 
             break;
         case DEFAULT:
-            fprintf(outputFile, "\ndefault ");
+            fprintf(outputFile, "DEFAULT ");
             execute(p->opr.op[0], 0, 0);
+
             break;
         case CASE:
-            fprintf(outputFile, "\ncase ");
-            execute(p->opr.op[0], 0, 0);
+            switch (p->opr.nops)
+            {
+            case 2:
+                fprintf(outputFile, "CASE ");
+                execute(p->opr.op[0], 0, 0);
+                break;
+            case 3: // CASE with a statement list
+                fprintf(outputFile, "CASE ");
+                execute(p->opr.op[0], 0, 0);
+                execute(p->opr.op[1], 0, 0);
+                break;
+            }
+
             break;
         case CALL:
             if (insideScope == 1)
