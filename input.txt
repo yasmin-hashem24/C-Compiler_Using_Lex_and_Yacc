@@ -1,8 +1,7 @@
-int x =1;
+int x = 1;
+int z = 1000;
+float y = x + 1 + z;
 
-float y;
-
-int f(){
-  int z = 1;
+float hi(){
   return 1;
 }

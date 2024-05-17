@@ -32,7 +32,14 @@ bool checkTypeInt(conEnum  typeEnum) {
     return typeEnum == typeInt;
 }
 
-bool checkTypeFloat(conEnum    typeEnum) {
+bool checkTypeFloat(conEnum  typeEnum) {
+    if(typeEnum == typeInt){
+        printf("Convertion from int to float\n");
+        FILE *outputFile;
+        outputFile = fopen("QuadrapletsFile", "a+");
+        fprintf(outputFile, "Convertion from int to float\n");
+        return true;
+    }
     return typeEnum == typeFloat;
 }
 
@@ -51,6 +58,8 @@ bool checkTypeBool(conEnum typeEnum) {
 bool checkTypeMismatchConNode(nodeType* node, char* symbolValue, char* typeUnion, CheckTypeFunc checkFunc) {
                                                                           
     if(checkFunc(node->con.typeConst)){
+        printf("Eaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1111111111111111111\n");
+        printf("typeUnion: %s\n", typeUnion);
         if(strcmp(typeUnion, "Integer") == 0){
             int integerValue = node->con.iValue;
             sprintf(symbolValue, "%d", integerValue);
@@ -78,7 +87,6 @@ bool checkTypeMismatchConNode(nodeType* node, char* symbolValue, char* typeUnion
 SymbolEntry* checkIdNodeDeclaration(SymbolTable *currTable, const char *id) {
     SymbolEntry *idEntry = getSymbolEntryFomCurrentScope(currTable,id);
     if(idEntry==NULL){
-        printf("Error: Identifier %s not deaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaclared\n",id);
        idEntry = getSymbolEntryFromParentScope(currTable,id);
     }
     return idEntry;
