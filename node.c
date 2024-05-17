@@ -218,6 +218,7 @@ void execute(nodeType *p, int first, int insideScope)
                 LoopsNames--;
 
                 fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
+                LoopsNames += 1;
                 fprintf(outputFile, "\nL%d:\n", LoopsNames);
 
                 LoopsNames += 1;

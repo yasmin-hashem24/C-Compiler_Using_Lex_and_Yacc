@@ -24,7 +24,10 @@ const int val = 4;
         x= x - 1;
       
     }
+    float sha3bola = 2.3;
+float za3bola = 5.4;
 
+float justlola= sha3bola/za3bola;
     int a = 5;
     int b = 3;
     int add(int a,int b) {
@@ -60,7 +63,6 @@ x = sabaho-masa2o;
 
 bool b1 = true;
 bool b2 = false;
-
-
 bool BIGB = b1>b2;
-
+bool smolB = b1 && b2;
+bool aVGB = b1 !=b2;
