@@ -5,26 +5,29 @@ string s = "hello";
 const int val = 4;
 
 
-    x = x + 1;
-    y = x;
-    print("y assigned value of x");
-    bool indicator = true;
-    int result = z - val;
-    if (y == result)
-    {
-        indicator = false;
-    }
-    else
-    {
-       z=z*3;
-    }
- 
-    while (x > 0)
-    {
-        x= x - 1;
-      
-    }
-    float sha3bola = 2.3;
+x = x + 1;
+y = x;
+print("y assigned value of x");
+bool indicator = true;
+int result = z - val;
+if (y == result)
+{
+    indicator = false;
+}
+else
+{
+    z=z*3;
+}
+
+while (x > 0)
+{
+    x= x - 1;
+    
+}
+enum hello{ 
+'yasmina'
+};
+float sha3bola = 2.3;
 float za3bola = 5.4;
 
 float justlola= sha3bola/za3bola;
@@ -34,26 +37,27 @@ float justlola= sha3bola/za3bola;
         int fooz=a+b;
     return fooz;
 }
-    int sum = add(a,b);
-   
-    switch (z) 
-   {
-    case 0:
-        print( "Zero");
-        break;
-    case 1:
-        print("One");
-        break;
-    default:
-        print("Other");
-        break;
-   }
+int sum = add(a,b);
 
-   int temp = 22; // Outer scope
- 
-  print(temp);
-   
+switch (z) 
+{
+case 0:
+    print( "Zero");
+    break;
+case 1:
+    print("One");
+    break;
+default:
+    print("Other");
+    break;
+}
+
+int temp = 22; // Outer scope
+
+print(temp);
+
 string se = "String value";
+
 
 
 int sabaho=9;
@@ -66,3 +70,11 @@ bool b2 = false;
 bool BIGB = b1>b2;
 bool smolB = b1 && b2;
 bool aVGB = b1 !=b2;
+
+while(sabaho>=masa2o)
+{
+   while(b1)
+   {
+    masa2o=masa2o+1;
+   }
+}
