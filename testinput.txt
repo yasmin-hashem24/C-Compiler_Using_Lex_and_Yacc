@@ -25,7 +25,7 @@ while (x > 0)
     
 }
 enum hello{ 
-'yasmina'
+yasmin
 };
 float sha3bola = 2.3;
 float za3bola = 5.4;
