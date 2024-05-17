@@ -56,15 +56,19 @@ class MyWindow(tk.Frame):
 
         if syntax_errors :
             error_message = "Syntax Errors:\n{}\n".format(syntax_errors)
-        if semantic_errors:
+            if semantic_errors:
+                error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
+                messagebox.showerror("Compilation Errors", error_message)
+            else:
+                messagebox.showerror("Compilation Errors", error_message)
+            
+        elif semantic_errors:
             if syntax_errors:
                 error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
             else:
                 error_message = "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
-        else:
-            messagebox.showerror("Compilation Errors", error_message)
         if not syntax_errors and not semantic_errors:
             print("Successful")
 
