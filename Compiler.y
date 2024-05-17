@@ -114,7 +114,7 @@ print_statement         : PRINT '(' expression ')' ';'    {$$= createOperatorNod
 if_condition_statement  : IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope                                                              {$$ = createOperatorNode(IF,2,$3,$7);}
                         | IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope      {$$ = createOperatorNode(ELSE, 3, $3, $7, $13);}
                         ;
-switch_statement        : SWITCH '(' expression ')' LBRACE case_list case_default RBRACE    {$$ = createOperatorNode(SWITCH, 2, $3, $6);}
+switch_statement        : SWITCH '(' expression ')' LBRACE case_list case_default RBRACE    {$$ = createOperatorNode(SWITCH, 3, $3, $6,$7);}
                         ;
 
 case_list            : case_list CASE expression ':' statement_list BREAK ';'  {$$ = createOperatorNode(CASE,3,$1,$3,$5);}

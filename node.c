@@ -7,6 +7,7 @@
 void yyerror(const char *s);
 char Result[1000000];
 int LoopsNames = 0;
+int switchLabel = 0;
 nodeType *createTypeNode(conEnum type)
 {
     nodeType *p = malloc(sizeof(nodeType));
@@ -254,11 +255,10 @@ void execute(nodeType *p, int first, int insideScope)
             if (insideScope == 1)
             {
                 strcat(Result, "PRINT ");
-
+                printf("Result in Print 1 %s\n", Result);
                 execute(p->opr.op[0], 0, 1);
                 strcat(Result, "\n ");
-                fprintf(outputFile, Result);
-                memset(Result, 0, sizeof(Result));
+                printf("Result in Print 2 %s\n", Result);
             }
             else
             {
@@ -333,10 +333,6 @@ void execute(nodeType *p, int first, int insideScope)
             switch (p->opr.nops)
             {
             case 5:
-                /*
-                    type IDENTIFIER start_scope '(' arg_list ')' LBRACE statement_list RETURN expression ';' RBRACE end_scope
-                        $$ = createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
-                    0->type 1->identifier 2->arg_list 3->statement_list 4->expression*/
 
                 execute(p->opr.op[1], 0, 1);
                 strcat(Result, ":\n");
@@ -367,25 +363,56 @@ void execute(nodeType *p, int first, int insideScope)
             insideScope = 0;
             break;
         case SWITCH:
-             fprintf(outputFile, "SWITCHScope:\n ");
-    execute(p->opr.op[0], 0, 0); 
-            break;
-        case DEFAULT:
-            fprintf(outputFile, "DEFAULT ");
-            execute(p->opr.op[0], 0, 0);
+            switchLabel++;
+            sprintf(Result, "L%d:\n", switchLabel);
 
+            strcat(Result, "SWITCHScope:\n");
+            strcat(Result, "Check\t");
+            execute(p->opr.op[0], 0, 1);
+            strcat(Result, "\n");
+            execute(p->opr.op[1], 0, 1);
+            fprintf(outputFile, Result);
+            break;
+
+        case DEFAULT:
+            printf("\nINSIDE DEEEEFFF\n");
+            strcat(Result, "DEFAULT ");
+
+            execute(p->opr.op[0], 0, 1);
+            sprintf(Result, "jmp L%d\n", switchLabel + 1);
+            printf("Result after default: %s", Result);
             break;
         case CASE:
+
             switch (p->opr.nops)
             {
             case 2:
-                fprintf(outputFile, "CASE ");
-                execute(p->opr.op[0], 0, 0);
+                strcat(Result, "CASE ");
+                execute(p->opr.op[0], 0, 1);
+
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                sprintf(Result, "jmp L%d\n", switchLabel + 1);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+
+                execute(p->opr.op[1], 0, 1);
+                printf("Result after case: %s", Result);
                 break;
-            case 3: // CASE with a statement list
-                fprintf(outputFile, "CASE ");
-                execute(p->opr.op[0], 0, 0);
-                execute(p->opr.op[1], 0, 0);
+            case 3:
+                strcat(Result, "CASE ");
+                execute(p->opr.op[0], 0, 1);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                sprintf(Result, "jmp L%d\n", switchLabel + 1);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                execute(p->opr.op[1], 0, 1);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
+                execute(p->opr.op[2], 0, 1);
+                fprintf(outputFile, Result);
+                memset(Result, 0, sizeof(Result));
                 break;
             }
 

@@ -98,12 +98,26 @@ GrTn a b
 ASSIGN comparison 
 
 
+
+
+
+L1:
 SWITCHScope:
+Check	z 
+CASE CASE 0 jmp L2
+
+
+
+
+PRINT "Zero" 
+ jmp L2
+1 PRINT "One" 
  
 
 
 
-ASSIGN z 22 temp 
+
+ASSIGN 22 temp 
 
 
 PRINT temp 
