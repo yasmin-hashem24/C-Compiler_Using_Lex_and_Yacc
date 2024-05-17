@@ -1,1 +1,12 @@
-Warning: y at line 3 is declared but never used
+Warning: functionScopeTest at line 10 is declared but never used
+Warning: mainChar at line 12 is declared but never used
+Warning: mainColor at line 13 is declared but never used
+Warning: funcReturn at line 15 is declared but never used
+Warning: funcChar at line 6 is declared but never used
+Warning: funcColor at line 7 is declared but never used
+Warning: ifChar at line 19 is declared but never used
+Warning: ifColor at line 20 is declared but never used
+Warning: ifVar at line 21 is declared but never used
+Warning: forChar at line 27 is declared but never used
+Warning: forColor at line 28 is declared but never used
+Warning: forVar at line 29 is declared but never used

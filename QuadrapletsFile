@@ -1,44 +1,122 @@
 
-
-ASSIGN 1 x 
-
-INIT y 
+numDef SingleColor EnumDef RED 
 
 
 
+ASSIGN À funcChar 
 
-f :
-
-ASSIGN 1 z 
-RETURN 1 
-END OF FUNCTION
+EnumDef SingleColor funcColor RED 
 
 
-fg :
 
-ASSIGN 0 x 
+MUL limit 2 TEMP 
 
-END OF FUNCTION
+ASSIGN TEMP  funcVar 
+
+
+functionScopeTest :
+RETURN funcVar 
+FUNC_END
+
+
+
+ASSIGN À mainChar 
+
+
+EnumDef SingleColor mainColor RED 
+
+
+
+ASSIGN 40 globVar 
+
+
+INIT funcReturn 
+
+
 
 
 
 ASSIGN 
-ASSIGN 0 x 
-1 x 
+GrTn globVar 20 ð ifChar 
+
+EnumDef SingleColor ifColor RED 
+
+
+
+SUB globVar 5 TEMP 
+
+ASSIGN TEMP  ifVar 
 
 
 
 
-ASSIGN 2.000000 t 
+ASSIGN 0 i 
 
 
 
 
-ASSIGN 3 y 
+
+
+ASSIGN 
+L0 :
+
+LessTn i 3   forChar 
+
+EnumDef SingleColor forColor RED 
+
+
+ASSIGN i forVar 
 
 
 
-CALL hello 
 
-ASSIGN u 
+ADD i 1 TEMP 
+
+ASSIGN TEMP  i 
+
+
+jz	L1
+jmp	L0
+
+L1:
+
+
+
+
+ASSIGN true hello 
+
+
+
+
+
+
+
+
+
+
+
+IFScope:
+
+L2 :
+
+IsEQ hello true 
+LessTn globVar 10 
+ASSIGN false hello 
+ELSEScope
+
+ASSIGN 
+SUB globVar 1 globVar 
+ENDIF
+
+
+jz	L3
+jmp	L2
+
+L3:
+
+
+
+IFScope:
+ELSEScope
+ENDIF
 

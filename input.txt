@@ -1,8 +1,41 @@
-int x =1;
+// Enum definition with a single enumerator
+enum SingleColor { RED };
 
-float y;
+int functionScopeTest(int limit) {
+    // Function scope
+    char funcChar = 'F';
+    enum SingleColor funcColor = RED;
+    int funcVar = limit * 2;
+    return funcVar;
+}
 
-int f(){
-  int z = 1;
-  return 1;
+char mainChar = 'M';
+enum SingleColor mainColor = RED;
+int globVar = 40;
+int funcReturn;
+
+// If condition scope
+if (globVar > 20) {
+    char ifChar = 'I';
+    enum SingleColor ifColor = RED;
+    int ifVar = globVar - 5;
+
+    int i=0;
+    while(i<3){
+        char forChar = 'F';
+        enum SingleColor forColor = RED;
+        int forVar = i;
+        i=i+1;
+    }
+}
+else{
+    bool hello= true;
+    while(hello==true){
+        if(globVar<10){
+            hello=false;
+        }
+        else{
+            globVar=globVar-1;
+        }
+    }
 }
