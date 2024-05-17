@@ -192,10 +192,10 @@ void execute(nodeType *p, int first, int insideScope)
                 strcat(Result, "\n");
 
                 execute(p->opr.op[1], 0, 1);
-
+                LoopsNames++;
                 sprintf(Result, "%s jz\tL%d\n", Result, LoopsNames);
 
-                LoopsNames++;
+                LoopsNames--;
                 sprintf(Result, "%sjmp\tL%d\n", Result, LoopsNames);
 
                 fprintf(outputFile, "\nL%d:\n", LoopsNames);
@@ -212,9 +212,10 @@ void execute(nodeType *p, int first, int insideScope)
 
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                LoopsNames++;
                 fprintf(outputFile, "jz\tL%d\n", LoopsNames);
 
-                LoopsNames++;
+                LoopsNames--;
 
                 fprintf(outputFile, "jmp\tL%d\n", LoopsNames);
                 fprintf(outputFile, "\nL%d:\n", LoopsNames);
