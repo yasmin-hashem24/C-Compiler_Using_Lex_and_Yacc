@@ -51,6 +51,16 @@ const int val = 4;
   print(temp);
    
 string se = "String value";
+
+
+int sabaho=9;
+int masa2o=3;
+
+x = sabaho-masa2o;
+
 bool b1 = true;
 bool b2 = false;
+
+
+bool BIGB = b1>b2;
 

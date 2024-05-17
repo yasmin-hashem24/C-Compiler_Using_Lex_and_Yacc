@@ -197,7 +197,7 @@ void execute(nodeType *p, int first, int insideScope)
 
                 LoopsNames--;
                 sprintf(Result, "%sjmp\tL%d\n", Result, LoopsNames);
-
+                LoopsNames++;
                 fprintf(outputFile, "\nL%d:\n", LoopsNames);
 
                 LoopsNames += 1;
@@ -667,10 +667,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nLessTn ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
 
@@ -684,10 +693,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nGrTn ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         case LTE:
@@ -700,10 +718,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nLessTnE ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         case GTE:
@@ -716,10 +743,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nGrTnE ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
 
@@ -733,10 +769,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nIsNEQ ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
 
@@ -750,10 +795,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nIsEQ ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         case AND:
@@ -766,10 +820,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nAND ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         case OR:
@@ -782,10 +845,19 @@ void execute(nodeType *p, int first, int insideScope)
             else
             {
                 fprintf(outputFile, "\nOR ");
+                char *Temp;
+                Temp = strdup(Result);
+
+                memset(Result, 0, sizeof(Result));
+
                 execute(p->opr.op[0], 0, 0);
                 execute(p->opr.op[1], 0, 0);
+                strcat(Result, "TEMP ");
                 fprintf(outputFile, Result);
                 memset(Result, 0, sizeof(Result));
+                strcat(Result, "TEMP ");
+                sprintf(Result, "%s%s ", Result, Temp);
+                free(Temp);
             }
             break;
         default:
