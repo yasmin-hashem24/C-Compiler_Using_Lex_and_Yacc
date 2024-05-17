@@ -19,8 +19,8 @@
 - For Variables
 
 ```c
-int x;
-char y;
+int x = 1;
+char y= 'c';
 int z = x + y;
  // At line 3, Error: Type mismatch.
 ```
