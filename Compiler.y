@@ -112,7 +112,7 @@ print_statement         : PRINT '(' expression ')' ';'    {$$= createOperatorNod
 
 // Statements rules: Conditional statements
 if_condition_statement  : IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope                                                              {$$ = createOperatorNode(IF,2,$3,$7);}
-                        | IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope      {$$ = createOperatorNode(IF, 2, $3, $7, $13);}
+                        | IF '(' expression ')' LBRACE start_scope statement_list RBRACE end_scope ELSE LBRACE start_scope statement_list RBRACE end_scope      {$$ = createOperatorNode(ELSE, 3, $3, $7, $13);}
                         ;
 switch_statement        : SWITCH '(' expression ')' LBRACE case_list case_default RBRACE    {$$ = createOperatorNode(SWITCH, 2, $3, $6);}
                         ;
@@ -387,7 +387,8 @@ declaration             : type IDENTIFIER
                                                                     }
                         | type IDENTIFIER '=' expression            
                                                                     {  
-                                                                        
+                                                                           $$ = createOperatorNode('=', 3, createTypeNode($1->typ.type), createIdentifierNode($2), $4); 
+                                                                         
                                                                         SymbolEntry *entry = getSymbolEntryFomCurrentScope(currTable, $2);
                                                                         if(entry == NULL){
                                                                             
