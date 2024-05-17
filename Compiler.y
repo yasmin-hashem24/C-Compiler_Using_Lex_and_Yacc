@@ -141,7 +141,6 @@ for_loop                : FOR start_scope '(' declaration_assignment_loop ';' ex
 // Functions rules
 function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  statement_list RETURN expression ';' RBRACE end_scope     
                                                                                                                                         { 
-                                                                                                                                            printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                             SymbolEntry *entry = getSymbolEntryFromParentScope(currTable, $2);
                                                                     
                                                                                                                                             if(entry == NULL){
@@ -152,14 +151,10 @@ function_declaration    : type IDENTIFIER start_scope '(' arg_list ')' LBRACE  s
                                                                                                                                                     // Itirate over the arguments types to add them
                                                                                                                                                     int argCount = 0;
                                                                                                                                                     char** argList = NULL;
-                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                     getArgList($5, &argCount, &argList);
-                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                     SymbolEntry *newEntry = create_function_SymbolEntry($2, 0, 1, currentLineNumber, argCount, argList, conEnumToString($1->typ.type));
                                                                                                                                                     addSymbolEntry(currTable, newEntry);
-                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                     $$=createOperatorNode(FUNC, 5, createTypeNode($1->typ.type), createIdentifierNode($2), $5, $8, $10);
-                                                                                                                                                    printf("aaaaaaaaaaaaaa33333333333\n");
                                                                                                                                                 }
                                                                                                                                                 else{
                                                                                                                                                     throwError("Type mismatch. Return type does not match function declaration", currentLineNumber, semanticErrorsFile);
@@ -482,6 +477,7 @@ declaration             : type IDENTIFIER
                                                                                     }
                                                                                }
                                                                                if(enumTypeExists){
+                                                                                    setIsUsed(enumEntry, 1);
                                                                                     char strValueIndex[20]; 
                                                                                     sprintf(strValueIndex, "%d", strIndex);
                                                                                     SymbolEntry *newEntry = create_variable_SymbolEntry($3, $2, 1, 0, 0, strValueIndex, currentLineNumber);
@@ -978,7 +974,14 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
             setIsUsed(idEntry, 1);
             char *idEntryValue = getValue(idEntry);
             char *idEntryType = getType(idEntry);
-            if (strcmp(typeUnion, idEntryType) == 0) {
+            printf("idEntryType %s\n", idEntryType);
+            printf("typeUnion %s\n", typeUnion);
+            if (strcmp(typeUnion, idEntryType) == 0 || ((strcmp(typeUnion, "Float") == 0 && strcmp(idEntryType, "Integer") == 0))){
+                if((strcmp(typeUnion, "Float") == 0 && strcmp(idEntryType, "Integer") == 0)) {
+                    FILE *outputFile;
+                    outputFile = fopen("QuadrapletsFile", "a+");
+                    fprintf(outputFile, "Convertion from int to float\n");
+                }
                 if(!mainCall) {
                     return true;
                 }
@@ -986,7 +989,7 @@ bool handleIdNodeExpressionInDeclaration(const nodeType *node1, const nodeType *
                 addSymbolEntry(currTable, newEntry);
                 return true;
             } else {
-                throwError("Type mismatch", currentLineNumber, semanticErrorsFile);
+                throwError("Type mimatch", currentLineNumber, semanticErrorsFile);
             }
         } else {
             throwError("Variable has not been initialized before", currentLineNumber, semanticErrorsFile);

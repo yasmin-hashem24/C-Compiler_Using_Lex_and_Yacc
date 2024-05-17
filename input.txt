@@ -1,53 +1,8 @@
-int x = 1;
-int y;
-int z=10;
-string s = "hello";
-const int val = 4;
+int x =1;
 
+float y;
 
-    x = x + 1;
-    y = x;
-    print("y assigned value of x");
-    bool indicator = true;
-    int result = z - val;
-    if (y == result)
-    {
-        indicator = false;
-    }
-    else
-    {
-       z=z*3;
-    }
- 
-    while (x > 0)
-    {
-        y = x + 1;
-      
-    }
-
-    int a = 5;
-    int b = 3;
-    int add(int a,int b) {
-        int fooz=a+b;
-    return fooz;
+int f(){
+  int z = 1;
+  return 1;
 }
-    int sum = add(a,b);
-    switch (z) 
-   {
-    case 0:
-        print( "Zero");
-        break;
-    case 1:
-        print("One");
-        break;
-    default:
-        print("Other");
-        break;
-   }
-
-   int temp = 22; // Outer scope
- 
-  print(temp);
-   
-
-

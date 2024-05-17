@@ -6,135 +6,39 @@ INIT y
 
 
 
-ASSIGN 10 z 
+
+f :
+
+ASSIGN 1 z 
+RETURN 1 
+END OF FUNCTION
 
 
+fg :
 
-
-ASSIGN "hello" s 
-
-
-
-CONST val 4 
-
-
-
-ADD x 1 TEMP 
-
-ASSIGN TEMP  x 
-
-
-ASSIGN x y 
-
-
-PRINT "y assigned value of x" 
-
-
-
-ASSIGN true indicator 
-
-
-
-SUB z val TEMP 
-
-ASSIGN TEMP  result 
-
-
-
-
-
-
-
-
-
-IFScope:
-
-IsEQ y result 
-ASSIGN false indicator 
-ELSEScope
-
-ASSIGN 
-MUL z 3 z 
-ENDIF
-
-
-
-
-
-
-
-
-
-L0 :
-
-GrTn x 0 
-ASSIGN 
-ADD x 1 y 
-jz	L0
-jmp	L1
-
-L1:
-
-
-
-
-ASSIGN 5 a 
-
-
-
-
-ASSIGN 3 b 
-
-
+ASSIGN 0 x 
 
 END OF FUNCTION
 
 
-CALL add 
 
-ASSIGN sum 
-
-
-
-GrTn a b 
-
-ASSIGN comparison 
+ASSIGN 
+ASSIGN 0 x 
+1 x 
 
 
 
 
-
-SWITCHScope:
-Check	z 
-CASE 0 : 
-PRINT "Zero" 
- 
-jmp Case
+ASSIGN 2.000000 t 
 
 
 
 
-CASE 1 : 
-PRINT "One" 
- 
-jmp Case
+ASSIGN 3 y 
 
 
 
+CALL hello 
 
-DEFAULT: 
-PRINT "Other" 
- 
-jmp SWITCH
+ASSIGN u 
 
-
-
-
-ASSIGN DEFAULT: 
-PRINT "Other" 
- 
-jmp SWITCH
-22 temp 
-
-
-PRINT temp 
