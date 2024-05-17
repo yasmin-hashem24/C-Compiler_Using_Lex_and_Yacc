@@ -79,6 +79,7 @@ class MyWindow(tk.Frame):
                 messagebox.showerror("Compilation Errors", error_message)
         if not syntax_errors and not semantic_errors:
             quadruples_file = "QuadrapletsFile"
+            symboltable_file="symbol_table.txt"
             if os.path.exists(quadruples_file):
                 with open(quadruples_file, "r") as f:
                     quadruples_content = f.read().strip()
@@ -90,6 +91,18 @@ class MyWindow(tk.Frame):
                 quadruples_text.pack(expand=True, fill="both")
             else:
                 print("Quadruples file not found.")
+            if os.path.exists(symboltable_file):
+                with open(symboltable_file, "r") as f:
+                    symboltable_content = f.read().strip()
+                new_window = tk.Toplevel(self.master)
+                new_window.title("Symbol table")
+                new_window.geometry("500x300+480+100")
+                symbol_text = scrolledtext.ScrolledText(new_window, wrap=tk.WORD, bg="black", fg="yellow", font=("Consolas", 12), width=40, height=5,insertbackground='white')
+                symbol_text.insert(tk.END, symboltable_content)
+                symbol_text.pack(expand=True, fill="both")
+            else:
+                print("Symbol table file not found.")
+            
 
         
     def upload(self):
