@@ -38,7 +38,7 @@ class MyWindow(tk.Frame):
         if not code.strip():
             messagebox.showerror("Input Error", "please enter your code")
             return
-        file_path = "../testinput.txt"
+        file_path = "../input.txt"
         with open(file_path, "w") as f:
             f.write(code)
         subprocess.call(["../bas.exe", file_path])
@@ -56,15 +56,19 @@ class MyWindow(tk.Frame):
 
         if syntax_errors :
             error_message = "Syntax Errors:\n{}\n".format(syntax_errors)
-        if semantic_errors:
+            if semantic_errors:
+                error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
+                messagebox.showerror("Compilation Errors", error_message)
+            else:
+                messagebox.showerror("Compilation Errors", error_message)
+            
+        elif semantic_errors:
             if syntax_errors:
                 error_message += "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
             else:
                 error_message = "\nSemantic Errors:\n{}\n".format(semantic_errors)
                 messagebox.showerror("Compilation Errors", error_message)
-        else:
-            messagebox.showerror("Compilation Errors", error_message)
         if not syntax_errors and not semantic_errors:
             print("Successful")
 
